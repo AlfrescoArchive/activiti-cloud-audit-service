@@ -13,19 +13,19 @@ public interface EventsRepository extends MongoRepository<ProcessEngineEventDocu
     
     @Override
     @RestResource(exported = false)
-    public <S extends ProcessEngineEventDocument> S insert(S arg0);
+    public <S extends ProcessEngineEventDocument> S insert(S entity);
     
     @Override
     @RestResource(exported = false)
-    public <S extends ProcessEngineEventDocument> List<S> insert(Iterable<S> arg0);
+    public <S extends ProcessEngineEventDocument> List<S> insert(Iterable<S> entities);
     
     @Override
     @RestResource(exported = false)
-    public <S extends ProcessEngineEventDocument> List<S> saveAll(Iterable<S> arg0);
+    public <S extends ProcessEngineEventDocument> List<S> saveAll(Iterable<S> entities);
     
     @Override
     @RestResource(exported = false)
-    public void delete(ProcessEngineEventDocument arg0);
+    public void delete(ProcessEngineEventDocument entity);
     
     @Override
     @RestResource(exported = false)
@@ -33,13 +33,13 @@ public interface EventsRepository extends MongoRepository<ProcessEngineEventDocu
     
     @Override
     @RestResource(exported = false)
-    public void deleteAll(Iterable<? extends ProcessEngineEventDocument> arg0);
+    public void deleteAll(Iterable<? extends ProcessEngineEventDocument> entities);
     
     @Override
     @RestResource(exported = false)
-    public void deleteById(String arg0);
+    public void deleteById(String id);
     
     @Override
     @RestResource(exported = false)
-    public <S extends ProcessEngineEventDocument> S save(S arg0);
+    public <S extends ProcessEngineEventDocument> S save(S entity);
 }
