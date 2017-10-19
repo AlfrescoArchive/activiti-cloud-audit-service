@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import org.activiti.cloud.services.test.rest.support.TestMvcClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
