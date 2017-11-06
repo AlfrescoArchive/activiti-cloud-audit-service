@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.activiti.cloud.services.audit;
+package org.activiti.cloud.services.audit.repository;
 
 import com.querydsl.core.types.dsl.StringPath;
+import org.activiti.cloud.services.audit.EventsRelProvider;
 import org.activiti.cloud.services.audit.events.QProcessEngineEventEntity;
 import org.activiti.cloud.services.audit.events.ProcessEngineEventEntity;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
