@@ -30,7 +30,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(path = EventsRelProvider.COLLECTION_RESOURCE_REL,
         collectionResourceDescription = @Description("Collection of event resources"),
         collectionResourceRel = EventsRelProvider.COLLECTION_RESOURCE_REL)
-public interface EventsRepository extends PagingAndSortingRepository<ProcessEngineEventEntity, Long>,
+public interface EventsRepository extends RestResourceRepository<ProcessEngineEventEntity, Long>,
+                                          PagingAndSortingRepository<ProcessEngineEventEntity, Long>,
                                           QuerydslPredicateExecutor<ProcessEngineEventEntity>,
                                           QuerydslBinderCustomizer<QProcessEngineEventEntity> {
 
