@@ -13,6 +13,11 @@
   <version>7-201711-EA-ffazzini_1481_remove_controller_jpa-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <version.activiti>7-201711-EA-SNAPSHOT</version.activiti>
+    <version.activiti.cloud>7-201711-EA-SNAPSHOT</version.activiti.cloud>
+  </properties>
+
   <modules>
     <module>activiti-cloud-services-audit</module>
     <module>activiti-cloud-starter-audit</module>
