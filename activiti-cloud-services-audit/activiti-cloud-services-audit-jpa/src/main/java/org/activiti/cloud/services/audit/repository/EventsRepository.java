@@ -23,18 +23,20 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.rest.core.annotation.Description;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource(exported = false)
+@RepositoryRestResource(path = EventsRelProvider.COLLECTION_RESOURCE_REL,
+        collectionResourceDescription = @Description("Collection of event resources"),
+        collectionResourceRel = EventsRelProvider.COLLECTION_RESOURCE_REL)
 public interface EventsRepository extends PagingAndSortingRepository<ProcessEngineEventEntity, Long>,
                                           QuerydslPredicateExecutor<ProcessEngineEventEntity>,
                                           QuerydslBinderCustomizer<QProcessEngineEventEntity> {
 
     @Override
     default void customize(QuerydslBindings bindings,
-                   QProcessEngineEventEntity root) {
+                           QProcessEngineEventEntity root) {
         bindings.bind(String.class).first(
                 (StringPath path, String value) -> path.eq(value));
     }
-
 }
