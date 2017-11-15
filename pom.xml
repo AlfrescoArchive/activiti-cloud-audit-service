@@ -4,7 +4,8 @@
   <parent>
     <groupId>org.activiti.cloud</groupId>
     <artifactId>activiti-cloud-parent</artifactId>
-    <version>7-201711-EA-SNAPSHOT</version>
+    <!-- TODO revert before merging-->
+    <version>7-201711-EA-salaboy_1560_parent_deps_link-SNAPSHOT</version>
   </parent>
 
   <artifactId>activiti-cloud-audit-service-parent</artifactId>
@@ -14,8 +15,11 @@
   <packaging>pom</packaging>
 
   <properties>
-    <version.activiti>7-201711-EA-SNAPSHOT</version.activiti>
-    <version.activiti.cloud>7-201711-EA-SNAPSHOT</version.activiti.cloud>
+    <!--
+    Override property from activiti-cloud-parent that's set to the default snapshot version.
+    This allow to easily create feature branches with a different Maven version.
+    -->
+    <version.activiti.cloud.audit>${project.version}</version.activiti.cloud.audit>
   </properties>
 
   <modules>
