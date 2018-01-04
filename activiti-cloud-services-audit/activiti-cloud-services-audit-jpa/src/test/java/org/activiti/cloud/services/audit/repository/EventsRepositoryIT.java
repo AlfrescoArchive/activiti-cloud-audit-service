@@ -16,7 +16,6 @@
 
 package org.activiti.cloud.services.audit.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.activiti.cloud.services.audit.events.ActivityStartedEventEntity;
 import org.activiti.cloud.services.audit.events.ProcessEngineEventEntity;
 import org.junit.Test;
@@ -46,10 +45,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EventsRepositoryIT {
 
     private static final String DOCUMENTATION_IDENTIFIER = "events";
+
     @Autowired
-    EventsRepository eventsRepository;
-    @Autowired
-    ObjectMapper mapper;
+    private EventsRepository eventsRepository;
+
     @Autowired
     private MockMvc mockMvc;
 
