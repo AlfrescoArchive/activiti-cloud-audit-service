@@ -68,7 +68,7 @@ public class EventsRepositoryIT {
                                 responseFields(
                                         subsectionWithPath("_embedded.events").description("A list of events "),
                                         subsectionWithPath("_links.self").description("Resource Self Link"),
-                                        subsectionWithPath("_links.profile").description("Resource Profile Link"),
+//                                        subsectionWithPath("_links.profile").description("Resource Profile Link"),
                                         subsectionWithPath("page").description("Pagination details."))));
     }
 
@@ -77,7 +77,7 @@ public class EventsRepositoryIT {
         mockMvc.perform(head("{version}/events",
                              API_VERSION))
                 .andDo(print())
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_IDENTIFIER + "/head/list"));
     }
 
@@ -107,7 +107,7 @@ public class EventsRepositoryIT {
                              API_VERSION,
                              activitiStartedEvent.getId()))
                 .andDo(print())
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_IDENTIFIER + "/head"));
     }
 }
