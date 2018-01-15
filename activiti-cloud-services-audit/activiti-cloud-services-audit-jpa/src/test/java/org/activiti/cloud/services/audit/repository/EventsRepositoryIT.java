@@ -55,7 +55,7 @@ public class EventsRepositoryIT {
     @Test
     public void getEvents() throws Exception {
         mockMvc.perform(get("{version}/events",
-                            "v1")
+                            "/v1")
                                 .param("page",
                                        "0")
                                 .param("size",
@@ -75,7 +75,7 @@ public class EventsRepositoryIT {
     @Test
     public void headEvents() throws Exception {
         mockMvc.perform(head("{version}/events",
-                             "v1"))
+                             "/v1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_IDENTIFIER + "/head/list"));
@@ -86,7 +86,7 @@ public class EventsRepositoryIT {
         ProcessEngineEventEntity event = new ActivityStartedEventEntity();
         final ProcessEngineEventEntity activitiStartedEvent = eventsRepository.save(event);
         mockMvc.perform(get("{version}/events/{id}",
-                            "v1",
+                            "/v1",
                             activitiStartedEvent.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -104,7 +104,7 @@ public class EventsRepositoryIT {
         ProcessEngineEventEntity event = new ActivityStartedEventEntity();
         final ProcessEngineEventEntity activitiStartedEvent = eventsRepository.save(event);
         mockMvc.perform(head("{version}/events/{id}",
-                             "v1",
+                             "/v1",
                              activitiStartedEvent.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
