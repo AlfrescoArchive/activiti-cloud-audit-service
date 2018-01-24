@@ -39,7 +39,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.activiti.cloud.starters.test.ActivityEventBuilder.aActivityStartedEvent;
+import static org.activiti.cloud.starters.test.builder.ActivityEventBuilder.aActivityStartedEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.awaitility.Awaitility.await;
