@@ -1,15 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
-
   <parent>
     <groupId>org.activiti.cloud</groupId>
     <artifactId>activiti-cloud-services-audit</artifactId>
     <version>7-201802-EA-SNAPSHOT</version>
   </parent>
-
   <artifactId>activiti-cloud-services-audit-mongo</artifactId>
-
+  <name>Activiti Cloud Audit - Services - Audit MongoDB</name>
   <dependencies>
     <dependency>
       <groupId>org.activiti.cloud</groupId>
@@ -91,7 +90,6 @@
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-mongodb</artifactId>
     </dependency>
-
     <!-- Test dependencies-->
     <dependency>
       <groupId>junit</groupId>
@@ -124,7 +122,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>

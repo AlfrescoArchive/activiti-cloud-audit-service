@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -8,7 +9,7 @@
   </parent>
 
   <artifactId>activiti-cloud-starter-audit</artifactId>
-  <name>Activiti Cloud Starter :: Audit</name>
+  <name>Activiti Cloud Audit - Starter - Audit</name>
   <dependencies>
     <dependency>
       <groupId>org.activiti.cloud</groupId>
@@ -173,13 +174,8 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.commonjava.maven.plugins</groupId>
-        <artifactId>directory-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
-        <version>${maven.docker.plugin.version}</version>
         <configuration>
           <images>
             <!-- A single's image configuration -->
