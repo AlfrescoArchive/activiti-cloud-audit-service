@@ -23,6 +23,8 @@ import org.activiti.cloud.services.audit.assembler.EventResourceAssembler;
 import org.activiti.cloud.services.audit.events.ProcessEngineEventEntity;
 import org.activiti.cloud.services.audit.repository.EventsRepository;
 import org.activiti.cloud.services.audit.resources.EventResource;
+import org.activiti.cloud.services.security.SecurityPoliciesApplicationService;
+import org.activiti.cloud.services.security.SecurityPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
@@ -43,13 +45,17 @@ public class ProcessEngineEventsController {
 
     private PagedResourcesAssembler<ProcessEngineEventEntity> pagedResourcesAssembler;
 
+    private SecurityPoliciesApplicationService securityPoliciesApplicationService;
+
     @Autowired
     public ProcessEngineEventsController(EventsRepository eventsRepository,
                                          EventResourceAssembler eventResourceAssembler,
-                                         PagedResourcesAssembler<ProcessEngineEventEntity> pagedResourcesAssembler) {
+                                         PagedResourcesAssembler<ProcessEngineEventEntity> pagedResourcesAssembler,
+                                         SecurityPoliciesApplicationService securityPoliciesApplicationService) {
         this.eventsRepository = eventsRepository;
         this.eventResourceAssembler = eventResourceAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.securityPoliciesApplicationService = securityPoliciesApplicationService;
     }
 
     @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
@@ -58,12 +64,20 @@ public class ProcessEngineEventsController {
         if (!findResult.isPresent()) {
             throw new RuntimeException("Unable to find event for the given id:'" + eventId + "'");
         }
-        return eventResourceAssembler.toResource(findResult.get());
+        ProcessEngineEventEntity processEngineEventEntity = findResult.get();
+        if (!securityPoliciesApplicationService.canRead(processEngineEventEntity.getProcessDefinitionId(),processEngineEventEntity.getApplicationName())){
+            throw new RuntimeException("Operation not permitted for " + processEngineEventEntity.getProcessDefinitionId());
+        }
+        return eventResourceAssembler.toResource(processEngineEventEntity);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public PagedResources<EventResource> findAll(@QuerydslPredicate(root = ProcessEngineEventEntity.class) Predicate predicate,
                                                  Pageable pageable) {
+
+        predicate = securityPoliciesApplicationService.restrictProcessEngineEventQuery(predicate,
+                SecurityPolicy.READ);
+
         return pagedResourcesAssembler.toResource(eventsRepository.findAll(predicate,
                                                                            pageable),
                                                   eventResourceAssembler);
