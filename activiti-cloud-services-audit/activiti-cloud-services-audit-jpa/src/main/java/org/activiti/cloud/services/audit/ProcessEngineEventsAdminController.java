@@ -30,8 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping(value = "/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL)
 public class ProcessEngineEventsAdminController {
