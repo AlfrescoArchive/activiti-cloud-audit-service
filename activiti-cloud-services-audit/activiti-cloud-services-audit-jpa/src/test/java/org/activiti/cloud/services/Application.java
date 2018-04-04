@@ -18,8 +18,10 @@ package org.activiti.cloud.services;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"org.activiti.cloud.services","org.activiti.cloud.alfresco"})
 public class Application {
 
     public static void main(String[] args) {

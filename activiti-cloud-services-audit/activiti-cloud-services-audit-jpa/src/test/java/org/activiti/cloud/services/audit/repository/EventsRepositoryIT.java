@@ -16,15 +16,16 @@
 
 package org.activiti.cloud.services.audit.repository;
 
-import org.activiti.cloud.services.audit.ProcessEngineEventsController;
 import org.activiti.cloud.services.audit.events.ActivityStartedEventEntity;
 import org.activiti.cloud.services.audit.events.ProcessEngineEventEntity;
+import org.activiti.cloud.services.audit.events.ProcessStartedEventEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -37,6 +38,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
+import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -45,6 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EventsRepositoryIT {
 
     private static final String DOCUMENTATION_IDENTIFIER = "events";
+    private static final String DOCUMENTATION_ALFRESCO_IDENTIFIER = "events-alfresco";
 
     @Autowired
     private EventsRepository eventsRepository;
@@ -70,6 +74,22 @@ public class EventsRepositoryIT {
                                         subsectionWithPath("_links.self").description("Resource Self Link"),
 //                                        subsectionWithPath("_links.profile").description("Resource Profile Link"),
                                         subsectionWithPath("page").description("Pagination details."))));
+    }
+
+    @Test
+    public void getEventsAlfresco() throws Exception {
+
+        ProcessEngineEventEntity entity = new ProcessStartedEventEntity();
+        eventsRepository.save(entity);
+        
+        mockMvc.perform(get("{version}/events?skipCount=0&maxItems=25",
+                "/v1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document(DOCUMENTATION_ALFRESCO_IDENTIFIER + "/list",
+                        pageRequestParameters(),
+                        pagedResourcesResponseFields()
+                ));
     }
 
     @Test
