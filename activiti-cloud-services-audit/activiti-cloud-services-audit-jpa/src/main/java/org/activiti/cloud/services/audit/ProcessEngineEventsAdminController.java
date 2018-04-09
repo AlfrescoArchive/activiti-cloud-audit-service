@@ -56,7 +56,7 @@ public class ProcessEngineEventsAdminController {
                                                  Pageable pageable) {
 
 
-        return pagedResourcesAssembler.toResource(eventsRepository.findAll(predicate,
+        return pagedResourcesAssembler.toResource(pageable,eventsRepository.findAll(predicate,
                                                                            pageable),
                                                   eventResourceAssembler);
     }
