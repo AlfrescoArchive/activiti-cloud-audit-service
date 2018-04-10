@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.cloud.services.audit.repository;
+package org.activiti.cloud.services.audit.mongo.controller;
 
+import com.querydsl.core.types.Predicate;
 import org.activiti.cloud.alfresco.argument.resolver.AlfrescoPageRequest;
-import org.activiti.cloud.services.audit.TestProcessEngineEventEntity;
-import org.activiti.cloud.services.audit.events.ActivityStartedEventEntity;
-import org.activiti.cloud.services.audit.events.ProcessEngineEventEntity;
+import org.activiti.cloud.services.audit.mongo.TestProcessEngineEventDocument;
+import org.activiti.cloud.services.audit.mongo.events.ProcessEngineEventDocument;
+import org.activiti.cloud.services.audit.mongo.repository.EventsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,20 +38,16 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
 import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/snippets")
-public class EventsRepositoryAdminIT {
+public class EventsEngineEventsAdminControllerIT {
 
     private static final String DOCUMENTATION_IDENTIFIER = "events-admin";
     private static final String DOCUMENTATION_ALFRESCO_IDENTIFIER = "events-admin-alfresco";
@@ -74,11 +71,11 @@ public class EventsRepositoryAdminIT {
     public void getEvents() throws Exception {
         PageRequest pageable = PageRequest.of(1,
                 10);
-        Page<ProcessEngineEventEntity> eventsPage = new PageImpl<>(buildEventsData(1),
+        Page<ProcessEngineEventDocument> eventsPage = new PageImpl<>(buildEventsData(1),
                 pageable,
                 10);
 
-        given(eventsRepository.findAll(any(),any(PageRequest.class))).willReturn(eventsPage);
+        given(eventsRepository.findAll((Predicate)any(),any(PageRequest.class))).willReturn(eventsPage);
 
         mockMvc.perform(get("/admin/{version}/events",
                 "v1")
@@ -100,21 +97,21 @@ public class EventsRepositoryAdminIT {
                                 subsectionWithPath("page").description("Pagination details."))));
     }
 
-    private List<ProcessEngineEventEntity> buildEventsData(int recordsNumber){
+    private List<ProcessEngineEventDocument> buildEventsData(int recordsNumber){
 
-        List<ProcessEngineEventEntity> eventsList = new ArrayList<>();
+        List<ProcessEngineEventDocument> eventsList = new ArrayList<>();
 
         for(long i=0;i<recordsNumber;i++) {
             //would like to mock this but jackson and mockito not happy together
-            TestProcessEngineEventEntity eventEntity = buildTestProcessEngineEventEntity(i);
+            TestProcessEngineEventDocument eventEntity = buildTestProcessEngineEventDocument(i+"");
             eventsList.add(eventEntity);
         }
 
         return eventsList;
     }
 
-    private TestProcessEngineEventEntity buildTestProcessEngineEventEntity(long id) {
-        TestProcessEngineEventEntity eventEntity = new TestProcessEngineEventEntity();
+    private TestProcessEngineEventDocument buildTestProcessEngineEventDocument(String id) {
+        TestProcessEngineEventDocument eventEntity = new TestProcessEngineEventDocument();
         eventEntity.setId(id);
         eventEntity.setApplicationName("rb-my-app");
         eventEntity.setEventType("ProcessStartedEvent");
@@ -133,9 +130,9 @@ public class EventsRepositoryAdminIT {
                 PageRequest.of(0,
                         20));
 
-        List<ProcessEngineEventEntity> events = buildEventsData(1);
+        List<ProcessEngineEventDocument> events = buildEventsData(1);
 
-        given(eventsRepository.findAll(any(),
+        given(eventsRepository.findAll((Predicate)any(),
                 any(AlfrescoPageRequest.class)))
                 .willReturn(new PageImpl<>(events,
                         pageRequest,
@@ -163,11 +160,11 @@ public class EventsRepositoryAdminIT {
     public void headEvents() throws Exception {
         PageRequest pageable = PageRequest.of(1,
                 10);
-        Page<ProcessEngineEventEntity> eventsPage = new PageImpl<>(buildEventsData(1),
+        Page<ProcessEngineEventDocument> eventsPage = new PageImpl<>(buildEventsData(1),
                 pageable,
                 10);
 
-        given(eventsRepository.findAll(any(),any(PageRequest.class))).willReturn(eventsPage);
+        given(eventsRepository.findAll((Predicate)any(),any(PageRequest.class))).willReturn(eventsPage);
 
         mockMvc.perform(head("/admin/{version}/events",
                 "v1"))
@@ -184,9 +181,9 @@ public class EventsRepositoryAdminIT {
                 PageRequest.of(0,
                         20));
 
-        List<ProcessEngineEventEntity> events = buildEventsData(1);
+        List<ProcessEngineEventDocument> events = buildEventsData(1);
 
-        given(eventsRepository.findAll(any(),
+        given(eventsRepository.findAll((Predicate)any(),
                 any(AlfrescoPageRequest.class)))
                 .willReturn(new PageImpl<>(events,
                         pageRequest,
@@ -199,5 +196,5 @@ public class EventsRepositoryAdminIT {
                 .andDo(print())
                 .andDo(document(DOCUMENTATION_ALFRESCO_IDENTIFIER + "/head/list"));
     }
-    
+
 }
