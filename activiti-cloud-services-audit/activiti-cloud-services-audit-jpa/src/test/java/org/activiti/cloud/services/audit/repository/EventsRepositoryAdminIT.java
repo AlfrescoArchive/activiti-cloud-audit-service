@@ -80,23 +80,24 @@ public class EventsRepositoryAdminIT {
 
         given(eventsRepository.findAll(any(),any(PageRequest.class))).willReturn(eventsPage);
 
-        mockMvc.perform(get("admin/v1/events")
-                                .param("page",
-                                       "0")
-                                .param("size",
-                                       "25")
-                                .param("sort",
-                                       "asc"))
+        mockMvc.perform(get("/admin/{version}/events",
+                "v1")
+                .param("page",
+                        "0")
+                .param("size",
+                        "25")
+                .param("sort",
+                        "asc"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_IDENTIFIER + "/list",
-                                responseFields(
-                                        subsectionWithPath("_embedded.events").description("A list of events "),
-                                        subsectionWithPath("_links.self").description("Resource Self Link"),
-                                        subsectionWithPath("_links.first").description("Pagination First Link"),
-                                        subsectionWithPath("_links.prev").description("Pagination Prev Link"),
-                                        subsectionWithPath("_links.last").description("Pagination Last Link"),
-                                        subsectionWithPath("page").description("Pagination details."))));
+                        responseFields(
+                                subsectionWithPath("_embedded.events").description("A list of events "),
+                                subsectionWithPath("_links.self").description("Resource Self Link"),
+                                subsectionWithPath("_links.first").description("Pagination First Link"),
+                                subsectionWithPath("_links.prev").description("Pagination Prev Link"),
+                                subsectionWithPath("_links.last").description("Pagination Last Link"),
+                                subsectionWithPath("page").description("Pagination details."))));
     }
 
     private List<ProcessEngineEventEntity> buildEventsData(int recordsNumber){
@@ -140,7 +141,8 @@ public class EventsRepositoryAdminIT {
                         pageRequest,
                         12));
 
-        MvcResult result = mockMvc.perform(get("admin/v1/events?skipCount=11&maxItems=10")
+        MvcResult result = mockMvc.perform(get("/admin/{version}/events?skipCount=11&maxItems=10",
+                "v1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_ALFRESCO_IDENTIFIER + "/list",
@@ -167,7 +169,8 @@ public class EventsRepositoryAdminIT {
 
         given(eventsRepository.findAll(any(),any(PageRequest.class))).willReturn(eventsPage);
 
-        mockMvc.perform(head("admin/v1/events"))
+        mockMvc.perform(head("/admin/{version}/events",
+                "v1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_IDENTIFIER + "/head/list"));
@@ -189,79 +192,12 @@ public class EventsRepositoryAdminIT {
                         pageRequest,
                         12));
 
-        mockMvc.perform(head("admin/v1/events?skipCount=11&maxItems=10")
+        mockMvc.perform(head("/admin/{version}/events?skipCount=11&maxItems=10",
+                "v1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document(DOCUMENTATION_ALFRESCO_IDENTIFIER + "/head/list"));
     }
-
-    @Test
-    public void getEventById() throws Exception {
-
-        ProcessEngineEventEntity eventEntity = buildTestProcessEngineEventEntity(1);
-
-        given(eventsRepository.findById(anyLong())).willReturn(Optional.of(eventEntity));
-
-        mockMvc.perform(get("admin/v1/events/{id}",
-                eventEntity.getId()))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document(DOCUMENTATION_IDENTIFIER + "/get",
-                                pathParameters(parameterWithName("id").description("The event id"),
-                                               parameterWithName("version").description("The API version")),
-                                responseFields(
-                                        subsectionWithPath("id").description("The event id"),
-                                        subsectionWithPath("_links").description("<<resources-index-links,Links>> to other resources"),
-                                        subsectionWithPath("timestamp").description("The event timestamp"),
-                                        subsectionWithPath("eventType").description("The event type"),
-                                        subsectionWithPath("executionId").description("The execution id"),
-                                        subsectionWithPath("processDefinitionId").description("The process definition id"),
-                                        subsectionWithPath("processInstanceId").description("The process instance id"),
-                                        subsectionWithPath("applicationName").description("The application name")
-                                )));
-    }
-
-
-    @Test
-    public void getEventByIdAlfresco() throws Exception {
-
-        ProcessEngineEventEntity eventEntity = buildTestProcessEngineEventEntity(1);
-
-        given(eventsRepository.findById(anyLong())).willReturn(Optional.of(eventEntity));
-
-        mockMvc.perform(get("admin/v1/events/{id}",
-                eventEntity.getId()).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document(DOCUMENTATION_ALFRESCO_IDENTIFIER + "/get",
-                        pathParameters(parameterWithName("id").description("The event id"),
-                                parameterWithName("version").description("The API version")),
-                        responseFields(
-                                subsectionWithPath("entry").ignored(),
-                                subsectionWithPath("entry.id").description("The event id"),
-                                subsectionWithPath("entry.timestamp").description("The event timestamp"),
-                                subsectionWithPath("entry.eventType").description("The event type"),
-                                subsectionWithPath("entry.executionId").description("The execution id"),
-                                subsectionWithPath("entry.processDefinitionId").description("The process definition id"),
-                                subsectionWithPath("entry.processInstanceId").description("The process instance id"),
-                                subsectionWithPath("entry.applicationName").description("The application name")
-                        )));
-    }
-
-    @Test
-    public void headEventById() throws Exception {
-
-        ProcessEngineEventEntity eventEntity = buildTestProcessEngineEventEntity(1);
-
-        given(eventsRepository.findById(anyLong())).willReturn(Optional.of(eventEntity));
-
-        ProcessEngineEventEntity event = new ActivityStartedEventEntity();
-
-        mockMvc.perform(head("admin/v1/events/{id}",
-                eventEntity.getId()))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document(DOCUMENTATION_IDENTIFIER + "/head"));
-    }
+    
 }
