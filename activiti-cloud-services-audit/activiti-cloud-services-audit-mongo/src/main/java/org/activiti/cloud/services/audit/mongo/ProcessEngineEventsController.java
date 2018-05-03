@@ -80,8 +80,10 @@ public class ProcessEngineEventsController {
         predicate = securityPoliciesApplicationService.restrictProcessEngineEventQuery(predicate,
                 SecurityPolicy.READ);
 
-        return pagedResourcesAssembler.toResource(pageable,eventsRepository.findAll(predicate,
+        return pagedResourcesAssembler.toResource(pageable,
+                                                  eventsRepository.findAll(predicate,
                                                                            pageable),
+                                                  ProcessEngineEventDocument.class,
                                                   eventResourceAssembler);
     }
 }
