@@ -81,7 +81,10 @@ public class ProcessEngineEventsController {
                 SecurityPolicy.READ);
 
 
-        return pagedResourcesAssembler.toResource(pageable,eventsRepository.findAll(predicate,
-                pageable),eventResourceAssembler);
+        return pagedResourcesAssembler.toResource(pageable,
+                                                  eventsRepository.findAll(predicate,
+                                                                           pageable),
+                                                  ProcessEngineEventEntity.class,
+                                                  eventResourceAssembler);
     }
 }
