@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan({"org.activiti.cloud.services.audit"})
 public class ActivitiAuditMongoAutoConfiguration {
-    
+
     @Bean
     @ConditionalOnMissingBean
     public SecurityPoliciesApplicationService securityPoliciesApplicationService(){
