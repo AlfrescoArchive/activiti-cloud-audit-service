@@ -11,8 +11,8 @@
   <name>Activiti Cloud Audit :: Services :: Audit API</name>
   <dependencies>
     <dependency>
-      <groupId>org.activiti</groupId>
-      <artifactId>activiti-cloud-common-model-api</artifactId>
+      <groupId>org.activiti.api</groupId>
+      <artifactId>activiti-cloud-api-model-shared</artifactId>
     </dependency>
     <dependency>
       <groupId>org.activiti</groupId>
