@@ -26,7 +26,7 @@ import java.util.UUID;
 
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
 import org.activiti.cloud.starters.test.MyProducer;
-import org.activiti.runtime.api.event.BPMNActivityEvent;
+import org.activiti.api.process.model.events.BPMNActivityEvent;
 import org.activiti.runtime.api.event.CloudBPMNActivityEvent;
 import org.activiti.runtime.api.event.CloudBPMNActivityStarted;
 import org.activiti.runtime.api.event.CloudRuntimeEvent;
@@ -44,7 +44,7 @@ import org.activiti.runtime.api.event.impl.CloudTaskAssignedEventImpl;
 import org.activiti.runtime.api.event.impl.CloudTaskCancelledEventImpl;
 import org.activiti.runtime.api.event.impl.CloudTaskCompletedEventImpl;
 import org.activiti.runtime.api.event.impl.CloudTaskCreatedEventImpl;
-import org.activiti.runtime.api.model.Task;
+import org.activiti.api.task.model.Task;
 import org.activiti.runtime.api.model.impl.BPMNActivityImpl;
 import org.activiti.runtime.api.model.impl.ProcessInstanceImpl;
 import org.activiti.runtime.api.model.impl.TaskImpl;

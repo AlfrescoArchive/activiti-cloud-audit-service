@@ -3,7 +3,7 @@ package org.activiti.cloud.services.audit.jpa.converters;
 import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
 import org.activiti.cloud.services.audit.jpa.events.ActivityCompletedAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
-import org.activiti.runtime.api.event.BPMNActivityEvent;
+import org.activiti.api.process.model.events.BPMNActivityEvent;
 import org.activiti.runtime.api.event.CloudBPMNActivityCompleted;
 import org.activiti.runtime.api.event.CloudRuntimeEvent;
 import org.activiti.runtime.api.event.impl.CloudBPMNActivityCompletedEventImpl;

@@ -18,7 +18,7 @@ package org.activiti.cloud.services.audit.jpa.converters;
 
 import org.activiti.cloud.services.audit.jpa.converters.json.SequenceFlowJpaJsonConverter;
 import org.activiti.runtime.api.model.BPMNElement;
-import org.activiti.runtime.api.model.SequenceFlow;
+import org.activiti.api.process.model.ProcessInstanceMeta;
 import org.activiti.runtime.api.model.impl.SequenceFlowImpl;
 import org.junit.Test;
 

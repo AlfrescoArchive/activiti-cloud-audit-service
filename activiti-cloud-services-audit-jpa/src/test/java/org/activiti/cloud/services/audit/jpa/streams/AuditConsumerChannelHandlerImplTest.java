@@ -21,7 +21,7 @@ import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
 import org.activiti.runtime.api.event.CloudRuntimeEvent;
-import org.activiti.runtime.api.event.ProcessRuntimeEvent;
+import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

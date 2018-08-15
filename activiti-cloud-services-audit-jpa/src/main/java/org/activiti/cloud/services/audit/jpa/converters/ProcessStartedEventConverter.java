@@ -5,7 +5,7 @@ import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.ProcessStartedAuditEventEntity;
 import org.activiti.runtime.api.event.CloudProcessStarted;
 import org.activiti.runtime.api.event.CloudRuntimeEvent;
-import org.activiti.runtime.api.event.ProcessRuntimeEvent;
+import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.activiti.runtime.api.event.impl.CloudProcessStartedEventImpl;
 import org.springframework.stereotype.Component;
 

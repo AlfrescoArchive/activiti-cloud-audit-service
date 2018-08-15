@@ -21,7 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 
 import org.activiti.runtime.api.event.VariableEvent;
-import org.activiti.runtime.api.model.VariableInstance;
+import org.activiti.api.model.shared.model.VariableInstance;
 
 @Entity
 @DiscriminatorValue(value = VariableCreatedEventEntity.VARIABLE_CREATED_EVENT)

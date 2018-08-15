@@ -5,7 +5,7 @@ import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.ProcessSuspendedAuditEventEntity;
 import org.activiti.runtime.api.event.CloudProcessSuspended;
 import org.activiti.runtime.api.event.CloudRuntimeEvent;
-import org.activiti.runtime.api.event.ProcessRuntimeEvent;
+import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.activiti.runtime.api.event.impl.CloudProcessSuspendedEventImpl;
 import org.springframework.stereotype.Component;
 

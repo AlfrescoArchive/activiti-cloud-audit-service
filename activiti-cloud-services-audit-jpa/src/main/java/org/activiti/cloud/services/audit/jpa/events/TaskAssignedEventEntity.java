@@ -21,7 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 
 import org.activiti.runtime.api.event.TaskRuntimeEvent;
-import org.activiti.runtime.api.model.Task;
+import org.activiti.api.task.model.Task;
 
 @Entity
 @DiscriminatorValue(value = TaskAssignedEventEntity.TASK_ASSIGNED_EVENT)
