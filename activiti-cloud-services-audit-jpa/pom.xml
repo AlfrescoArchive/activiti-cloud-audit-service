@@ -259,7 +259,9 @@
         </executions>
         <configuration>
           <packages>
-            <package>org.activiti.runtime.api.model</package>
+            <package>org.activiti.api.process.model</package>
+            <package>org.activiti.api.task.model</package>
+            <package>org.activiti.api.model.shared.model</package>
           </packages>
           <classes>
             <class>org.springframework.http.ResponseEntity</class>

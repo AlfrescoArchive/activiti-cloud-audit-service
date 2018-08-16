@@ -21,11 +21,10 @@ import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
 
+import org.activiti.api.process.model.SequenceFlow;
+import org.activiti.api.process.model.events.SequenceFlowEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.SequenceFlowJpaJsonConverter;
-import org.activiti.runtime.api.event.SequenceFlowEvent;
-import org.activiti.api.process.model.ProcessInstanceMeta;
 
 @Entity
 @DiscriminatorValue(value = SequenceFlowAuditEventEntity.SEQUENCE_FLOW_TAKEN_EVENT)
