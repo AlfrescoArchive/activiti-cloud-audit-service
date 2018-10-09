@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.activiti.cloud.build</groupId>
     <artifactId>activiti-cloud-parent</artifactId>
-    <version>7.0.31</version>
+    <version>7.0.0.TEST1</version>
     <relativePath/>
   </parent>
   <groupId>org.activiti.cloud.audit</groupId>
   <artifactId>activiti-cloud-audit-service-parent</artifactId>
-  <version>7.0.23</version>
+  <version>7.0.0.TEST1</version>
   <packaging>pom</packaging>
   <name>Activiti Cloud Audit :: Parent</name>
   <url>http://activiti.org</url>
@@ -41,9 +41,9 @@
     </repository>
   </repositories>
   <properties>
-    <activiti-cloud-build.version>7.0.31</activiti-cloud-build.version>       
-    <activiti-cloud-service-common.version>7.0.28</activiti-cloud-service-common.version>
-    <activiti-cloud-audit-service.version>${project.version}</activiti-cloud-audit-service.version>
+    <activiti-cloud-build.version>7.0.0.TEST1</activiti-cloud-build.version>       
+    <activiti-cloud-service-common.version>7.0.0.TEST1</activiti-cloud-service-common.version>
+    <activiti-cloud-audit-service.version>7.0.0.TEST1</activiti-cloud-audit-service.version>
   </properties>
   <dependencyManagement>
     <!-- This duplicates activiti-cloud-audit-dependencies module but we can't import that module here as this is its parent
