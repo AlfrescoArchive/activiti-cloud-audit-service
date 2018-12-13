@@ -20,16 +20,26 @@ public class TaskCompletedEventConverter implements EventToEntityConverter<Audit
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudTaskCompletedEvent cloudTaskCompletedEvent = (CloudTaskCompletedEvent) cloudRuntimeEvent;
-        TaskCompletedEventEntity taskCompletedEventEntity = new TaskCompletedEventEntity(cloudTaskCompletedEvent.getId(),
-                                                                                         cloudTaskCompletedEvent.getTimestamp(),
-                                                                                         cloudTaskCompletedEvent.getAppName(),
-                                                                                         cloudTaskCompletedEvent.getAppVersion(),
-                                                                                         cloudTaskCompletedEvent.getServiceFullName(),
-                                                                                         cloudTaskCompletedEvent.getServiceName(),
-                                                                                         cloudTaskCompletedEvent.getServiceType(),
-                                                                                         cloudTaskCompletedEvent.getServiceVersion(),
-                                                                                         cloudTaskCompletedEvent.getEntity());
-        return taskCompletedEventEntity;
+        
+        TaskCompletedEventEntity eventEntity = new TaskCompletedEventEntity(cloudTaskCompletedEvent.getId(),
+                                                                            cloudTaskCompletedEvent.getTimestamp(),
+                                                                            cloudTaskCompletedEvent.getAppName(),
+                                                                            cloudTaskCompletedEvent.getAppVersion(),
+                                                                            cloudTaskCompletedEvent.getServiceName(),
+                                                                            cloudTaskCompletedEvent.getServiceFullName(),
+                                                                            cloudTaskCompletedEvent.getServiceType(),
+                                                                            cloudTaskCompletedEvent.getServiceVersion(),
+                                                                            cloudTaskCompletedEvent.getEntity());
+        
+        eventEntity.setBaseProcessData(cloudTaskCompletedEvent.getEntityId(),
+                                       cloudTaskCompletedEvent.getProcessInstanceId(),
+                                       cloudTaskCompletedEvent.getProcessDefinitionId(),
+                                       cloudTaskCompletedEvent.getProcessDefinitionKey(),
+                                       cloudTaskCompletedEvent.getBusinessKey(),
+                                       cloudTaskCompletedEvent.getParentProcessInstanceId());
+        
+        
+        return eventEntity;
     }
 
     @Override

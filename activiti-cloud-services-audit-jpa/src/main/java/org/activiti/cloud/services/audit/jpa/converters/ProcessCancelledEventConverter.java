@@ -20,18 +20,25 @@ public class ProcessCancelledEventConverter implements EventToEntityConverter<Au
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudProcessCancelledEvent cloudProcessCancelledEvent = (CloudProcessCancelledEvent) cloudRuntimeEvent;
-        ProcessCancelledAuditEventEntity processCancelledEventEntity = new ProcessCancelledAuditEventEntity(cloudProcessCancelledEvent.getId(),
-                                                                                                            cloudProcessCancelledEvent.getTimestamp(),
-                                                                                                            cloudProcessCancelledEvent.getCause());
-        processCancelledEventEntity.setAppName(cloudProcessCancelledEvent.getAppName());
-        processCancelledEventEntity.setAppVersion(cloudProcessCancelledEvent.getAppVersion());
-        processCancelledEventEntity.setServiceFullName(cloudProcessCancelledEvent.getServiceFullName());
-        processCancelledEventEntity.setServiceName(cloudProcessCancelledEvent.getServiceName());
-        processCancelledEventEntity.setServiceType(cloudProcessCancelledEvent.getServiceType());
-        processCancelledEventEntity.setServiceVersion(cloudProcessCancelledEvent.getServiceVersion());
-        processCancelledEventEntity.setProcessInstance(cloudProcessCancelledEvent.getEntity());
+        ProcessCancelledAuditEventEntity eventEntity = new ProcessCancelledAuditEventEntity(cloudProcessCancelledEvent.getId(),
+                                                                                            cloudProcessCancelledEvent.getTimestamp(),
+                                                                                            cloudProcessCancelledEvent.getAppName(),
+                                                                                            cloudProcessCancelledEvent.getAppVersion(),
+                                                                                            cloudProcessCancelledEvent.getServiceName(),
+                                                                                            cloudProcessCancelledEvent.getServiceFullName(),
+                                                                                            cloudProcessCancelledEvent.getServiceType(),
+                                                                                            cloudProcessCancelledEvent.getServiceVersion(),
+                                                                                            cloudProcessCancelledEvent.getEntity(),
+                                                                                            cloudProcessCancelledEvent.getCause());
         
-        return processCancelledEventEntity;
+        eventEntity.setBaseProcessData(cloudProcessCancelledEvent.getEntityId(),
+                                       cloudProcessCancelledEvent.getProcessInstanceId(),
+                                       cloudProcessCancelledEvent.getProcessDefinitionId(),
+                                       cloudProcessCancelledEvent.getProcessDefinitionKey(),
+                                       cloudProcessCancelledEvent.getBusinessKey(),
+                                       cloudProcessCancelledEvent.getParentProcessInstanceId());
+        
+        return eventEntity;
     }
 
     @Override

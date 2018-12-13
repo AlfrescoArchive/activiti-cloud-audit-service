@@ -20,17 +20,24 @@ public class ProcessCompletedEventConverter implements EventToEntityConverter<Au
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudProcessCompletedEvent cloudProcessCompletedEvent = (CloudProcessCompletedEvent) cloudRuntimeEvent;
-        ProcessCompletedEventEntity processCompletedEventEntity = new ProcessCompletedEventEntity(cloudProcessCompletedEvent.getId(),
-                                                                                                  cloudProcessCompletedEvent.getTimestamp(),
-                                                                                                  cloudProcessCompletedEvent.getAppName(),
-                                                                                                  cloudProcessCompletedEvent.getAppVersion(),
-                                                                                                  cloudProcessCompletedEvent.getServiceFullName(),
-                                                                                                  cloudProcessCompletedEvent.getServiceName(),
-                                                                                                  cloudProcessCompletedEvent.getServiceType(),
-                                                                                                  cloudProcessCompletedEvent.getServiceVersion(),
-                                                                                                  cloudProcessCompletedEvent.getEntity());
+        ProcessCompletedEventEntity eventEntity = new ProcessCompletedEventEntity(cloudProcessCompletedEvent.getId(),
+                                                                                  cloudProcessCompletedEvent.getTimestamp(),
+                                                                                  cloudProcessCompletedEvent.getAppName(),
+                                                                                  cloudProcessCompletedEvent.getAppVersion(),
+                                                                                  cloudProcessCompletedEvent.getServiceName(),
+                                                                                  cloudProcessCompletedEvent.getServiceFullName(),
+                                                                                  cloudProcessCompletedEvent.getServiceType(),
+                                                                                  cloudProcessCompletedEvent.getServiceVersion(),
+                                                                                  cloudProcessCompletedEvent.getEntity());
+             
+        eventEntity.setBaseProcessData(cloudProcessCompletedEvent.getEntityId(),
+                                       cloudProcessCompletedEvent.getProcessInstanceId(),
+                                       cloudProcessCompletedEvent.getProcessDefinitionId(),
+                                       cloudProcessCompletedEvent.getProcessDefinitionKey(),
+                                       cloudProcessCompletedEvent.getBusinessKey(),
+                                       cloudProcessCompletedEvent.getParentProcessInstanceId());
 
-        return processCompletedEventEntity;
+        return eventEntity;
     }
 
     @Override

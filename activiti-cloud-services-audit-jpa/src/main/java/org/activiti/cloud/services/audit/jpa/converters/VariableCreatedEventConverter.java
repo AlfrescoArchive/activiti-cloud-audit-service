@@ -21,19 +21,28 @@ public class VariableCreatedEventConverter implements EventToEntityConverter<Aud
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudVariableCreatedEvent cloudVariableCreatedEvent = (CloudVariableCreatedEvent) cloudRuntimeEvent;
         
-        VariableCreatedEventEntity variableCreatedEventEntity = new VariableCreatedEventEntity(cloudVariableCreatedEvent.getId(),
-                                       cloudVariableCreatedEvent.getTimestamp(),
-                                       cloudVariableCreatedEvent.getAppName(),
-                                       cloudVariableCreatedEvent.getAppVersion(),
-                                       cloudVariableCreatedEvent.getServiceFullName(),
-                                       cloudVariableCreatedEvent.getServiceName(),
-                                       cloudVariableCreatedEvent.getServiceType(),
-                                       cloudVariableCreatedEvent.getServiceVersion(),
-                                       cloudVariableCreatedEvent.getEntity());
+        VariableCreatedEventEntity eventEntity = new VariableCreatedEventEntity(cloudVariableCreatedEvent.getId(),
+                                                                                cloudVariableCreatedEvent.getTimestamp(),
+                                                                                cloudVariableCreatedEvent.getAppName(),
+                                                                                cloudVariableCreatedEvent.getAppVersion(),
+                                                                                cloudVariableCreatedEvent.getServiceFullName(),
+                                                                                cloudVariableCreatedEvent.getServiceName(),
+                                                                                cloudVariableCreatedEvent.getServiceType(),
+                                                                                cloudVariableCreatedEvent.getServiceVersion(),
+                                                                                cloudVariableCreatedEvent.getEntity());
         
-        variableCreatedEventEntity.setProcessDefinitionId(cloudVariableCreatedEvent.getProcessDefinitionId());
+         
         
-        return variableCreatedEventEntity;
+        eventEntity.setBaseProcessData(cloudVariableCreatedEvent.getEntityId(),
+                                       cloudVariableCreatedEvent.getProcessInstanceId(),
+                                       cloudVariableCreatedEvent.getProcessDefinitionId(),
+                                       cloudVariableCreatedEvent.getProcessDefinitionKey(),
+                                       cloudVariableCreatedEvent.getBusinessKey(),
+                                       cloudVariableCreatedEvent.getParentProcessInstanceId());
+        
+        
+        
+        return eventEntity;
     }
 
     @Override

@@ -20,19 +20,24 @@ public class ProcessUpdatedEventConverter implements EventToEntityConverter<Audi
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudProcessUpdatedEvent cloudProcessUpdated = (CloudProcessUpdatedEvent) cloudRuntimeEvent;
-        ProcessUpdatedAuditEventEntity processUpdatedAuditEventEntity = new ProcessUpdatedAuditEventEntity(cloudProcessUpdated.getId(),
-                                                                                                           cloudProcessUpdated.getTimestamp());
-        processUpdatedAuditEventEntity.setAppName(cloudProcessUpdated.getAppName());
-        processUpdatedAuditEventEntity.setAppVersion(cloudProcessUpdated.getAppVersion());
-        processUpdatedAuditEventEntity.setServiceFullName(cloudProcessUpdated.getServiceFullName());
-        processUpdatedAuditEventEntity.setServiceName(cloudProcessUpdated.getServiceName());
-        processUpdatedAuditEventEntity.setServiceType(cloudProcessUpdated.getServiceType());
-        processUpdatedAuditEventEntity.setServiceVersion(cloudProcessUpdated.getServiceVersion());
-        processUpdatedAuditEventEntity.setProcessDefinitionId(cloudProcessUpdated.getEntity().getProcessDefinitionId());
-        processUpdatedAuditEventEntity.setProcessInstanceId(cloudProcessUpdated.getEntity().getId());
-        processUpdatedAuditEventEntity.setProcessInstance(cloudProcessUpdated.getEntity());
+         
+        ProcessUpdatedAuditEventEntity eventEntity = new ProcessUpdatedAuditEventEntity(cloudProcessUpdated.getId(),
+                                                                                        cloudProcessUpdated.getTimestamp(),
+                                                                                        cloudProcessUpdated.getAppName(),
+                                                                                        cloudProcessUpdated.getAppVersion(),
+                                                                                        cloudProcessUpdated.getServiceName(),
+                                                                                        cloudProcessUpdated.getServiceFullName(),
+                                                                                        cloudProcessUpdated.getServiceType(),
+                                                                                        cloudProcessUpdated.getServiceVersion(),
+                                                                                        cloudProcessUpdated.getEntity());
+        eventEntity.setBaseProcessData(cloudProcessUpdated.getEntityId(),
+                                       cloudProcessUpdated.getProcessInstanceId(),
+                                       cloudProcessUpdated.getProcessDefinitionId(),
+                                       cloudProcessUpdated.getProcessDefinitionKey(),
+                                       cloudProcessUpdated.getBusinessKey(),
+                                       cloudProcessUpdated.getParentProcessInstanceId());
 
-        return processUpdatedAuditEventEntity;
+        return eventEntity;
     }
 
     @Override

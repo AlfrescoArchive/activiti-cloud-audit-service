@@ -20,20 +20,25 @@ public class   ActivityCancelledEventConverter implements EventToEntityConverter
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudBPMNActivityCancelledEvent cloudBPMNActivityCancelledEvent = (CloudBPMNActivityCancelledEvent) cloudRuntimeEvent;
-        ActivityCancelledAuditEventEntity activityCancelledAuditEventEntity = new ActivityCancelledAuditEventEntity(cloudBPMNActivityCancelledEvent.getId(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getTimestamp(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getAppName(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getAppVersion(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getServiceFullName(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getServiceName(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getServiceType(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getServiceVersion(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getEntity(),
-                                                                                                                    cloudBPMNActivityCancelledEvent.getCause());
+        ActivityCancelledAuditEventEntity auditEventEntity = new ActivityCancelledAuditEventEntity(cloudBPMNActivityCancelledEvent.getId(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getTimestamp(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getAppName(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getAppVersion(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getServiceFullName(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getServiceName(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getServiceType(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getServiceVersion(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getEntity(),
+                                                                                                   cloudBPMNActivityCancelledEvent.getCause());
         
-        activityCancelledAuditEventEntity.setProcessDefinitionId(cloudBPMNActivityCancelledEvent.getProcessDefinitionId());
-        activityCancelledAuditEventEntity.setProcessInstanceId(cloudBPMNActivityCancelledEvent.getProcessInstanceId());
-        return activityCancelledAuditEventEntity;
+        auditEventEntity.setBaseProcessData(cloudBPMNActivityCancelledEvent.getEntityId(),
+                                            cloudBPMNActivityCancelledEvent.getProcessInstanceId(),
+                                            cloudBPMNActivityCancelledEvent.getProcessDefinitionId(),
+                                            cloudBPMNActivityCancelledEvent.getProcessDefinitionKey(),
+                                            cloudBPMNActivityCancelledEvent.getBusinessKey(),
+                                            cloudBPMNActivityCancelledEvent.getParentProcessInstanceId());
+            
+        return auditEventEntity;
     }
 
     @Override

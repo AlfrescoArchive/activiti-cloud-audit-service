@@ -20,16 +20,25 @@ public class TaskAssignedEventConverter implements EventToEntityConverter<AuditE
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudTaskAssignedEvent cloudTaskAssignedEvent = (CloudTaskAssignedEvent) cloudRuntimeEvent;
-        TaskAssignedEventEntity taskAssignedEventEntity = new TaskAssignedEventEntity(cloudTaskAssignedEvent.getId(),
-                                                                                      cloudTaskAssignedEvent.getTimestamp(),
-                                                                                      cloudTaskAssignedEvent.getAppName(),
-                                                                                      cloudTaskAssignedEvent.getAppVersion(),
-                                                                                      cloudTaskAssignedEvent.getServiceFullName(),
-                                                                                      cloudTaskAssignedEvent.getServiceName(),
-                                                                                      cloudTaskAssignedEvent.getServiceType(),
-                                                                                      cloudTaskAssignedEvent.getServiceVersion(),
-                                                                                      cloudTaskAssignedEvent.getEntity());
-        return taskAssignedEventEntity;
+                
+        TaskAssignedEventEntity eventEntity = new TaskAssignedEventEntity(cloudTaskAssignedEvent.getId(),
+                                                                          cloudTaskAssignedEvent.getTimestamp(),
+                                                                          cloudTaskAssignedEvent.getAppName(),
+                                                                          cloudTaskAssignedEvent.getAppVersion(),
+                                                                          cloudTaskAssignedEvent.getServiceName(),
+                                                                          cloudTaskAssignedEvent.getServiceFullName(),
+                                                                          cloudTaskAssignedEvent.getServiceType(),
+                                                                          cloudTaskAssignedEvent.getServiceVersion(),
+                                                                          cloudTaskAssignedEvent.getEntity());
+        
+        eventEntity.setBaseProcessData(cloudTaskAssignedEvent.getEntityId(),
+                                       cloudTaskAssignedEvent.getProcessInstanceId(),
+                                       cloudTaskAssignedEvent.getProcessDefinitionId(),
+                                       cloudTaskAssignedEvent.getProcessDefinitionKey(),
+                                       cloudTaskAssignedEvent.getBusinessKey(),
+                                       cloudTaskAssignedEvent.getParentProcessInstanceId());
+        
+        return eventEntity;
     }
 
     @Override

@@ -20,19 +20,25 @@ public class ProcessSuspendedEventConverter implements EventToEntityConverter<Au
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudProcessSuspendedEvent cloudProcessSuspended = (CloudProcessSuspendedEvent) cloudRuntimeEvent;
-        ProcessSuspendedAuditEventEntity processSuspendedAuditEventEntity = new ProcessSuspendedAuditEventEntity(cloudProcessSuspended.getId(),
-                                                                                                                 cloudProcessSuspended.getTimestamp());
-        processSuspendedAuditEventEntity.setAppName(cloudProcessSuspended.getAppName());
-        processSuspendedAuditEventEntity.setAppVersion(cloudProcessSuspended.getAppVersion());
-        processSuspendedAuditEventEntity.setServiceFullName(cloudProcessSuspended.getServiceFullName());
-        processSuspendedAuditEventEntity.setServiceName(cloudProcessSuspended.getServiceName());
-        processSuspendedAuditEventEntity.setServiceType(cloudProcessSuspended.getServiceType());
-        processSuspendedAuditEventEntity.setServiceVersion(cloudProcessSuspended.getServiceVersion());
-        processSuspendedAuditEventEntity.setProcessDefinitionId(cloudProcessSuspended.getEntity().getProcessDefinitionId());
-        processSuspendedAuditEventEntity.setProcessInstanceId(cloudProcessSuspended.getEntity().getId());
-        processSuspendedAuditEventEntity.setProcessInstance(cloudProcessSuspended.getEntity());
+                 
+        ProcessSuspendedAuditEventEntity eventEntity = new ProcessSuspendedAuditEventEntity(cloudProcessSuspended.getId(),
+                                                                                            cloudProcessSuspended.getTimestamp(),
+                                                                                            cloudProcessSuspended.getAppName(),
+                                                                                            cloudProcessSuspended.getAppVersion(),
+                                                                                            cloudProcessSuspended.getServiceName(),
+                                                                                            cloudProcessSuspended.getServiceFullName(),
+                                                                                            cloudProcessSuspended.getServiceType(),
+                                                                                            cloudProcessSuspended.getServiceVersion(),
+                                                                                            cloudProcessSuspended.getEntity());
+        eventEntity.setBaseProcessData(cloudProcessSuspended.getEntityId(),
+                                       cloudProcessSuspended.getProcessInstanceId(),
+                                       cloudProcessSuspended.getProcessDefinitionId(),
+                                       cloudProcessSuspended.getProcessDefinitionKey(),
+                                       cloudProcessSuspended.getBusinessKey(),
+                                       cloudProcessSuspended.getParentProcessInstanceId());
+        
 
-        return processSuspendedAuditEventEntity;
+        return eventEntity;
     }
 
     @Override

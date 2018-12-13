@@ -20,18 +20,24 @@ public class ActivityStartedEventConverter implements EventToEntityConverter<Aud
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudBPMNActivityStartedEvent cloudActivityStartedEvent = (CloudBPMNActivityStartedEvent) cloudRuntimeEvent;
-        ActivityStartedAuditEventEntity activityStartedAuditEventEntity = new ActivityStartedAuditEventEntity(cloudActivityStartedEvent.getId(),
-                                                                                                              cloudActivityStartedEvent.getTimestamp(),
-                                                                                                              cloudActivityStartedEvent.getAppName(),
-                                                                                                              cloudActivityStartedEvent.getAppVersion(),
-                                                                                                              cloudActivityStartedEvent.getServiceFullName(),
-                                                                                                              cloudActivityStartedEvent.getServiceName(),
-                                                                                                              cloudActivityStartedEvent.getServiceType(),
-                                                                                                              cloudActivityStartedEvent.getServiceVersion(),
-                                                                                                              cloudActivityStartedEvent.getEntity());
-        activityStartedAuditEventEntity.setProcessDefinitionId(cloudActivityStartedEvent.getProcessDefinitionId());
-        activityStartedAuditEventEntity.setProcessInstanceId(cloudActivityStartedEvent.getProcessInstanceId());
-        return activityStartedAuditEventEntity;
+        ActivityStartedAuditEventEntity auditEventEntity = new ActivityStartedAuditEventEntity(cloudActivityStartedEvent.getId(),
+                                                                                               cloudActivityStartedEvent.getTimestamp(),
+                                                                                               cloudActivityStartedEvent.getAppName(),
+                                                                                               cloudActivityStartedEvent.getAppVersion(),
+                                                                                               cloudActivityStartedEvent.getServiceFullName(),
+                                                                                               cloudActivityStartedEvent.getServiceName(),
+                                                                                               cloudActivityStartedEvent.getServiceType(),
+                                                                                               cloudActivityStartedEvent.getServiceVersion(),
+                                                                                               cloudActivityStartedEvent.getEntity());
+               
+        auditEventEntity.setBaseProcessData(cloudActivityStartedEvent.getEntityId(),
+                                            cloudActivityStartedEvent.getProcessInstanceId(),
+                                            cloudActivityStartedEvent.getProcessDefinitionId(),
+                                            cloudActivityStartedEvent.getProcessDefinitionKey(),
+                                            cloudActivityStartedEvent.getBusinessKey(),
+                                            cloudActivityStartedEvent.getParentProcessInstanceId());
+        
+        return auditEventEntity;
     }
 
     @Override

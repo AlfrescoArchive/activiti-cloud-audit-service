@@ -50,10 +50,7 @@ public abstract class VariableAuditEventEntity extends AuditEventEntity {
         setServiceFullName(serviceFullName);
         setServiceType(serviceType);
         setServiceVersion(serviceVersion);
-        
-        if (variableInstance != null) {
-            setVariableInstance(variableInstance);
-        }
+        setVariableInstance(variableInstance);
     }
 
     public String getVariableName() {
@@ -87,12 +84,12 @@ public abstract class VariableAuditEventEntity extends AuditEventEntity {
     public void setVariableInstance(VariableInstance variableInstance) {
         this.variableInstance = variableInstance;
         if (variableInstance != null) {
-            setProcessInstanceId(variableInstance.getProcessInstanceId());
-                        
             this.variableName = variableInstance.getName();
             this.variableType = variableInstance.getType();
             this.taskId = variableInstance.getTaskId();
-            setEntityId(variableInstance.getName());
+            
+            //To do: This should be checked
+            //setEntityId(variableInstance.getName());
         }
     }
 }

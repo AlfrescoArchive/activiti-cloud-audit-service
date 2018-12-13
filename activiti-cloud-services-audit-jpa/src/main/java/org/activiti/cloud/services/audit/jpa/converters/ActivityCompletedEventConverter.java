@@ -20,20 +20,24 @@ public class ActivityCompletedEventConverter implements EventToEntityConverter<A
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudBPMNActivityCompletedEvent cloudBPMNActivityCompletedEvent = (CloudBPMNActivityCompletedEvent) cloudRuntimeEvent;
-        ActivityCompletedAuditEventEntity activityCompletedAuditEventEntity = new ActivityCompletedAuditEventEntity(cloudBPMNActivityCompletedEvent.getId(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getTimestamp(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getAppName(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getAppVersion(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getServiceFullName(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getServiceName(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getServiceType(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getServiceVersion(),
-                                                                                                                    cloudBPMNActivityCompletedEvent.getEntity());
+    ActivityCompletedAuditEventEntity auditEventEntity = new ActivityCompletedAuditEventEntity(cloudBPMNActivityCompletedEvent.getId(),
+                                                                                               cloudBPMNActivityCompletedEvent.getTimestamp(),
+                                                                                               cloudBPMNActivityCompletedEvent.getAppName(),
+                                                                                               cloudBPMNActivityCompletedEvent.getAppVersion(),
+                                                                                               cloudBPMNActivityCompletedEvent.getServiceFullName(),
+                                                                                               cloudBPMNActivityCompletedEvent.getServiceName(),
+                                                                                               cloudBPMNActivityCompletedEvent.getServiceType(),
+                                                                                               cloudBPMNActivityCompletedEvent.getServiceVersion(),
+                                                                                               cloudBPMNActivityCompletedEvent.getEntity());
 
-        activityCompletedAuditEventEntity.setProcessDefinitionId(cloudBPMNActivityCompletedEvent.getProcessDefinitionId());
-        activityCompletedAuditEventEntity.setProcessInstanceId(cloudBPMNActivityCompletedEvent.getProcessInstanceId());
-        
-        return activityCompletedAuditEventEntity;
+        auditEventEntity.setBaseProcessData(cloudBPMNActivityCompletedEvent.getEntityId(),
+                                            cloudBPMNActivityCompletedEvent.getProcessInstanceId(),
+                                            cloudBPMNActivityCompletedEvent.getProcessDefinitionId(),
+                                            cloudBPMNActivityCompletedEvent.getProcessDefinitionKey(),
+                                            cloudBPMNActivityCompletedEvent.getBusinessKey(),
+                                            cloudBPMNActivityCompletedEvent.getParentProcessInstanceId());
+      
+        return auditEventEntity;
     }
 
     @Override

@@ -20,16 +20,25 @@ public class TaskSuspendedEventConverter implements EventToEntityConverter<Audit
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudTaskSuspendedEvent cloudTaskSuspendedEvent = (CloudTaskSuspendedEvent) cloudRuntimeEvent;
-        TaskSuspendedEventEntity taskSuspendedEventEntity = new TaskSuspendedEventEntity(cloudTaskSuspendedEvent.getId(),
-                                                                                         cloudTaskSuspendedEvent.getTimestamp(),
-                                                                                         cloudTaskSuspendedEvent.getAppName(),
-                                                                                         cloudTaskSuspendedEvent.getAppVersion(),
-                                                                                         cloudTaskSuspendedEvent.getServiceFullName(),
-                                                                                         cloudTaskSuspendedEvent.getServiceName(),
-                                                                                         cloudTaskSuspendedEvent.getServiceType(),
-                                                                                         cloudTaskSuspendedEvent.getServiceVersion(),
-                                                                                         cloudTaskSuspendedEvent.getEntity());
-        return taskSuspendedEventEntity;
+        TaskSuspendedEventEntity eventEntity = new TaskSuspendedEventEntity(cloudTaskSuspendedEvent.getId(),
+                                                                            cloudTaskSuspendedEvent.getTimestamp(),
+                                                                            cloudTaskSuspendedEvent.getAppName(),
+                                                                            cloudTaskSuspendedEvent.getAppVersion(),
+                                                                            cloudTaskSuspendedEvent.getServiceName(),
+                                                                            cloudTaskSuspendedEvent.getServiceFullName(),
+                                                                            cloudTaskSuspendedEvent.getServiceType(),
+                                                                            cloudTaskSuspendedEvent.getServiceVersion(),
+                                                                            cloudTaskSuspendedEvent.getEntity());
+        
+        eventEntity.setBaseProcessData(cloudTaskSuspendedEvent.getEntityId(),
+                                       cloudTaskSuspendedEvent.getProcessInstanceId(),
+                                       cloudTaskSuspendedEvent.getProcessDefinitionId(),
+                                       cloudTaskSuspendedEvent.getProcessDefinitionKey(),
+                                       cloudTaskSuspendedEvent.getBusinessKey(),
+                                       cloudTaskSuspendedEvent.getParentProcessInstanceId());
+        
+        
+        return eventEntity;
     }
 
     @Override

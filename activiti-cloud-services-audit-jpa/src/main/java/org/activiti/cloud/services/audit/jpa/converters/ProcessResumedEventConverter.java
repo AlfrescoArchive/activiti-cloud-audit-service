@@ -20,19 +20,26 @@ public class ProcessResumedEventConverter implements EventToEntityConverter<Audi
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudProcessResumedEvent cloudProcessResumed = (CloudProcessResumedEvent) cloudRuntimeEvent;
-        ProcessResumedAuditEventEntity processResumedAuditEventEntity = new ProcessResumedAuditEventEntity(cloudProcessResumed.getId(),
-                                                                                                             cloudProcessResumed.getTimestamp());
-        processResumedAuditEventEntity.setAppName(cloudProcessResumed.getAppName());
-        processResumedAuditEventEntity.setAppVersion(cloudProcessResumed.getAppVersion());
-        processResumedAuditEventEntity.setServiceFullName(cloudProcessResumed.getServiceFullName());
-        processResumedAuditEventEntity.setServiceName(cloudProcessResumed.getServiceName());
-        processResumedAuditEventEntity.setServiceType(cloudProcessResumed.getServiceType());
-        processResumedAuditEventEntity.setServiceVersion(cloudProcessResumed.getServiceVersion());
-        processResumedAuditEventEntity.setProcessDefinitionId(cloudProcessResumed.getEntity().getProcessDefinitionId());
-        processResumedAuditEventEntity.setProcessInstanceId(cloudProcessResumed.getEntity().getId());
-        processResumedAuditEventEntity.setProcessInstance(cloudProcessResumed.getEntity());
+       
+        ProcessResumedAuditEventEntity eventEntity = new ProcessResumedAuditEventEntity(cloudProcessResumed.getId(),
+                                                                                        cloudProcessResumed.getTimestamp(),
+                                                                                        cloudProcessResumed.getAppName(),
+                                                                                        cloudProcessResumed.getAppVersion(),
+                                                                                        cloudProcessResumed.getServiceName(),
+                                                                                        cloudProcessResumed.getServiceFullName(),
+                                                                                        cloudProcessResumed.getServiceType(),
+                                                                                        cloudProcessResumed.getServiceVersion(),
+                                                                                        cloudProcessResumed.getEntity());
+        
+        eventEntity.setBaseProcessData(cloudProcessResumed.getEntityId(),
+                                       cloudProcessResumed.getProcessInstanceId(),
+                                       cloudProcessResumed.getProcessDefinitionId(),
+                                       cloudProcessResumed.getProcessDefinitionKey(),
+                                       cloudProcessResumed.getBusinessKey(),
+                                       cloudProcessResumed.getParentProcessInstanceId());
+        
 
-        return processResumedAuditEventEntity;
+        return eventEntity;
     }
 
     @Override

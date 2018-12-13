@@ -20,19 +20,23 @@ public class ProcessStartedEventConverter implements EventToEntityConverter<Audi
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudProcessStartedEvent cloudProcessStartedEvent = (CloudProcessStartedEvent) cloudRuntimeEvent;
-        ProcessStartedAuditEventEntity processStartedEventEntity = new ProcessStartedAuditEventEntity(cloudProcessStartedEvent.getId(),
-                                                                                                      cloudProcessStartedEvent.getTimestamp(),
-                                                                                                      cloudProcessStartedEvent.getAppName(),
-                                                                                                      cloudProcessStartedEvent.getAppVersion(),
-                                                                                                      cloudProcessStartedEvent.getServiceFullName(),
-                                                                                                      cloudProcessStartedEvent.getServiceName(),
-                                                                                                      cloudProcessStartedEvent.getServiceType(),
-                                                                                                      cloudProcessStartedEvent.getServiceVersion(),
-                                                                                                      cloudProcessStartedEvent.getEntity(),
-                                                                                                      cloudProcessStartedEvent.getNestedProcessDefinitionId(),
-                                                                                                      cloudProcessStartedEvent.getNestedProcessInstanceId());
+        ProcessStartedAuditEventEntity eventEntity = new ProcessStartedAuditEventEntity(cloudProcessStartedEvent.getId(),
+                                                                                        cloudProcessStartedEvent.getTimestamp(),
+                                                                                        cloudProcessStartedEvent.getAppName(),
+                                                                                        cloudProcessStartedEvent.getAppVersion(),
+                                                                                        cloudProcessStartedEvent.getServiceName(),
+                                                                                        cloudProcessStartedEvent.getServiceFullName(),
+                                                                                        cloudProcessStartedEvent.getServiceType(),
+                                                                                        cloudProcessStartedEvent.getServiceVersion(),
+                                                                                        cloudProcessStartedEvent.getEntity());
+        eventEntity.setBaseProcessData(cloudProcessStartedEvent.getEntityId(),
+                                       cloudProcessStartedEvent.getProcessInstanceId(),
+                                       cloudProcessStartedEvent.getProcessDefinitionId(),
+                                       cloudProcessStartedEvent.getProcessDefinitionKey(),
+                                       cloudProcessStartedEvent.getBusinessKey(),
+                                       cloudProcessStartedEvent.getParentProcessInstanceId());
 
-        return processStartedEventEntity;
+        return eventEntity;
     }
 
     @Override

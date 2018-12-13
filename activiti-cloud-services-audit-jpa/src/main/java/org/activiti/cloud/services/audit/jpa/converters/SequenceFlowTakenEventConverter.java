@@ -21,22 +21,23 @@ public class SequenceFlowTakenEventConverter implements EventToEntityConverter<A
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudSequenceFlowTakenEvent cloudSequenceFlowTaken = (CloudSequenceFlowTakenEvent) cloudRuntimeEvent;
 
-        /*processDefinitionId, processDefinitionKey, processInstanceId, parentProcessInstanceId, businessKey*/
-        SequenceFlowAuditEventEntity sequenceFlowAuditEventEntity = new SequenceFlowAuditEventEntity(cloudSequenceFlowTaken.getId(),
-                                                                                                     cloudSequenceFlowTaken.getTimestamp(),
-                                                                                                     cloudSequenceFlowTaken.getAppName(),
-                                                                                                     cloudSequenceFlowTaken.getAppVersion(),
-                                                                                                     cloudSequenceFlowTaken.getServiceFullName(),
-                                                                                                     cloudSequenceFlowTaken.getServiceName(),
-                                                                                                     cloudSequenceFlowTaken.getServiceType(),
-                                                                                                     cloudSequenceFlowTaken.getServiceVersion(),
-                                                                                                     cloudSequenceFlowTaken.getEntity());
-     
-        sequenceFlowAuditEventEntity.setEntityId(cloudSequenceFlowTaken.getProcessInstanceId());
-        sequenceFlowAuditEventEntity.setProcessDefinitionId(cloudSequenceFlowTaken.getProcessDefinitionId());
-        sequenceFlowAuditEventEntity.setProcessInstanceId(cloudSequenceFlowTaken.getProcessInstanceId());
+        SequenceFlowAuditEventEntity eventEntity = new SequenceFlowAuditEventEntity(cloudSequenceFlowTaken.getId(),
+                                                                                    cloudSequenceFlowTaken.getTimestamp(),
+                                                                                    cloudSequenceFlowTaken.getAppName(),
+                                                                                    cloudSequenceFlowTaken.getAppVersion(),
+                                                                                    cloudSequenceFlowTaken.getServiceName(),
+                                                                                    cloudSequenceFlowTaken.getServiceFullName(),
+                                                                                    cloudSequenceFlowTaken.getServiceType(),
+                                                                                    cloudSequenceFlowTaken.getServiceVersion(),
+                                                                                    cloudSequenceFlowTaken.getEntity());
+        eventEntity.setBaseProcessData(cloudSequenceFlowTaken.getEntityId(),
+                                       cloudSequenceFlowTaken.getProcessInstanceId(),
+                                       cloudSequenceFlowTaken.getProcessDefinitionId(),
+                                       cloudSequenceFlowTaken.getProcessDefinitionKey(),
+                                       cloudSequenceFlowTaken.getBusinessKey(),
+                                       cloudSequenceFlowTaken.getParentProcessInstanceId());
 
-        return sequenceFlowAuditEventEntity;    
+        return eventEntity;    
     }
 
     @Override
