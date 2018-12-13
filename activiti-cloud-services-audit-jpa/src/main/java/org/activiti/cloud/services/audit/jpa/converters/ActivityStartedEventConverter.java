@@ -29,7 +29,6 @@ public class ActivityStartedEventConverter implements EventToEntityConverter<Aud
                                                                                                               cloudActivityStartedEvent.getServiceType(),
                                                                                                               cloudActivityStartedEvent.getServiceVersion(),
                                                                                                               cloudActivityStartedEvent.getEntity());
-        activityStartedAuditEventEntity.setEntityId(cloudActivityStartedEvent.getProcessInstanceId());
         activityStartedAuditEventEntity.setProcessDefinitionId(cloudActivityStartedEvent.getProcessDefinitionId());
         activityStartedAuditEventEntity.setProcessInstanceId(cloudActivityStartedEvent.getProcessInstanceId());
         return activityStartedAuditEventEntity;

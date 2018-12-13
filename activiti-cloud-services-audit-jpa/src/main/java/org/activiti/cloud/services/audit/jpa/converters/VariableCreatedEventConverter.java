@@ -20,15 +20,20 @@ public class VariableCreatedEventConverter implements EventToEntityConverter<Aud
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudVariableCreatedEvent cloudVariableCreatedEvent = (CloudVariableCreatedEvent) cloudRuntimeEvent;
-        return new VariableCreatedEventEntity(cloudVariableCreatedEvent.getId(),
-                                              cloudVariableCreatedEvent.getTimestamp(),
-                                              cloudVariableCreatedEvent.getAppName(),
-                                              cloudVariableCreatedEvent.getAppVersion(),
-                                              cloudVariableCreatedEvent.getServiceFullName(),
-                                              cloudVariableCreatedEvent.getServiceName(),
-                                              cloudVariableCreatedEvent.getServiceType(),
-                                              cloudVariableCreatedEvent.getServiceVersion(),
-                                              cloudVariableCreatedEvent.getEntity());
+        
+        VariableCreatedEventEntity variableCreatedEventEntity = new VariableCreatedEventEntity(cloudVariableCreatedEvent.getId(),
+                                       cloudVariableCreatedEvent.getTimestamp(),
+                                       cloudVariableCreatedEvent.getAppName(),
+                                       cloudVariableCreatedEvent.getAppVersion(),
+                                       cloudVariableCreatedEvent.getServiceFullName(),
+                                       cloudVariableCreatedEvent.getServiceName(),
+                                       cloudVariableCreatedEvent.getServiceType(),
+                                       cloudVariableCreatedEvent.getServiceVersion(),
+                                       cloudVariableCreatedEvent.getEntity());
+        
+        variableCreatedEventEntity.setProcessDefinitionId(cloudVariableCreatedEvent.getProcessDefinitionId());
+        
+        return variableCreatedEventEntity;
     }
 
     @Override
@@ -44,6 +49,8 @@ public class VariableCreatedEventConverter implements EventToEntityConverter<Aud
         cloudVariableCreatedEvent.setServiceName(variableCreatedEventEntity.getServiceName());
         cloudVariableCreatedEvent.setServiceType(variableCreatedEventEntity.getServiceType());
         cloudVariableCreatedEvent.setServiceVersion(variableCreatedEventEntity.getServiceVersion());
+        
+        cloudVariableCreatedEvent.setProcessDefinitionId(variableCreatedEventEntity.getProcessDefinitionId());
 
         return cloudVariableCreatedEvent;
     }

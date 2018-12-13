@@ -30,7 +30,7 @@ public class   ActivityCancelledEventConverter implements EventToEntityConverter
                                                                                                                     cloudBPMNActivityCancelledEvent.getServiceVersion(),
                                                                                                                     cloudBPMNActivityCancelledEvent.getEntity(),
                                                                                                                     cloudBPMNActivityCancelledEvent.getCause());
-        activityCancelledAuditEventEntity.setEntityId(cloudBPMNActivityCancelledEvent.getProcessInstanceId());
+        
         activityCancelledAuditEventEntity.setProcessDefinitionId(cloudBPMNActivityCancelledEvent.getProcessDefinitionId());
         activityCancelledAuditEventEntity.setProcessInstanceId(cloudBPMNActivityCancelledEvent.getProcessInstanceId());
         return activityCancelledAuditEventEntity;
@@ -52,7 +52,7 @@ public class   ActivityCancelledEventConverter implements EventToEntityConverter
         bpmnActivityCancelledEvent.setServiceName(activityCancelledAuditEventEntity.getServiceName());
         bpmnActivityCancelledEvent.setServiceType(activityCancelledAuditEventEntity.getServiceType());
         bpmnActivityCancelledEvent.setServiceVersion(activityCancelledAuditEventEntity.getServiceVersion());
-
+        
         return bpmnActivityCancelledEvent;
     }
 }

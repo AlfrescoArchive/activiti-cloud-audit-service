@@ -2,12 +2,11 @@ package org.activiti.cloud.services.audit.jpa.events;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
-import org.activiti.cloud.services.audit.jpa.converters.json.VariableJpaJsonConverter;
 import org.activiti.api.model.shared.model.VariableInstance;
+import org.activiti.cloud.services.audit.jpa.converters.json.VariableJpaJsonConverter;
 
 @MappedSuperclass
 public abstract class VariableAuditEventEntity extends AuditEventEntity {
@@ -51,13 +50,9 @@ public abstract class VariableAuditEventEntity extends AuditEventEntity {
         setServiceFullName(serviceFullName);
         setServiceType(serviceType);
         setServiceVersion(serviceVersion);
-        setProcessInstanceId((variableInstance != null) ? variableInstance.getProcessInstanceId() : null);
-        this.variableInstance = variableInstance;
+        
         if (variableInstance != null) {
-            this.variableName = variableInstance.getName();
-            this.variableType = variableInstance.getType();
-            this.taskId = variableInstance.getTaskId();
-            setEntityId(variableInstance.getName());
+            setVariableInstance(variableInstance);
         }
     }
 
@@ -91,5 +86,13 @@ public abstract class VariableAuditEventEntity extends AuditEventEntity {
 
     public void setVariableInstance(VariableInstance variableInstance) {
         this.variableInstance = variableInstance;
+        if (variableInstance != null) {
+            setProcessInstanceId(variableInstance.getProcessInstanceId());
+                        
+            this.variableName = variableInstance.getName();
+            this.variableType = variableInstance.getType();
+            this.taskId = variableInstance.getTaskId();
+            setEntityId(variableInstance.getName());
+        }
     }
 }

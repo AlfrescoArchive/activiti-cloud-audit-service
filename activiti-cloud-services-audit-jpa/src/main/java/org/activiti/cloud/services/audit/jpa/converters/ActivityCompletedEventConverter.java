@@ -29,9 +29,10 @@ public class ActivityCompletedEventConverter implements EventToEntityConverter<A
                                                                                                                     cloudBPMNActivityCompletedEvent.getServiceType(),
                                                                                                                     cloudBPMNActivityCompletedEvent.getServiceVersion(),
                                                                                                                     cloudBPMNActivityCompletedEvent.getEntity());
-        activityCompletedAuditEventEntity.setEntityId(cloudBPMNActivityCompletedEvent.getProcessInstanceId());
+
         activityCompletedAuditEventEntity.setProcessDefinitionId(cloudBPMNActivityCompletedEvent.getProcessDefinitionId());
         activityCompletedAuditEventEntity.setProcessInstanceId(cloudBPMNActivityCompletedEvent.getProcessInstanceId());
+        
         return activityCompletedAuditEventEntity;
     }
 
@@ -50,6 +51,7 @@ public class ActivityCompletedEventConverter implements EventToEntityConverter<A
         bpmnActivityCompletedEvent.setServiceName(activityCompletedAuditEventEntity.getServiceName());
         bpmnActivityCompletedEvent.setServiceType(activityCompletedAuditEventEntity.getServiceType());
         bpmnActivityCompletedEvent.setServiceVersion(activityCompletedAuditEventEntity.getServiceVersion());
+        
         return bpmnActivityCompletedEvent;
     }
 }

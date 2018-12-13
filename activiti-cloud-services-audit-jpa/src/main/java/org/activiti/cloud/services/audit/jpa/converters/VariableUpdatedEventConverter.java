@@ -29,6 +29,9 @@ public class VariableUpdatedEventConverter implements EventToEntityConverter<Aud
                                                                                                cloudVariableUpdatedEvent.getServiceType(),
                                                                                                cloudVariableUpdatedEvent.getServiceVersion(),
                                                                                                cloudVariableUpdatedEvent.getEntity());
+        
+        variableUpdatedEventEntity.setProcessDefinitionId(cloudVariableUpdatedEvent.getProcessDefinitionId());
+        
         return variableUpdatedEventEntity;
     }
 
@@ -46,6 +49,8 @@ public class VariableUpdatedEventConverter implements EventToEntityConverter<Aud
         variableUpdatedEvent.setServiceType(variableUpdatedEventEntity.getServiceType());
         variableUpdatedEvent.setServiceVersion(variableUpdatedEventEntity.getServiceVersion());
 
+        variableUpdatedEvent.setProcessDefinitionId(variableUpdatedEventEntity.getProcessDefinitionId());
+        
         return variableUpdatedEvent;
     }
 }

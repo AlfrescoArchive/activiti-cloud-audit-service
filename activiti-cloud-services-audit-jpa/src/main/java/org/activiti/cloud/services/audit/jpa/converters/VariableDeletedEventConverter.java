@@ -29,6 +29,8 @@ public class VariableDeletedEventConverter implements EventToEntityConverter<Aud
                                                                                                cloudVariableDeletedEvent.getServiceType(),
                                                                                                cloudVariableDeletedEvent.getServiceVersion(),
                                                                                                cloudVariableDeletedEvent.getEntity());
+        
+        variableDeletedEventEntity.setProcessDefinitionId(cloudVariableDeletedEvent.getProcessDefinitionId());
         return variableDeletedEventEntity;
     }
 
@@ -45,6 +47,8 @@ public class VariableDeletedEventConverter implements EventToEntityConverter<Aud
         variableDeletedEvent.setServiceName(variableDeletedEventEntity.getServiceName());
         variableDeletedEvent.setServiceType(variableDeletedEventEntity.getServiceType());
         variableDeletedEvent.setServiceVersion(variableDeletedEventEntity.getServiceVersion());
+        
+        variableDeletedEvent.setProcessDefinitionId(variableDeletedEventEntity.getProcessDefinitionId());
 
         return variableDeletedEvent;
     }
