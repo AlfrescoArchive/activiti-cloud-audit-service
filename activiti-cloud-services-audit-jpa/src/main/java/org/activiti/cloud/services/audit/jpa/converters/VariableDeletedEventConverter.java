@@ -3,45 +3,41 @@ package org.activiti.cloud.services.audit.jpa.converters;
 import org.activiti.api.model.shared.event.VariableEvent;
 import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
 import org.activiti.cloud.api.model.shared.events.CloudVariableDeletedEvent;
+import org.activiti.cloud.api.model.shared.impl.events.CloudRuntimeEventImpl;
 import org.activiti.cloud.api.model.shared.impl.events.CloudVariableDeletedEventImpl;
-import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.VariableDeletedEventEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class VariableDeletedEventConverter implements EventToEntityConverter<AuditEventEntity> {
+public class VariableDeletedEventConverter extends BaseEventToEntityConverter {
 
+    public VariableDeletedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        super(eventContextInfoAppender);
+    }
+    
     @Override
     public String getSupportedEvent() {
         return VariableEvent.VariableEvents.VARIABLE_DELETED.name();
     }
 
     @Override
-    public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
+    protected VariableDeletedEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudVariableDeletedEvent cloudVariableDeletedEvent = (CloudVariableDeletedEvent) cloudRuntimeEvent;
-        VariableDeletedEventEntity eventEntity = new VariableDeletedEventEntity(cloudVariableDeletedEvent.getId(),
-                                                                                cloudVariableDeletedEvent.getTimestamp(),
-                                                                                cloudVariableDeletedEvent.getAppName(),
-                                                                                cloudVariableDeletedEvent.getAppVersion(),
-                                                                                cloudVariableDeletedEvent.getServiceFullName(),
-                                                                                cloudVariableDeletedEvent.getServiceName(),
-                                                                                cloudVariableDeletedEvent.getServiceType(),
-                                                                                cloudVariableDeletedEvent.getServiceVersion(),
-                                                                                cloudVariableDeletedEvent.getEntity());
+        return new VariableDeletedEventEntity(cloudVariableDeletedEvent.getId(),
+                                              cloudVariableDeletedEvent.getTimestamp(),
+                                              cloudVariableDeletedEvent.getAppName(),
+                                              cloudVariableDeletedEvent.getAppVersion(),
+                                              cloudVariableDeletedEvent.getServiceFullName(),
+                                              cloudVariableDeletedEvent.getServiceName(),
+                                              cloudVariableDeletedEvent.getServiceType(),
+                                              cloudVariableDeletedEvent.getServiceVersion(),
+                                              cloudVariableDeletedEvent.getEntity());
         
-        eventEntity.setBaseProcessData(cloudVariableDeletedEvent.getEntityId(),
-                                       cloudVariableDeletedEvent.getProcessInstanceId(),
-                                       cloudVariableDeletedEvent.getProcessDefinitionId(),
-                                       cloudVariableDeletedEvent.getProcessDefinitionKey(),
-                                       cloudVariableDeletedEvent.getBusinessKey(),
-                                       cloudVariableDeletedEvent.getParentProcessInstanceId());
-        
-        return eventEntity;
     }
 
     @Override
-    public CloudRuntimeEvent convertToAPI(AuditEventEntity auditEventEntity) {
+    protected CloudRuntimeEventImpl<?, ?> createAPIEvent(AuditEventEntity auditEventEntity) {
         VariableDeletedEventEntity variableDeletedEventEntity = (VariableDeletedEventEntity) auditEventEntity;
 
         CloudVariableDeletedEventImpl variableDeletedEvent = new CloudVariableDeletedEventImpl(variableDeletedEventEntity.getEventId(),

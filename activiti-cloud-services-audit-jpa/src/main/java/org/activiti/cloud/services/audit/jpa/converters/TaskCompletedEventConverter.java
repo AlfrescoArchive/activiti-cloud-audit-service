@@ -2,48 +2,44 @@ package org.activiti.cloud.services.audit.jpa.converters;
 
 import org.activiti.api.task.model.events.TaskRuntimeEvent;
 import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
+import org.activiti.cloud.api.model.shared.impl.events.CloudRuntimeEventImpl;
 import org.activiti.cloud.api.task.model.events.CloudTaskCompletedEvent;
 import org.activiti.cloud.api.task.model.impl.events.CloudTaskCompletedEventImpl;
-import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.TaskCompletedEventEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TaskCompletedEventConverter implements EventToEntityConverter<AuditEventEntity> {
-
+public class TaskCompletedEventConverter extends BaseEventToEntityConverter {
+    
+    public TaskCompletedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        super(eventContextInfoAppender);
+    }
+    
     @Override
     public String getSupportedEvent() {
         return TaskRuntimeEvent.TaskEvents.TASK_COMPLETED.name();
     }
 
     @Override
-    public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
+    protected TaskCompletedEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent) {
         CloudTaskCompletedEvent cloudTaskCompletedEvent = (CloudTaskCompletedEvent) cloudRuntimeEvent;
         
-        TaskCompletedEventEntity eventEntity = new TaskCompletedEventEntity(cloudTaskCompletedEvent.getId(),
-                                                                            cloudTaskCompletedEvent.getTimestamp(),
-                                                                            cloudTaskCompletedEvent.getAppName(),
-                                                                            cloudTaskCompletedEvent.getAppVersion(),
-                                                                            cloudTaskCompletedEvent.getServiceName(),
-                                                                            cloudTaskCompletedEvent.getServiceFullName(),
-                                                                            cloudTaskCompletedEvent.getServiceType(),
-                                                                            cloudTaskCompletedEvent.getServiceVersion(),
-                                                                            cloudTaskCompletedEvent.getEntity());
+        return new TaskCompletedEventEntity(cloudTaskCompletedEvent.getId(),
+                                            cloudTaskCompletedEvent.getTimestamp(),
+                                            cloudTaskCompletedEvent.getAppName(),
+                                            cloudTaskCompletedEvent.getAppVersion(),
+                                            cloudTaskCompletedEvent.getServiceName(),
+                                            cloudTaskCompletedEvent.getServiceFullName(),
+                                            cloudTaskCompletedEvent.getServiceType(),
+                                            cloudTaskCompletedEvent.getServiceVersion(),
+                                            cloudTaskCompletedEvent.getEntity());
         
-        eventEntity.setBaseProcessData(cloudTaskCompletedEvent.getEntityId(),
-                                       cloudTaskCompletedEvent.getProcessInstanceId(),
-                                       cloudTaskCompletedEvent.getProcessDefinitionId(),
-                                       cloudTaskCompletedEvent.getProcessDefinitionKey(),
-                                       cloudTaskCompletedEvent.getBusinessKey(),
-                                       cloudTaskCompletedEvent.getParentProcessInstanceId());
-        
-        
-        return eventEntity;
+
     }
 
     @Override
-    public CloudRuntimeEvent convertToAPI(AuditEventEntity auditEventEntity) {
+    protected CloudRuntimeEventImpl<?, ?> createAPIEvent(AuditEventEntity auditEventEntity) {
         TaskCompletedEventEntity taskCompletedEventEntity = (TaskCompletedEventEntity) auditEventEntity;
 
         CloudTaskCompletedEventImpl cloudTaskCompletedEvent = new CloudTaskCompletedEventImpl(taskCompletedEventEntity.getEventId(),

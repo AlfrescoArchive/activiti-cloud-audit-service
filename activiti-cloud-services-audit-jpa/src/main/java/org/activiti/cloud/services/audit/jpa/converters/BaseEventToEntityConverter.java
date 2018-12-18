@@ -19,7 +19,6 @@ package org.activiti.cloud.services.audit.jpa.converters;
 import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
 import org.activiti.cloud.api.model.shared.impl.events.CloudRuntimeEventImpl;
 import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
-import org.activiti.cloud.services.audit.jpa.events.ActivityCancelledAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 
 public abstract class BaseEventToEntityConverter implements EventToEntityConverter<AuditEventEntity> {
@@ -32,11 +31,13 @@ public abstract class BaseEventToEntityConverter implements EventToEntityConvert
 
     @Override
     public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudRuntimeEvent) {
-        ActivityCancelledAuditEventEntity auditEventEntity = createEventEntity(cloudRuntimeEvent);
+        AuditEventEntity auditEventEntity = createEventEntity(cloudRuntimeEvent);
+        
         return eventContextInfoAppender.addProcessContextInfoToEntityEvent(auditEventEntity, cloudRuntimeEvent);
     }
 
-    protected abstract ActivityCancelledAuditEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent);
+    protected abstract AuditEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent);
+    
 
     @Override
     public CloudRuntimeEvent convertToAPI(AuditEventEntity auditEventEntity) {
