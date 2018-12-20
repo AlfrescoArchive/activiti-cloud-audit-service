@@ -86,7 +86,7 @@ public class AuditServiceIT {
     private MyProducer producer;
     
     @Autowired
-    APIEventToEntityConverters eventConverters;
+    private APIEventToEntityConverters eventConverters;
 
     @Before
     public void setUp() {
