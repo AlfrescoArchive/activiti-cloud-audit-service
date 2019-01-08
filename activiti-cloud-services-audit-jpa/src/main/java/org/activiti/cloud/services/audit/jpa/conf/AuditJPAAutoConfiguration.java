@@ -215,4 +215,4 @@ public class AuditJPAAutoConfiguration {
         return new TaskCandidateGroupRemovedEventConverter(eventContextInfoAppender);
     }      
     
-}
+} 
