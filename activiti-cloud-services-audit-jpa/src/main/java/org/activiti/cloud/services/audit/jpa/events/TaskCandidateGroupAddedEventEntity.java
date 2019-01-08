@@ -16,8 +16,10 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 import org.activiti.api.task.model.TaskCandidateGroup;
 import org.activiti.api.task.model.events.TaskCandidateGroupEvent;
@@ -28,6 +30,8 @@ public class TaskCandidateGroupAddedEventEntity extends AuditEventEntity {
 
     protected static final String TASK_CANDIDATE_GROUP_ADDED_EVENT = "TaskCandidateGroupAddedEvent";
    
+    @Lob
+    @Column
     private TaskCandidateGroup candidateGroup;
     
     public TaskCandidateGroupAddedEventEntity() {
