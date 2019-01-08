@@ -18,7 +18,9 @@ package org.activiti.cloud.services.audit.jpa.events;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
+
+import org.activiti.api.task.model.TaskCandidateGroup;
+import org.activiti.api.task.model.events.TaskCandidateGroupEvent;
 
 @Entity
 @DiscriminatorValue(value = TaskCandidateGroupRemovedEventEntity.TASK_CANDIDATE_GROUP_REMOVED_EVENT)
@@ -26,14 +28,26 @@ public class TaskCandidateGroupRemovedEventEntity extends AuditEventEntity {
 
     protected static final String TASK_CANDIDATE_GROUP_REMOVED_EVENT = "TaskCandidateGroupRemovedEvent";
 
+    private TaskCandidateGroup candidateGroup;
+    
     public TaskCandidateGroupRemovedEventEntity() {
     }
 
     public TaskCandidateGroupRemovedEventEntity(String eventId,
                                                 Long timestamp,
-                                                String eventType) {
+                                                TaskCandidateGroup candidateGroup) {
         super(eventId,
               timestamp,
-              eventType);
+              TaskCandidateGroupEvent.TaskCandidateGroupEvents.TASK_CANDIDATE_GROUP_REMOVED.name());
+        
+        setCandidateGroup(candidateGroup);
+    }
+    
+    public TaskCandidateGroup getCandidateGroup() {
+        return candidateGroup;
+    }
+
+    public void setCandidateGroup(TaskCandidateGroup candidateGroup) {
+        this.candidateGroup = candidateGroup;
     }
 }
