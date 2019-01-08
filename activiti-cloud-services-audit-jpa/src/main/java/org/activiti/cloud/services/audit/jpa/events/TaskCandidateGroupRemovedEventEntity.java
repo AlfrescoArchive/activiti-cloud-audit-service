@@ -17,12 +17,15 @@
 package org.activiti.cloud.services.audit.jpa.events;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
 import org.activiti.api.task.model.TaskCandidateGroup;
 import org.activiti.api.task.model.events.TaskCandidateGroupEvent;
+import org.activiti.api.task.model.impl.TaskCandidateGroupImpl;
+import org.activiti.cloud.services.audit.jpa.converters.json.TaskCandidateGroupJpaJsonConverter;
 
 @Entity
 @DiscriminatorValue(value = TaskCandidateGroupRemovedEventEntity.TASK_CANDIDATE_GROUP_REMOVED_EVENT)
@@ -30,9 +33,10 @@ public class TaskCandidateGroupRemovedEventEntity extends AuditEventEntity {
 
     protected static final String TASK_CANDIDATE_GROUP_REMOVED_EVENT = "TaskCandidateGroupRemovedEvent";
 
+    @Convert(converter = TaskCandidateGroupJpaJsonConverter.class)
     @Lob
     @Column
-    private TaskCandidateGroup candidateGroup;
+    private TaskCandidateGroupImpl candidateGroup;
     
     public TaskCandidateGroupRemovedEventEntity() {
     }
@@ -52,6 +56,6 @@ public class TaskCandidateGroupRemovedEventEntity extends AuditEventEntity {
     }
 
     public void setCandidateGroup(TaskCandidateGroup candidateGroup) {
-        this.candidateGroup = candidateGroup;
+        this.candidateGroup = new TaskCandidateGroupImpl(candidateGroup.getGroupId(),candidateGroup.getTaskId());
     }
 }
