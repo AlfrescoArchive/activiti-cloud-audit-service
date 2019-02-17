@@ -16,38 +16,6 @@
 
 package org.activiti.cloud.services.audit.jpa.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.activiti.cloud.alfresco.argument.resolver.AlfrescoPageRequest;
-import org.activiti.cloud.services.audit.jpa.controllers.AuditEventsControllerImpl;
-import org.activiti.cloud.services.audit.jpa.events.ActivityStartedAuditEventEntity;
-import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
-import org.activiti.cloud.services.audit.jpa.events.ProcessStartedAuditEventEntity;
-import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
-import org.activiti.api.process.model.events.ProcessRuntimeEvent;
-import org.activiti.api.runtime.shared.identity.UserGroupManager;
-import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.activiti.api.runtime.shared.security.SecurityManager;
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
 import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
@@ -64,6 +32,38 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.activiti.api.process.model.events.ProcessRuntimeEvent;
+import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
+import org.activiti.api.runtime.shared.identity.UserGroupManager;
+import org.activiti.api.runtime.shared.security.SecurityManager;
+import org.activiti.cloud.alfresco.argument.resolver.AlfrescoPageRequest;
+import org.activiti.cloud.services.audit.jpa.controllers.AuditEventsControllerImpl;
+import org.activiti.cloud.services.audit.jpa.events.ActivitySignaledAuditEventEntity;
+import org.activiti.cloud.services.audit.jpa.events.ActivityStartedAuditEventEntity;
+import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
+import org.activiti.cloud.services.audit.jpa.events.ProcessStartedAuditEventEntity;
+import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AuditEventsControllerImpl.class)
@@ -308,6 +308,24 @@ public class AuditEventsControllerImplIT {
         given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
 
         AuditEventEntity event = new ActivityStartedAuditEventEntity("eventId",
+                                                                     System.currentTimeMillis());
+
+        mockMvc.perform(head("{version}/events/{id}",
+                             "/v1",
+                             eventEntity.getId()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document(DOCUMENTATION_IDENTIFIER + "/head"));
+    }
+    
+    @Test
+    public void headSignalEventById() throws Exception {
+
+        AuditEventEntity eventEntity = buildAuditEventEntity(1);
+
+        given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
+
+        AuditEventEntity event = new ActivitySignaledAuditEventEntity("eventId",
                                                                      System.currentTimeMillis());
 
         mockMvc.perform(head("{version}/events/{id}",
