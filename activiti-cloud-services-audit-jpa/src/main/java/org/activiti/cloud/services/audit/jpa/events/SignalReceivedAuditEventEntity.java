@@ -33,8 +33,7 @@ public class SignalReceivedAuditEventEntity extends AuditEventEntity {
     protected static final String SIGNAL_RECEIVED_EVENT = "SignalReceivedEvent";
     
     @Convert(converter = SignalJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private BPMNSignal signal;
 
     public SignalReceivedAuditEventEntity() {
