@@ -28,8 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.activiti.api.process.model.BPMNSignal;
+import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.model.events.BPMNActivityEvent;
+import org.activiti.api.process.model.payloads.SignalPayload;
 import org.activiti.api.runtime.model.impl.BPMNActivityImpl;
+import org.activiti.api.runtime.model.impl.BPMNSignalImpl;
 import org.activiti.api.runtime.model.impl.ProcessDefinitionImpl;
 import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
 import org.activiti.api.task.model.Task;
@@ -45,6 +49,7 @@ import org.activiti.cloud.api.process.model.events.CloudBPMNActivityStartedEvent
 import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityCancelledEventImpl;
 import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityCompletedEventImpl;
 import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityStartedEventImpl;
+import org.activiti.cloud.api.process.model.impl.events.CloudBPMNSignalReceivedEventImpl;
 import org.activiti.cloud.api.process.model.impl.events.CloudProcessCancelledEventImpl;
 import org.activiti.cloud.api.process.model.impl.events.CloudProcessCompletedEventImpl;
 import org.activiti.cloud.api.process.model.impl.events.CloudProcessDeployedEventImpl;
@@ -583,6 +588,78 @@ public class AuditServiceIT {
     }
     
     @Test
+    public void checkEventConvertersForSignal() {
+        //given
+        ProcessInstanceImpl processInstanceStarted = new ProcessInstanceImpl();
+        processInstanceStarted.setId("processInstanceId");
+        processInstanceStarted.setProcessDefinitionId("processDefinitionId");
+        processInstanceStarted.setProcessDefinitionKey("processDefinitionKey");
+        processInstanceStarted.setBusinessKey("businessKey");
+        processInstanceStarted.setParentId("parentId");
+        
+        
+        BPMNSignalImpl signal = new BPMNSignalImpl("entityId",
+   								"activityName",
+   								"activityType");
+        signal.setProcessDefinitionId(processInstanceStarted.getProcessDefinitionId());
+        signal.setProcessInstanceId(processInstanceStarted.getId());
+        
+        SignalPayload signalPayload = ProcessPayloadBuilder.signal()
+										.withName("SignalName")
+										.build();
+        signal.setSignalPayload(signalPayload);
+        
+  
+        CloudBPMNSignalReceivedEventImpl event = new CloudBPMNSignalReceivedEventImpl("eventId",
+        									System.currentTimeMillis(),
+        									signal,
+        									signal.getProcessDefinitionId(),
+        									signal.getProcessInstanceId());
+    	
+
+        //Set explicitly to be sure
+        event.setEntityId("entityId");
+        event.setProcessInstanceId(processInstanceStarted.getId());
+        event.setProcessDefinitionId(processInstanceStarted.getProcessDefinitionId());
+        event.setProcessDefinitionKey(processInstanceStarted.getProcessDefinitionKey());
+        event.setBusinessKey(processInstanceStarted.getBusinessKey());
+        event.setParentProcessInstanceId(processInstanceStarted.getParentId());
+        event.setMessageId("message-id");
+        event.setSequenceNumber(0);
+
+        
+             
+        //Check convertToEntity
+        EventToEntityConverter converter = eventConverters.getConverterByEventTypeName(event.getEventType().name());
+        assertThat(converter).isNotNull();
+     
+        AuditEventEntity auditEventEntity= (AuditEventEntity) converter.convertToEntity(event);
+        assertThat(auditEventEntity).isNotNull();
+        
+        assertThat(auditEventEntity.getEntityId()).isEqualTo(event.getEntityId());
+        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(event.getProcessInstanceId());
+        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(event.getProcessDefinitionId());
+        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(event.getProcessDefinitionKey());
+        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(event.getBusinessKey());
+        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(event.getParentProcessInstanceId());
+            
+        //Check convertToAPI
+        EventToEntityConverter converterAPI = eventConverters.getConverterByEventTypeName(auditEventEntity.getEventType());
+        assertThat(converterAPI).isNotNull();
+     
+        CloudRuntimeEvent cloudEvent= (CloudRuntimeEvent)converterAPI.convertToAPI(auditEventEntity);
+        assertThat(cloudEvent).isNotNull();
+        
+        assertThat(auditEventEntity.getEntityId()).isEqualTo(cloudEvent.getEntityId());
+        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(cloudEvent.getProcessInstanceId());
+        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(cloudEvent.getProcessDefinitionId());
+        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(cloudEvent.getProcessDefinitionKey());
+        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(cloudEvent.getBusinessKey());
+        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudEvent.getParentProcessInstanceId());
+        
+    }
+    
+    @Test
     public void shouldGetUserCandidateEvents() {
         //given
         List<CloudRuntimeEvent> coveredEvents = getTestUserCandidatesEvents();
@@ -659,6 +736,52 @@ public class AuditServiceIT {
                         .isEqualTo(commonMessageId);
             }
 
+        });
+    }
+    
+    @Test
+    public void shouldGetSignalReceivedEvent() {
+        //given
+        List<CloudRuntimeEvent> coveredEvents = new ArrayList<>();
+        
+        BPMNSignalImpl signal = new BPMNSignalImpl("signalId",
+   								"activityName",
+   								"activityType");
+        signal.setProcessDefinitionId("processDefinitionId");
+        signal.setProcessInstanceId("processInstanceId");
+        
+        SignalPayload signalPayload = ProcessPayloadBuilder.signal()
+										.withName("SignalName")
+										.build();
+        signal.setSignalPayload(signalPayload);
+        
+  
+        CloudBPMNSignalReceivedEventImpl cloudSignalReceivedEvent = new CloudBPMNSignalReceivedEventImpl("eventId",
+        									System.currentTimeMillis(),
+        									signal,
+        									signal.getProcessDefinitionId(),
+        									signal.getProcessInstanceId());
+        coveredEvents.add(cloudSignalReceivedEvent);
+
+          
+        producer.send(coveredEvents.toArray(new CloudRuntimeEvent[coveredEvents.size()]));
+
+        await().untilAsserted(() -> {
+
+            //when
+            Map<String, Object> filters = new HashMap<>();
+            filters.put("entityId",
+                        "signalId");
+
+            ResponseEntity<PagedResources<CloudRuntimeEvent>> eventsPagedResources = eventsRestTemplate.executeFind(filters);
+
+            //then
+            Collection<CloudRuntimeEvent> retrievedEvents = eventsPagedResources.getBody().getContent();
+            assertThat(retrievedEvents).hasSize(1);
+            for (CloudRuntimeEvent e : retrievedEvents) {
+                assertThat(e.getEntityId()).isEqualTo("signalId");
+                assertThat(e.getProcessInstanceId()).isEqualTo("processInstanceId");
+            }
         });
     }
 
