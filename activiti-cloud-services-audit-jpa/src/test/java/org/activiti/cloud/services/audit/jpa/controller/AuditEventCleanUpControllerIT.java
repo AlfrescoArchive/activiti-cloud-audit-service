@@ -41,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 public class AuditEventCleanUpControllerIT {
 
-    private static final String DOCUMENTATION_IDENTIFIER = "events";
     private static final String DOCUMENTATION_ALFRESCO_IDENTIFIER = "events-alfresco";
 
     @MockBean
@@ -57,7 +56,7 @@ public class AuditEventCleanUpControllerIT {
     private UserGroupManager userGroupManager;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         when(securityManager.getAuthenticatedUserId()).thenReturn("admin");
     }
 
