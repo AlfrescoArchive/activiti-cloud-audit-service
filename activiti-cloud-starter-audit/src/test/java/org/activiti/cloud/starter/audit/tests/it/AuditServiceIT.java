@@ -16,10 +16,6 @@
 
 package org.activiti.cloud.starter.audit.tests.it;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.awaitility.Awaitility.await;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.activiti.api.process.model.BPMNSignal;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.model.events.BPMNActivityEvent;
 import org.activiti.api.process.model.payloads.SignalPayload;
@@ -81,6 +76,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.awaitility.Awaitility.await;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -598,24 +597,20 @@ public class AuditServiceIT {
         processInstanceStarted.setParentId("parentId");
         
         
-        BPMNSignalImpl signal = new BPMNSignalImpl("entityId",
-   								"activityName",
-   								"activityType");
+        BPMNSignalImpl signal = new BPMNSignalImpl("entityId");
         signal.setProcessDefinitionId(processInstanceStarted.getProcessDefinitionId());
         signal.setProcessInstanceId(processInstanceStarted.getId());
-        
+
         SignalPayload signalPayload = ProcessPayloadBuilder.signal()
-										.withName("SignalName")
-										.build();
+                .withName("SignalName")
+                .build();
         signal.setSignalPayload(signalPayload);
-        
-  
+
         CloudBPMNSignalReceivedEventImpl event = new CloudBPMNSignalReceivedEventImpl("eventId",
-        									System.currentTimeMillis(),
-        									signal,
-        									signal.getProcessDefinitionId(),
-        									signal.getProcessInstanceId());
-    	
+                                                                                      System.currentTimeMillis(),
+                                                                                      signal,
+                                                                                      signal.getProcessDefinitionId(),
+                                                                                      signal.getProcessInstanceId());
 
         //Set explicitly to be sure
         event.setEntityId("entityId");
@@ -744,23 +739,20 @@ public class AuditServiceIT {
         //given
         List<CloudRuntimeEvent> coveredEvents = new ArrayList<>();
         
-        BPMNSignalImpl signal = new BPMNSignalImpl("signalId",
-   								"activityName",
-   								"activityType");
+        BPMNSignalImpl signal = new BPMNSignalImpl("signalId");
         signal.setProcessDefinitionId("processDefinitionId");
         signal.setProcessInstanceId("processInstanceId");
-        
+
         SignalPayload signalPayload = ProcessPayloadBuilder.signal()
-										.withName("SignalName")
-										.build();
+                .withName("SignalName")
+                .build();
         signal.setSignalPayload(signalPayload);
-        
-  
+
         CloudBPMNSignalReceivedEventImpl cloudSignalReceivedEvent = new CloudBPMNSignalReceivedEventImpl("eventId",
-        									System.currentTimeMillis(),
-        									signal,
-        									signal.getProcessDefinitionId(),
-        									signal.getProcessInstanceId());
+                                                                                                         System.currentTimeMillis(),
+                                                                                                         signal,
+                                                                                                         signal.getProcessDefinitionId(),
+                                                                                                         signal.getProcessInstanceId());
         coveredEvents.add(cloudSignalReceivedEvent);
 
           

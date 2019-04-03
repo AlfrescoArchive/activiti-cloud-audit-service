@@ -16,23 +16,6 @@
 
 package org.activiti.cloud.services.audit.jpa.controller;
 
-import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
-import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
-import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,10 +29,10 @@ import org.activiti.api.runtime.shared.identity.UserGroupManager;
 import org.activiti.api.runtime.shared.security.SecurityManager;
 import org.activiti.cloud.alfresco.argument.resolver.AlfrescoPageRequest;
 import org.activiti.cloud.services.audit.jpa.controllers.AuditEventsControllerImpl;
-import org.activiti.cloud.services.audit.jpa.events.SignalReceivedAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.ActivityStartedAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.ProcessStartedAuditEventEntity;
+import org.activiti.cloud.services.audit.jpa.events.SignalReceivedAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +50,23 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
+import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
+import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AuditEventsControllerImpl.class)
@@ -320,32 +320,29 @@ public class AuditEventsControllerImplIT {
                 .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_IDENTIFIER + "/head"));
     }
-    
+
     @Test
     public void getSignalEventById() throws Exception {
 
-    	BPMNSignalImpl signal = new BPMNSignalImpl("elementId",
-                								   "activityName",
-                								   "activityType");
-    	signal.setSignalPayload(new SignalPayload("signal",null));
-    	
-        SignalReceivedAuditEventEntity eventEntity = new SignalReceivedAuditEventEntity("eventId",  
-        																				System.currentTimeMillis());
-			eventEntity.setId(1L);
-			eventEntity.setServiceName("rb-my-app");
-			eventEntity.setEventType(BPMNSignalEvent.SignalEvents.SIGNAL_RECEIVED.name());
-			eventEntity.setProcessDefinitionId("1");
-			eventEntity.setProcessInstanceId("10");
-			eventEntity.setSignal(signal);
-			
-	    given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
+        BPMNSignalImpl signal = new BPMNSignalImpl("elementId");
+        signal.setSignalPayload(new SignalPayload("signal",
+                                                  null));
 
-           
+        SignalReceivedAuditEventEntity eventEntity = new SignalReceivedAuditEventEntity("eventId",
+                                                                                        System.currentTimeMillis());
+        eventEntity.setId(1L);
+        eventEntity.setServiceName("rb-my-app");
+        eventEntity.setEventType(BPMNSignalEvent.SignalEvents.SIGNAL_RECEIVED.name());
+        eventEntity.setProcessDefinitionId("1");
+        eventEntity.setProcessInstanceId("10");
+        eventEntity.setSignal(signal);
+
+        given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
+
         mockMvc.perform(get("{version}/events/{id}",
-                "/v1",
-                eventEntity.getId()))
-	    .andDo(print())
-	    .andExpect(status().isOk());
-    
+                            "/v1",
+                            eventEntity.getId()))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
