@@ -62,9 +62,6 @@ import org.activiti.cloud.api.task.model.impl.events.CloudTaskCompletedEventImpl
 import org.activiti.cloud.api.task.model.impl.events.CloudTaskCreatedEventImpl;
 import org.activiti.cloud.api.task.model.impl.events.CloudTaskUpdatedEventImpl;
 import org.activiti.cloud.services.audit.api.converters.APIEventToEntityConverters;
-import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
-import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
-import org.activiti.cloud.services.audit.jpa.events.TaskCandidateUserAddedEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
 import org.activiti.cloud.starters.test.MyProducer;
 import org.junit.Before;
@@ -428,232 +425,6 @@ public class AuditServiceIT {
             assertThat(cloudProcessStartedEvent.getEntity().getActivityName()).isEqualTo("first step");
         });
     }
-
-    @Test
-    public void checkEventConvertersForProcess() {
-        //given
-        ProcessInstanceImpl processInstanceStarted = new ProcessInstanceImpl();
-        processInstanceStarted.setId("processInstanceId");
-        processInstanceStarted.setProcessDefinitionId("processDefinitionId");
-        processInstanceStarted.setProcessDefinitionKey("processDefinitionKey");
-        processInstanceStarted.setBusinessKey("businessKey");
-        processInstanceStarted.setParentId("parentId");
-               
-        CloudProcessStartedEventImpl event = new CloudProcessStartedEventImpl("ProcessStartedEventId",
-                                                                              System.currentTimeMillis(),
-                                                                              processInstanceStarted);
-        //Set explicitly to be sure
-        event.setEntityId("entityId");
-        event.setProcessInstanceId(processInstanceStarted.getId());
-        event.setProcessDefinitionId(processInstanceStarted.getProcessDefinitionId());
-        event.setProcessDefinitionKey(processInstanceStarted.getProcessDefinitionKey());
-        event.setBusinessKey(processInstanceStarted.getBusinessKey());
-        event.setParentProcessInstanceId(processInstanceStarted.getParentId());
-        event.setMessageId("message-id");
-        event.setSequenceNumber(0);
-
-        
-             
-        //Check convertToEntity
-        EventToEntityConverter converter = eventConverters.getConverterByEventTypeName(event.getEventType().name());
-        assertThat(converter).isNotNull();
-     
-        AuditEventEntity auditEventEntity= (AuditEventEntity) converter.convertToEntity(event);
-        assertThat(auditEventEntity).isNotNull();
-        
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(event.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(event.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(event.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(event.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(event.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(event.getParentProcessInstanceId());
-            
-        //Check convertToAPI
-        EventToEntityConverter converterAPI = eventConverters.getConverterByEventTypeName(auditEventEntity.getEventType());
-        assertThat(converterAPI).isNotNull();
-     
-        CloudRuntimeEvent cloudEvent= (CloudRuntimeEvent)converterAPI.convertToAPI(auditEventEntity);
-        assertThat(cloudEvent).isNotNull();
-        
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(cloudEvent.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(cloudEvent.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(cloudEvent.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(cloudEvent.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(cloudEvent.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudEvent.getParentProcessInstanceId());
-        
-    }
-    
-    @Test
-    public void checkEventConvertersForTask() {
-        //given
-        TaskImpl taskCreated = new TaskImpl("1234-abc-5678-def",
-                                            "my task",
-                                            Task.TaskStatus.CREATED);
-        CloudTaskCreatedEventImpl cloudTaskCreatedEvent = new CloudTaskCreatedEventImpl("TaskCreatedEventId",
-                                                                                        System.currentTimeMillis(),
-                                                                                        taskCreated);
-        cloudTaskCreatedEvent.setEntityId("entityId");
-        cloudTaskCreatedEvent.setProcessInstanceId("processInstanceId");
-        cloudTaskCreatedEvent.setProcessDefinitionId("processDefinitionId");
-        cloudTaskCreatedEvent.setProcessDefinitionKey("processDefinitionKey");
-        cloudTaskCreatedEvent.setBusinessKey("businessKey");
-        cloudTaskCreatedEvent.setParentProcessInstanceId("parentProcessInstanceId");
-        cloudTaskCreatedEvent.setMessageId("messageId");
-        cloudTaskCreatedEvent.setSequenceNumber(0);
-        
-             
-        //Check convertToEntity
-        EventToEntityConverter taskConverter = eventConverters.getConverterByEventTypeName(cloudTaskCreatedEvent.getEventType().name());
-        assertThat(taskConverter).isNotNull();
-     
-        AuditEventEntity auditEventEntity= (AuditEventEntity) taskConverter.convertToEntity(cloudTaskCreatedEvent);
-        assertThat(auditEventEntity).isNotNull();
-        
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(cloudTaskCreatedEvent.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(cloudTaskCreatedEvent.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(cloudTaskCreatedEvent.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(cloudTaskCreatedEvent.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(cloudTaskCreatedEvent.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudTaskCreatedEvent.getParentProcessInstanceId());
-            
-        //Check convertToAPI
-        EventToEntityConverter converterAPI = eventConverters.getConverterByEventTypeName(auditEventEntity.getEventType());
-        assertThat(converterAPI).isNotNull();
-     
-        CloudRuntimeEvent cloudEvent= (CloudRuntimeEvent)converterAPI.convertToAPI(auditEventEntity);
-        assertThat(cloudEvent).isNotNull();
-        
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(cloudEvent.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(cloudEvent.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(cloudEvent.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(cloudEvent.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(cloudEvent.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudEvent.getParentProcessInstanceId());
-        
-    }
-    
-    @Test
-    public void checkEventConvertersForTaskCandidates() {
-        //given
-        TaskCandidateUserImpl taskCandidateUser=new TaskCandidateUserImpl("userId", "1234-abc-5678-def");
-        
-        CloudTaskCandidateUserAddedEventImpl candidateUserAddedEvent = new CloudTaskCandidateUserAddedEventImpl("TaskCandidateUserAddedEventId",
-                                                                                                            System.currentTimeMillis(),
-                                                                                                            taskCandidateUser);
-        candidateUserAddedEvent.setEntityId("entityId");
-        candidateUserAddedEvent.setProcessInstanceId("processInstanceId");
-        candidateUserAddedEvent.setProcessDefinitionId("processDefinitionId");
-        candidateUserAddedEvent.setProcessDefinitionKey("processDefinitionKey");
-        candidateUserAddedEvent.setBusinessKey("businessKey");
-        candidateUserAddedEvent.setParentProcessInstanceId("parentProcessInstanceId");
-        candidateUserAddedEvent.setMessageId("messageId");
-        candidateUserAddedEvent.setSequenceNumber(0);
-        
-             
-        //Check convertToEntity
-        EventToEntityConverter converter = eventConverters.getConverterByEventTypeName(candidateUserAddedEvent.getEventType().name());
-        assertThat(converter).isNotNull();
-     
-        TaskCandidateUserAddedEventEntity auditEventEntity= (TaskCandidateUserAddedEventEntity) converter.convertToEntity(candidateUserAddedEvent);
-        assertThat(auditEventEntity).isNotNull();
-        
-        assertThat(auditEventEntity.getCandidateUser().getTaskId()).isEqualTo(candidateUserAddedEvent.getEntity().getTaskId());
-        assertThat(auditEventEntity.getCandidateUser().getUserId()).isEqualTo(candidateUserAddedEvent.getEntity().getUserId());
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(candidateUserAddedEvent.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(candidateUserAddedEvent.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(candidateUserAddedEvent.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(candidateUserAddedEvent.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(candidateUserAddedEvent.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(candidateUserAddedEvent.getParentProcessInstanceId());
-            
-        //Check convertToAPI
-        EventToEntityConverter converterAPI = eventConverters.getConverterByEventTypeName(auditEventEntity.getEventType());
-        assertThat(converterAPI).isNotNull();
-     
-        
-        
-        CloudTaskCandidateUserAddedEventImpl cloudEvent= (CloudTaskCandidateUserAddedEventImpl)converterAPI.convertToAPI(auditEventEntity);
-        assertThat(cloudEvent).isNotNull();
-        
-        assertThat(auditEventEntity.getCandidateUser().getTaskId()).isEqualTo(cloudEvent.getEntity().getTaskId());
-        assertThat(auditEventEntity.getCandidateUser().getUserId()).isEqualTo(cloudEvent.getEntity().getUserId());
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(cloudEvent.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(cloudEvent.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(cloudEvent.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(cloudEvent.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(cloudEvent.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudEvent.getParentProcessInstanceId());
-        
-    }
-    
-    @Test
-    public void checkEventConvertersForSignal() {
-        //given
-        ProcessInstanceImpl processInstanceStarted = new ProcessInstanceImpl();
-        processInstanceStarted.setId("processInstanceId");
-        processInstanceStarted.setProcessDefinitionId("processDefinitionId");
-        processInstanceStarted.setProcessDefinitionKey("processDefinitionKey");
-        processInstanceStarted.setBusinessKey("businessKey");
-        processInstanceStarted.setParentId("parentId");
-        
-        
-        BPMNSignalImpl signal = new BPMNSignalImpl("entityId");
-        signal.setProcessDefinitionId(processInstanceStarted.getProcessDefinitionId());
-        signal.setProcessInstanceId(processInstanceStarted.getId());
-
-        SignalPayload signalPayload = ProcessPayloadBuilder.signal()
-                .withName("SignalName")
-                .build();
-        signal.setSignalPayload(signalPayload);
-
-        CloudBPMNSignalReceivedEventImpl event = new CloudBPMNSignalReceivedEventImpl("eventId",
-                                                                                      System.currentTimeMillis(),
-                                                                                      signal,
-                                                                                      signal.getProcessDefinitionId(),
-                                                                                      signal.getProcessInstanceId());
-
-        //Set explicitly to be sure
-        event.setEntityId("entityId");
-        event.setProcessInstanceId(processInstanceStarted.getId());
-        event.setProcessDefinitionId(processInstanceStarted.getProcessDefinitionId());
-        event.setProcessDefinitionKey(processInstanceStarted.getProcessDefinitionKey());
-        event.setBusinessKey(processInstanceStarted.getBusinessKey());
-        event.setParentProcessInstanceId(processInstanceStarted.getParentId());
-        event.setMessageId("message-id");
-        event.setSequenceNumber(0);
-
-        
-             
-        //Check convertToEntity
-        EventToEntityConverter converter = eventConverters.getConverterByEventTypeName(event.getEventType().name());
-        assertThat(converter).isNotNull();
-     
-        AuditEventEntity auditEventEntity= (AuditEventEntity) converter.convertToEntity(event);
-        assertThat(auditEventEntity).isNotNull();
-        
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(event.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(event.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(event.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(event.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(event.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(event.getParentProcessInstanceId());
-            
-        //Check convertToAPI
-        EventToEntityConverter converterAPI = eventConverters.getConverterByEventTypeName(auditEventEntity.getEventType());
-        assertThat(converterAPI).isNotNull();
-     
-        CloudRuntimeEvent cloudEvent= (CloudRuntimeEvent)converterAPI.convertToAPI(auditEventEntity);
-        assertThat(cloudEvent).isNotNull();
-        
-        assertThat(auditEventEntity.getEntityId()).isEqualTo(cloudEvent.getEntityId());
-        assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(cloudEvent.getProcessInstanceId());
-        assertThat(auditEventEntity.getProcessDefinitionId()).isEqualTo(cloudEvent.getProcessDefinitionId());
-        assertThat(auditEventEntity.getProcessDefinitionKey()).isEqualTo(cloudEvent.getProcessDefinitionKey());
-        assertThat(auditEventEntity.getBusinessKey()).isEqualTo(cloudEvent.getBusinessKey());
-        assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudEvent.getParentProcessInstanceId());
-        
-    }
     
     @Test
     public void shouldGetUserCandidateEvents() {
@@ -781,6 +552,7 @@ public class AuditServiceIT {
                     CloudRuntimeEvent::getServiceName,
                     CloudRuntimeEvent::getServiceVersion,
                     CloudRuntimeEvent::getProcessInstanceId,
+                    CloudRuntimeEvent::getProcessDefinitionId,
                     CloudRuntimeEvent::getEntityId,
                     event -> ((CloudBPMNSignalReceivedEvent)event).getEntity().getElementId(),
                     event -> ((CloudBPMNSignalReceivedEvent)event).getEntity().getSignalPayload().getId(),
@@ -790,6 +562,7 @@ public class AuditServiceIT {
             		        cloudSignalReceivedEvent.getServiceName(),
             		        cloudSignalReceivedEvent.getServiceVersion(),
             		        cloudSignalReceivedEvent.getProcessInstanceId(),
+            		        cloudSignalReceivedEvent.getProcessDefinitionId(),
             		        cloudSignalReceivedEvent.getEntityId(),
             		        cloudSignalReceivedEvent.getEntity().getElementId(),
             		        cloudSignalReceivedEvent.getEntity().getSignalPayload().getId(),
