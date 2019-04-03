@@ -20,7 +20,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 import org.activiti.api.process.model.BPMNSignal;
 import org.activiti.api.process.model.events.BPMNSignalEvent;
@@ -57,7 +56,7 @@ public class SignalReceivedAuditEventEntity extends AuditEventEntity {
                                           String messageId,
                                           Integer sequenceNumber,
                                           BPMNSignal signal) {
-    	 super(eventId,
+        super(eventId,
                timestamp,
                BPMNSignalEvent.SignalEvents.SIGNAL_RECEIVED.name());
            setAppName(appName);
