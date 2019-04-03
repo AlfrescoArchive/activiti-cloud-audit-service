@@ -41,6 +41,7 @@ import org.activiti.cloud.api.model.shared.impl.conf.IgnoredRuntimeEvent;
 import org.activiti.cloud.api.model.shared.impl.events.CloudRuntimeEventImpl;
 import org.activiti.cloud.api.process.model.events.CloudBPMNActivityEvent;
 import org.activiti.cloud.api.process.model.events.CloudBPMNActivityStartedEvent;
+import org.activiti.cloud.api.process.model.events.CloudBPMNSignalReceivedEvent;
 import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityCancelledEventImpl;
 import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityCompletedEventImpl;
 import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityStartedEventImpl;
@@ -745,8 +746,11 @@ public class AuditServiceIT {
 
         SignalPayload signalPayload = ProcessPayloadBuilder.signal()
                 .withName("SignalName")
+                .withVariable("signal-variable",
+                              "test")
                 .build();
         signal.setSignalPayload(signalPayload);
+      
 
         CloudBPMNSignalReceivedEventImpl cloudSignalReceivedEvent = new CloudBPMNSignalReceivedEventImpl("eventId",
                                                                                                          System.currentTimeMillis(),
@@ -770,10 +774,27 @@ public class AuditServiceIT {
             //then
             Collection<CloudRuntimeEvent> retrievedEvents = eventsPagedResources.getBody().getContent();
             assertThat(retrievedEvents).hasSize(1);
-            for (CloudRuntimeEvent e : retrievedEvents) {
-                assertThat(e.getEntityId()).isEqualTo("signalId");
-                assertThat(e.getProcessInstanceId()).isEqualTo("processInstanceId");
-            }
+            
+            assertThat(retrievedEvents)
+            .extracting(
+                    CloudRuntimeEvent::getEventType,
+                    CloudRuntimeEvent::getServiceName,
+                    CloudRuntimeEvent::getServiceVersion,
+                    CloudRuntimeEvent::getProcessInstanceId,
+                    CloudRuntimeEvent::getEntityId,
+                    event -> ((CloudBPMNSignalReceivedEvent)event).getEntity().getElementId(),
+                    event -> ((CloudBPMNSignalReceivedEvent)event).getEntity().getSignalPayload().getId(),
+                    event -> ((CloudBPMNSignalReceivedEvent)event).getEntity().getSignalPayload().getName(),
+                    event -> ((CloudBPMNSignalReceivedEvent)event).getEntity().getSignalPayload().getVariables())
+            .contains(tuple(cloudSignalReceivedEvent.getEventType(),
+            		        cloudSignalReceivedEvent.getServiceName(),
+            		        cloudSignalReceivedEvent.getServiceVersion(),
+            		        cloudSignalReceivedEvent.getProcessInstanceId(),
+            		        cloudSignalReceivedEvent.getEntityId(),
+            		        cloudSignalReceivedEvent.getEntity().getElementId(),
+            		        cloudSignalReceivedEvent.getEntity().getSignalPayload().getId(),
+            		        cloudSignalReceivedEvent.getEntity().getSignalPayload().getName(),
+            		        cloudSignalReceivedEvent.getEntity().getSignalPayload().getVariables()));
         });
     }
 
