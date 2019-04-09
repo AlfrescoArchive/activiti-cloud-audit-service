@@ -16,34 +16,15 @@
 
 package org.activiti.cloud.starter.audit.tests.it;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.activiti.cloud.api.model.shared.impl.events.CloudVariableCreatedEventImpl;
-import org.activiti.cloud.api.model.shared.impl.events.CloudVariableDeletedEventImpl;
-import org.activiti.cloud.api.model.shared.impl.events.CloudVariableUpdatedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityCancelledEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityCompletedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudBPMNActivityStartedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudBPMNSignalReceivedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessCancelledEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessCompletedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessCreatedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessDeployedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessResumedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessStartedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessSuspendedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudProcessUpdatedEventImpl;
-import org.activiti.cloud.api.process.model.impl.events.CloudSequenceFlowTakenImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskAssignedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskCancelledEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskCandidateGroupAddedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskCandidateGroupRemovedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskCandidateUserAddedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskCandidateUserRemovedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskCompletedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskCreatedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskSuspendedEventImpl;
-import org.activiti.cloud.api.task.model.impl.events.CloudTaskUpdatedEventImpl;
+import org.activiti.api.model.shared.event.VariableEvent;
+import org.activiti.api.process.model.events.BPMNActivityEvent;
+import org.activiti.api.process.model.events.BPMNSignalEvent;
+import org.activiti.api.process.model.events.ProcessDefinitionEvent;
+import org.activiti.api.process.model.events.ProcessRuntimeEvent;
+import org.activiti.api.process.model.events.SequenceFlowEvent;
+import org.activiti.api.task.model.events.TaskCandidateGroupEvent;
+import org.activiti.api.task.model.events.TaskCandidateUserEvent;
+import org.activiti.api.task.model.events.TaskRuntimeEvent;
 import org.activiti.cloud.services.audit.api.converters.APIEventToEntityConverters;
 import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
 import org.activiti.cloud.services.audit.jpa.converters.ActivityCancelledEventConverter;
@@ -72,7 +53,6 @@ import org.activiti.cloud.services.audit.jpa.converters.TaskUpdatedEventConverte
 import org.activiti.cloud.services.audit.jpa.converters.VariableCreatedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.VariableDeletedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.VariableUpdatedEventConverter;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +60,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringRunner.class)
@@ -89,92 +71,89 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class APIEventToEntityConvertersIT {
 
     @Autowired
-    private EventsRestTemplate eventsRestTemplate;
-    
-    @Autowired
     private APIEventToEntityConverters eventConverters;
 
     @Test
-    public void checkConverterForEvents() {
+    public void shouldHaveConvertersForAllCoveredEvents() {
         
         EventToEntityConverter converter;
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudBPMNActivityCancelledEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(BPMNActivityEvent.ActivityEvents.ACTIVITY_CANCELLED.name());
         assertThat(converter).isNotNull().isInstanceOf(ActivityCancelledEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudBPMNActivityCompletedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(BPMNActivityEvent.ActivityEvents.ACTIVITY_COMPLETED.name());
         assertThat(converter).isNotNull().isInstanceOf(ActivityCompletedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudBPMNActivityStartedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(BPMNActivityEvent.ActivityEvents.ACTIVITY_STARTED.name());
         assertThat(converter).isNotNull().isInstanceOf(ActivityStartedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessCancelledEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessRuntimeEvent.ProcessEvents.PROCESS_CANCELLED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessCancelledEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessCompletedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessRuntimeEvent.ProcessEvents.PROCESS_COMPLETED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessCompletedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessCreatedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessRuntimeEvent.ProcessEvents.PROCESS_CREATED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessCreatedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessDeployedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessDefinitionEvent.ProcessDefinitionEvents.PROCESS_DEPLOYED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessDeployedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessResumedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessRuntimeEvent.ProcessEvents.PROCESS_RESUMED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessResumedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessStartedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessRuntimeEvent.ProcessEvents.PROCESS_STARTED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessStartedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessSuspendedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessRuntimeEvent.ProcessEvents.PROCESS_SUSPENDED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessSuspendedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudProcessUpdatedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(ProcessRuntimeEvent.ProcessEvents.PROCESS_UPDATED.name());
         assertThat(converter).isNotNull().isInstanceOf(ProcessUpdatedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudBPMNSignalReceivedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(BPMNSignalEvent.SignalEvents.SIGNAL_RECEIVED.name());
         assertThat(converter).isNotNull().isInstanceOf(SignalReceivedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudSequenceFlowTakenImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(SequenceFlowEvent.SequenceFlowEvents.SEQUENCE_FLOW_TAKEN.name());
         assertThat(converter).isNotNull().isInstanceOf(SequenceFlowTakenEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskAssignedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(TaskRuntimeEvent.TaskEvents.TASK_ASSIGNED.name());
         assertThat(converter).isNotNull().isInstanceOf(TaskAssignedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskCancelledEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(TaskRuntimeEvent.TaskEvents.TASK_CANCELLED.name());
         assertThat(converter).isNotNull().isInstanceOf(TaskCancelledEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskCandidateGroupAddedEventImpl().getEventType().name());
-        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateGroupAddedEventConverter.class);
-        
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskCandidateGroupRemovedEventImpl().getEventType().name());
-        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateGroupRemovedEventConverter.class);
-        
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskCandidateUserAddedEventImpl().getEventType().name());
-        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateUserAddedEventConverter.class);
-        
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskCandidateUserRemovedEventImpl().getEventType().name());
-        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateUserRemovedEventConverter.class);
-        
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskCompletedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(TaskRuntimeEvent.TaskEvents.TASK_COMPLETED.name());
         assertThat(converter).isNotNull().isInstanceOf(TaskCompletedEventConverter.class);
-        
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskCreatedEventImpl().getEventType().name());
+
+        converter = eventConverters.getConverterByEventTypeName(TaskCandidateGroupEvent.TaskCandidateGroupEvents.TASK_CANDIDATE_GROUP_ADDED.name());
+        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateGroupAddedEventConverter.class);
+
+        converter = eventConverters.getConverterByEventTypeName(TaskCandidateGroupEvent.TaskCandidateGroupEvents.TASK_CANDIDATE_GROUP_REMOVED.name());
+        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateGroupRemovedEventConverter.class);
+
+        converter = eventConverters.getConverterByEventTypeName(TaskCandidateUserEvent.TaskCandidateUserEvents.TASK_CANDIDATE_USER_ADDED.name());
+        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateUserAddedEventConverter.class);
+
+        converter = eventConverters.getConverterByEventTypeName(TaskCandidateUserEvent.TaskCandidateUserEvents.TASK_CANDIDATE_USER_REMOVED.name());
+        assertThat(converter).isNotNull().isInstanceOf(TaskCandidateUserRemovedEventConverter.class);
+
+        converter = eventConverters.getConverterByEventTypeName(TaskRuntimeEvent.TaskEvents.TASK_CREATED.name());
         assertThat(converter).isNotNull().isInstanceOf(TaskCreatedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskSuspendedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(TaskRuntimeEvent.TaskEvents.TASK_SUSPENDED.name());
         assertThat(converter).isNotNull().isInstanceOf(TaskSuspendedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudTaskUpdatedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(TaskRuntimeEvent.TaskEvents.TASK_UPDATED.name());
         assertThat(converter).isNotNull().isInstanceOf(TaskUpdatedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudVariableCreatedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(VariableEvent.VariableEvents.VARIABLE_CREATED.name());
         assertThat(converter).isNotNull().isInstanceOf(VariableCreatedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudVariableDeletedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(VariableEvent.VariableEvents.VARIABLE_DELETED.name());
         assertThat(converter).isNotNull().isInstanceOf(VariableDeletedEventConverter.class);
         
-        converter = eventConverters.getConverterByEventTypeName(new CloudVariableUpdatedEventImpl().getEventType().name());
+        converter = eventConverters.getConverterByEventTypeName(VariableEvent.VariableEvents.VARIABLE_UPDATED.name());
         assertThat(converter).isNotNull().isInstanceOf(VariableUpdatedEventConverter.class);
         
     }

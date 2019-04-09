@@ -25,14 +25,16 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaskCandidateUserAddedEventConverterTest {
-    
+
+    private  TaskCandidateUserAddedEventConverter eventConverter = new TaskCandidateUserAddedEventConverter(new EventContextInfoAppender());
+
     @Test
     public void checkConvertToEntityTaskCandidateUserAddedEvent() {
         //given
         CloudTaskCandidateUserAddedEventImpl event = createTaskCandidateUserAddedEvent();
            
         //when
-        AuditEventEntity auditEventEntity = convertToEntity(event);   
+        AuditEventEntity auditEventEntity = eventConverter.convertToEntity(event);
      
         //then
         assertThat(auditEventEntity).isNotNull();
@@ -49,10 +51,10 @@ public class TaskCandidateUserAddedEventConverterTest {
     @Test
     public void checkConvertToAPITaskCandidateUserAddedEvent() {
         //given
-        AuditEventEntity auditEventEntity = convertToEntity(createTaskCandidateUserAddedEvent());   
+        AuditEventEntity auditEventEntity = eventConverter.convertToEntity(createTaskCandidateUserAddedEvent());
         
         //when
-        CloudRuntimeEvent cloudEvent= convertToAPI(auditEventEntity);
+        CloudRuntimeEvent cloudEvent= eventConverter.convertToAPI(auditEventEntity);
         assertThat(cloudEvent).isNotNull();
         assertThat(((TaskCandidateUserAddedEventEntity)auditEventEntity).getCandidateUser().getTaskId()).isEqualTo(((CloudTaskCandidateUserAddedEventImpl)cloudEvent).getEntity().getTaskId());
         assertThat(((TaskCandidateUserAddedEventEntity)auditEventEntity).getCandidateUser().getUserId()).isEqualTo(((CloudTaskCandidateUserAddedEventImpl)cloudEvent).getEntity().getUserId());
@@ -64,7 +66,7 @@ public class TaskCandidateUserAddedEventConverterTest {
         assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudEvent.getParentProcessInstanceId());
     }
     
-    public CloudTaskCandidateUserAddedEventImpl createTaskCandidateUserAddedEvent() {
+    private CloudTaskCandidateUserAddedEventImpl createTaskCandidateUserAddedEvent() {
         //given
         TaskCandidateUserImpl taskCandidateUser=new TaskCandidateUserImpl("userId", "1234-abc-5678-def");
         
@@ -82,15 +84,4 @@ public class TaskCandidateUserAddedEventConverterTest {
         
         return candidateUserAddedEvent;
     }
-    
-    public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudEvent) {
-        TaskCandidateUserAddedEventConverter eventConverter = new TaskCandidateUserAddedEventConverter(new EventContextInfoAppender());
-        return (AuditEventEntity)eventConverter.convertToEntity(cloudEvent);
-    }
-    
-    public CloudRuntimeEvent convertToAPI(AuditEventEntity auditEventEntity) {
-        TaskCandidateUserAddedEventConverter eventConverter = new TaskCandidateUserAddedEventConverter(new EventContextInfoAppender());
-        return (CloudRuntimeEvent)eventConverter.convertToAPI(auditEventEntity);
-    }
-    
 }

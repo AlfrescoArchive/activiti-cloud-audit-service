@@ -25,6 +25,8 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaskCreatedEventConverterTest {
+
+    private TaskCreatedEventConverter eventConverter = new TaskCreatedEventConverter(new EventContextInfoAppender());
     
     @Test
     public void checkConvertToEntityTaskCreatedEvent() {
@@ -32,7 +34,7 @@ public class TaskCreatedEventConverterTest {
         CloudTaskCreatedEventImpl event = createTaskCreatedEvent();
            
         //when
-        AuditEventEntity auditEventEntity = convertToEntity(event);   
+        AuditEventEntity auditEventEntity = eventConverter.convertToEntity(event);
      
         //then
         assertThat(auditEventEntity).isNotNull();
@@ -47,10 +49,10 @@ public class TaskCreatedEventConverterTest {
     @Test
     public void checkConvertToAPITaskCreatedEvent() {
         //given
-        AuditEventEntity auditEventEntity = convertToEntity(createTaskCreatedEvent());   
+        AuditEventEntity auditEventEntity = eventConverter.convertToEntity(createTaskCreatedEvent());
         
         //when
-        CloudRuntimeEvent cloudEvent= convertToAPI(auditEventEntity);
+        CloudRuntimeEvent cloudEvent= eventConverter.convertToAPI(auditEventEntity);
         assertThat(cloudEvent).isNotNull();
         assertThat(auditEventEntity.getEntityId()).isEqualTo(cloudEvent.getEntityId());
         assertThat(auditEventEntity.getProcessInstanceId()).isEqualTo(cloudEvent.getProcessInstanceId());
@@ -60,7 +62,7 @@ public class TaskCreatedEventConverterTest {
         assertThat(auditEventEntity.getParentProcessInstanceId()).isEqualTo(cloudEvent.getParentProcessInstanceId());
     }
     
-    public CloudTaskCreatedEventImpl createTaskCreatedEvent() {
+    private CloudTaskCreatedEventImpl createTaskCreatedEvent() {
         //given
         TaskImpl taskCreated = new TaskImpl("1234-abc-5678-def",
                                             "my task",
@@ -79,15 +81,4 @@ public class TaskCreatedEventConverterTest {
         
         return cloudTaskCreatedEvent;
     }
-    
-    public AuditEventEntity convertToEntity(CloudRuntimeEvent cloudEvent) {
-        TaskCreatedEventConverter eventConverter = new TaskCreatedEventConverter(new EventContextInfoAppender());
-        return (AuditEventEntity)eventConverter.convertToEntity(cloudEvent);
-    }
-    
-    public CloudRuntimeEvent convertToAPI(AuditEventEntity auditEventEntity) {
-        TaskCreatedEventConverter eventConverter = new TaskCreatedEventConverter(new EventContextInfoAppender());
-        return (CloudRuntimeEvent)eventConverter.convertToAPI(auditEventEntity);
-    }
-    
 }
