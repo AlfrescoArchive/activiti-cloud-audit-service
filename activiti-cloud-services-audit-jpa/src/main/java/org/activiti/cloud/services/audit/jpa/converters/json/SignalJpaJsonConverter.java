@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.cloud.services.audit.api.resources;
+package org.activiti.cloud.services.audit.jpa.converters.json;
 
-import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resource;
+import org.activiti.api.process.model.BPMNSignal;
 
-public class EventResource extends Resource<CloudRuntimeEvent> {
+public class SignalJpaJsonConverter extends JpaJsonConverter<BPMNSignal> {
 
-    public EventResource(CloudRuntimeEvent content,
-                         Link... links) {
-        super(content,
-              links);
+    public SignalJpaJsonConverter() {
+        super(BPMNSignal.class);
     }
 }
