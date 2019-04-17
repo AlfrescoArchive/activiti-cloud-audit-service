@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.resourcesResponseFields;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,6 +59,7 @@ public class AuditEventCleanUpControllerIT {
     @Before
     public void setUp() {
         when(securityManager.getAuthenticatedUserId()).thenReturn("admin");
+        assertThat(userGroupManager).isNotNull();
     }
 
     @Test
