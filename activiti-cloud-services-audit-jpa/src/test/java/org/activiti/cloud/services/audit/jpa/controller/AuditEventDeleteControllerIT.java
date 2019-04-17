@@ -4,7 +4,8 @@ import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
 import org.activiti.api.runtime.shared.identity.UserGroupManager;
 import org.activiti.api.runtime.shared.security.SecurityManager;
-import org.activiti.cloud.services.audit.jpa.controllers.AuditEventsCleanUpController;
+import org.activiti.cloud.services.audit.api.resources.EventsRelProvider;
+import org.activiti.cloud.services.audit.jpa.controllers.AuditEventsDeleteController;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.ProcessStartedAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
@@ -34,13 +35,13 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource(properties="activiti.rest.enable-clean-up=true")
+@TestPropertySource(properties="activiti.rest.enable-deletion=true")
 @RunWith(SpringRunner.class)
-@WebMvcTest(AuditEventsCleanUpController.class)
+@WebMvcTest(AuditEventsDeleteController.class)
 @EnableSpringDataWebSupport
 @AutoConfigureMockMvc(secure = false)
 @AutoConfigureRestDocs(outputDir = "target/snippets")
-public class AuditEventCleanUpControllerIT {
+public class AuditEventDeleteControllerIT {
 
     private static final String DOCUMENTATION_ALFRESCO_IDENTIFIER = "events-alfresco";
 
@@ -71,7 +72,7 @@ public class AuditEventCleanUpControllerIT {
                 .willReturn(list);
 
         //when
-        mockMvc.perform(delete("/admin/clean-up/v1/events")
+        mockMvc.perform(delete("/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL + "/delete")
                 .accept(MediaType.APPLICATION_JSON))
                 //then
                 .andExpect(status().isOk())

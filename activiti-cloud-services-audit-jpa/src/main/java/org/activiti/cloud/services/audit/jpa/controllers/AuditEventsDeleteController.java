@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@ConditionalOnProperty(name = "activiti.rest.enable-clean-up", havingValue = "true")
+@ConditionalOnProperty(name = "activiti.rest.enable-deletion", havingValue = "true")
 @RestController
 @RequestMapping(
-        value = "/admin/clean-up/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL,
+        value = "/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL + "/delete",
         produces = {
                 MediaTypes.HAL_JSON_VALUE,
                 MediaType.APPLICATION_JSON_VALUE
         })
-public class AuditEventsCleanUpController {
+public class AuditEventsDeleteController {
 
     private final EventsRepository eventsRepository;
 
@@ -36,9 +36,9 @@ public class AuditEventsCleanUpController {
     private final APIEventToEntityConverters eventConverters;
 
     @Autowired
-    public AuditEventsCleanUpController(EventsRepository eventsRepository,
-                                          EventResourceAssembler eventResourceAssembler,
-                                          APIEventToEntityConverters eventConverters) {
+    public AuditEventsDeleteController(EventsRepository eventsRepository,
+                                       EventResourceAssembler eventResourceAssembler,
+                                       APIEventToEntityConverters eventConverters) {
         this.eventsRepository = eventsRepository;
         this.eventResourceAssembler = eventResourceAssembler;
         this.eventConverters = eventConverters;
