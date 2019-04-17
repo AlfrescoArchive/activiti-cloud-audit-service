@@ -72,7 +72,7 @@ public class AuditEventDeleteControllerIT {
                 .willReturn(list);
 
         //when
-        mockMvc.perform(delete("/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL + "/delete")
+        mockMvc.perform(delete("/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL)
                 .accept(MediaType.APPLICATION_JSON))
                 //then
                 .andExpect(status().isOk())

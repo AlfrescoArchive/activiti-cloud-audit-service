@@ -22,7 +22,7 @@ import java.util.Collection;
 @ConditionalOnProperty(name = "activiti.rest.enable-deletion", havingValue = "true")
 @RestController
 @RequestMapping(
-        value = "/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL + "/delete",
+        value = "/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL,
         produces = {
                 MediaTypes.HAL_JSON_VALUE,
                 MediaType.APPLICATION_JSON_VALUE
