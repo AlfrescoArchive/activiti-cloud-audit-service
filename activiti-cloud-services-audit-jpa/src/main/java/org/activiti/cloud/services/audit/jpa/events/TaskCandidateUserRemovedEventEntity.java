@@ -20,7 +20,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 import org.activiti.api.task.model.TaskCandidateUser;
 import org.activiti.api.task.model.events.TaskCandidateUserEvent;
@@ -34,8 +33,7 @@ public class TaskCandidateUserRemovedEventEntity extends AuditEventEntity {
     protected static final String TASK_CANDIDATE_USER_REMOVED_EVENT = "TaskCandidateUserRemovedEvent";
 
     @Convert(converter = TaskCandidateUserJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private TaskCandidateUserImpl candidateUser;
     
     public TaskCandidateUserRemovedEventEntity() {

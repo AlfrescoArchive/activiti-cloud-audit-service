@@ -34,8 +34,7 @@ public class TaskCandidateGroupAddedEventEntity extends AuditEventEntity {
     protected static final String TASK_CANDIDATE_GROUP_ADDED_EVENT = "TaskCandidateGroupAddedEvent";
    
     @Convert(converter = TaskCandidateGroupJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private TaskCandidateGroupImpl candidateGroup;
     
     public TaskCandidateGroupAddedEventEntity() {

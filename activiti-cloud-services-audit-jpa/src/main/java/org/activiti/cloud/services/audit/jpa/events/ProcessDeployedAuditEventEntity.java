@@ -33,8 +33,7 @@ public class ProcessDeployedAuditEventEntity extends AuditEventEntity {
     protected static final String PROCESS_DEPLOYED_EVENT = "ProcessDeployedEvent";
 
     @Convert(converter = ProcessDefinitionJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private ProcessDefinition processDefinition;
 
     public ProcessDeployedAuditEventEntity() {

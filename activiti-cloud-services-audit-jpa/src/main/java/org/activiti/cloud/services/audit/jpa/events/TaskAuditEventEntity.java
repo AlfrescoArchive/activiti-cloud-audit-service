@@ -12,8 +12,7 @@ import org.activiti.cloud.services.audit.jpa.converters.json.TaskJpaJsonConverte
 public abstract class TaskAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = TaskJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private Task task;
 
     private String taskId;

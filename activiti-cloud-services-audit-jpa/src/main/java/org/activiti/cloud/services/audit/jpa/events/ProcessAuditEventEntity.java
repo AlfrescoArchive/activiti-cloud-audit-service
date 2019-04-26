@@ -28,8 +28,7 @@ import org.activiti.cloud.services.audit.jpa.converters.json.ProcessInstanceJpaJ
 public abstract class ProcessAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = ProcessInstanceJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private ProcessInstance processInstance;
 
     public ProcessAuditEventEntity() {

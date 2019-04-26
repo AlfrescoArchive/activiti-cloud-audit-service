@@ -33,8 +33,7 @@ public class SequenceFlowAuditEventEntity extends AuditEventEntity {
     protected static final String SEQUENCE_FLOW_TAKEN_EVENT = "SequenceFlowTakenEvent";
 
     @Convert(converter = SequenceFlowJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private BPMNSequenceFlow sequenceFlow;
 
     public SequenceFlowAuditEventEntity() {

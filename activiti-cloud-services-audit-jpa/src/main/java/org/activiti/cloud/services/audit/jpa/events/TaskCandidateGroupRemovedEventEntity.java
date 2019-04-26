@@ -34,8 +34,7 @@ public class TaskCandidateGroupRemovedEventEntity extends AuditEventEntity {
     protected static final String TASK_CANDIDATE_GROUP_REMOVED_EVENT = "TaskCandidateGroupRemovedEvent";
 
     @Convert(converter = TaskCandidateGroupJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private TaskCandidateGroupImpl candidateGroup;
     
     public TaskCandidateGroupRemovedEventEntity() {

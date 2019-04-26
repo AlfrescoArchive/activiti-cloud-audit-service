@@ -28,8 +28,7 @@ import org.activiti.cloud.services.audit.jpa.converters.json.ActivityJpaJsonConv
 public abstract class BPMNActivityAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = ActivityJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition="text")
     private BPMNActivity bpmnActivity;
 
 
