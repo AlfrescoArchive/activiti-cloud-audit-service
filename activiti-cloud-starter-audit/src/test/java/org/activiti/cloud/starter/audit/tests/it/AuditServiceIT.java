@@ -72,6 +72,7 @@ import org.activiti.cloud.api.process.model.impl.events.CloudProcessSuspendedEve
 import org.activiti.cloud.api.process.model.impl.events.CloudProcessUpdatedEventImpl;
 import org.activiti.cloud.api.task.model.events.CloudTaskAssignedEvent;
 import org.activiti.cloud.api.task.model.events.CloudTaskCancelledEvent;
+import org.activiti.cloud.api.task.model.events.CloudTaskCreatedEvent;
 import org.activiti.cloud.api.task.model.impl.events.CloudTaskAssignedEventImpl;
 import org.activiti.cloud.api.task.model.impl.events.CloudTaskCancelledEventImpl;
 import org.activiti.cloud.api.task.model.impl.events.CloudTaskCandidateUserAddedEventImpl;
@@ -92,6 +93,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.awaitility.Awaitility.await;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -190,6 +196,43 @@ public class AuditServiceIT {
             }
         });
     }
+    
+    @Test
+    public void shouldBeAbleToFilterOnProcessInstanceIdTaskCreatedEvent() {
+        //given
+        List<CloudRuntimeEvent> coveredEvents = getTestEvents();
+        producer.send(coveredEvents.toArray(new CloudRuntimeEvent[coveredEvents.size()]));
+
+        await().untilAsserted(() -> {
+
+            //when
+            Map<String, Object> filters = new HashMap<>();
+            filters.put("processInstanceId",
+                        "47");
+            filters.put("eventType",
+                        TaskRuntimeEvent.TaskEvents.TASK_CREATED.name());
+            
+            ResponseEntity<PagedResources<CloudRuntimeEvent>> eventsPagedResources = eventsRestTemplate.executeFind(filters);
+
+            //then
+            Collection<CloudRuntimeEvent> retrievedEvents = eventsRestTemplate
+                                                            .executeFind(filters)
+                                                            .getBody()
+                                                            .getContent();
+            assertThat(retrievedEvents)
+                .isNotEmpty()
+                .filteredOn(event -> ((CloudTaskCreatedEvent)event).getEntity().getTaskDefinitionKey().equals("taskDefinitionKey"))
+                .extracting(event -> event.getEventType(),
+                            event -> ((CloudTaskCreatedEvent)event).getEntity().getName(),
+                            event -> ((CloudTaskCreatedEvent)event).getEntity().getTaskDefinitionKey())
+                .contains(  tuple(TaskRuntimeEvent.TaskEvents.TASK_CREATED,
+                                  "task created",
+                                  "taskDefinitionKey"));
+
+        });
+    }
+    
+    
 
     @Test
     public void shouldGetProcessStartedUpdatedCompletedEvents() {
@@ -940,6 +983,7 @@ public class AuditServiceIT {
                                             Task.TaskStatus.CREATED);
         taskCreated.setProcessDefinitionId("28");
         taskCreated.setProcessInstanceId("47");
+        taskCreated.setTaskDefinitionKey("taskDefinitionKey");
         CloudTaskCreatedEventImpl cloudTaskCreatedEvent = new CloudTaskCreatedEventImpl("TaskCreatedEventId",
                                                                                         System.currentTimeMillis(),
                                                                                         taskCreated);
