@@ -16,14 +16,33 @@
 
 package org.activiti.cloud.services.audit.jpa.controller;
 
+import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
+import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
+import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.model.events.BPMNSignalEvent;
 import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.activiti.api.process.model.payloads.SignalPayload;
 import org.activiti.api.runtime.model.impl.BPMNSignalImpl;
+import org.activiti.api.runtime.model.impl.BPMNTimerImpl;
 import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
 import org.activiti.api.runtime.shared.identity.UserGroupManager;
 import org.activiti.api.runtime.shared.security.SecurityManager;
@@ -33,6 +52,7 @@ import org.activiti.cloud.services.audit.jpa.events.ActivityStartedAuditEventEnt
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.ProcessStartedAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.SignalReceivedAuditEventEntity;
+import org.activiti.cloud.services.audit.jpa.events.TimerFiredAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,23 +70,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
-import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
-import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AuditEventsControllerImpl.class)
@@ -337,6 +340,45 @@ public class AuditEventsControllerImplIT {
         eventEntity.setProcessInstanceId("10");
         eventEntity.setSignal(signal);
 
+        given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
+
+        mockMvc.perform(get("{version}/events/{id}",
+                            "/v1",
+                            eventEntity.getId()))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void getTimerEventById() throws Exception {
+
+        BPMNTimerImpl timer = new BPMNTimerImpl("elementId");
+        timer.setProcessDefinitionId("processDefinitionId");
+        timer.setProcessInstanceId("processInstanceId"); 
+        timer.setTimerPayload(ProcessPayloadBuilder.timer()
+                              .withExecutionId("ExecutionId")
+                              .withIsExclusive(true)
+                              .withRetries(5)
+                              .withMaxIterations(2)
+                              .withJobHandlerType("jobHandlerType")
+                              .withJobHandlerConfiguration("jobHandlerConfiguration")
+                              .withTenantId("tetantId")
+                              .withJobType("jobType")
+                              .build());
+        
+        TimerFiredAuditEventEntity eventEntity = new TimerFiredAuditEventEntity("eventId",
+                                                                                System.currentTimeMillis());
+
+        eventEntity.setId(1L);
+        eventEntity.setEntityId("entityId");
+        eventEntity.setProcessInstanceId("processInstanceId");
+        eventEntity.setProcessDefinitionId("processDefinitionId");
+        eventEntity.setProcessDefinitionKey("processDefinitionKey");
+        eventEntity.setBusinessKey("businessKey");
+        eventEntity.setMessageId("message-id");
+        eventEntity.setSequenceNumber(0);
+        eventEntity.setTimer(timer);
+        
         given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
 
         mockMvc.perform(get("{version}/events/{id}",
