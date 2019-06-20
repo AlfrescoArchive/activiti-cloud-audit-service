@@ -44,6 +44,8 @@ import org.activiti.cloud.services.audit.jpa.converters.TaskCompletedEventConver
 import org.activiti.cloud.services.audit.jpa.converters.TaskCreatedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.TaskSuspendedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.TaskUpdatedEventConverter;
+import org.activiti.cloud.services.audit.jpa.converters.TimerFiredEventConverter;
+import org.activiti.cloud.services.audit.jpa.converters.TimerScheduledEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.VariableCreatedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.VariableDeletedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.VariableUpdatedEventConverter;
@@ -222,4 +224,15 @@ public class AuditJPAAutoConfiguration {
         return new TaskCandidateGroupRemovedEventConverter(eventContextInfoAppender);
     }      
     
+    @ConditionalOnMissingBean
+    @Bean
+    public TimerFiredEventConverter timerFiredEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new TimerFiredEventConverter(eventContextInfoAppender);
+    }   
+    
+    @ConditionalOnMissingBean
+    @Bean
+    public TimerScheduledEventConverter timerScheduledEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new TimerScheduledEventConverter(eventContextInfoAppender);
+    }   
 } 
