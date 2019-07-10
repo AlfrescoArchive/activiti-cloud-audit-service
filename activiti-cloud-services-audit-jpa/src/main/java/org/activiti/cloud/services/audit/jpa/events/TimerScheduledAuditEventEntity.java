@@ -32,7 +32,7 @@ public class TimerScheduledAuditEventEntity extends TimerAuditEventEntity {
     }
 
     public TimerScheduledAuditEventEntity(String eventId,
-                                      Long timestamp) {
+                                          Long timestamp) {
         super(eventId,
               timestamp,
               BPMNTimerEvent.TimerEvents.TIMER_SCHEDULED.name());
@@ -60,8 +60,6 @@ public class TimerScheduledAuditEventEntity extends TimerAuditEventEntity {
               serviceVersion,
               messageId,
               sequenceNumber,
-              timer);
-        
-    }
-    
+              timer);        
+    }   
 }

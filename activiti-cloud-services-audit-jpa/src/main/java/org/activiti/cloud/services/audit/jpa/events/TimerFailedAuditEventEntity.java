@@ -23,35 +23,35 @@ import org.activiti.api.process.model.BPMNTimer;
 import org.activiti.api.process.model.events.BPMNTimerEvent;
 
 @Entity
-@DiscriminatorValue(value = TimerFiredAuditEventEntity.TIMER_FIRED_EVENT)
-public class TimerFiredAuditEventEntity extends TimerAuditEventEntity {
+@DiscriminatorValue(value = TimerFailedAuditEventEntity.TIMER_FAILED_EVENT)
+public class TimerFailedAuditEventEntity extends TimerAuditEventEntity {
 
-    protected static final String TIMER_FIRED_EVENT = "TimerFiredEvent";
+    protected static final String TIMER_FAILED_EVENT = "TimerFailedEvent";
     
-    public TimerFiredAuditEventEntity() {
+    public TimerFailedAuditEventEntity() {
     }
 
-    public TimerFiredAuditEventEntity(String eventId,
-                                      Long timestamp) {
+    public TimerFailedAuditEventEntity(String eventId,
+                                       Long timestamp) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.TIMER_FIRED.name());
+              BPMNTimerEvent.TimerEvents.TIMER_FAILED.name());
     }
 
-    public TimerFiredAuditEventEntity(String eventId,
-                                      Long timestamp,
-                                      String appName,
-                                      String appVersion,
-                                      String serviceName,
-                                      String serviceFullName,
-                                      String serviceType,
-                                      String serviceVersion,
-                                      String messageId,
-                                      Integer sequenceNumber,
-                                      BPMNTimer timer) {
+    public TimerFailedAuditEventEntity(String eventId,
+                                       Long timestamp,
+                                       String appName,
+                                       String appVersion,
+                                       String serviceName,
+                                       String serviceFullName,
+                                       String serviceType,
+                                       String serviceVersion,
+                                       String messageId,
+                                       Integer sequenceNumber,
+                                       BPMNTimer timer) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.TIMER_FIRED.name(),
+              BPMNTimerEvent.TimerEvents.TIMER_FAILED.name(),
               appName,
               appVersion,
               serviceName,
@@ -60,6 +60,6 @@ public class TimerFiredAuditEventEntity extends TimerAuditEventEntity {
               serviceVersion,
               messageId,
               sequenceNumber,
-              timer);       
+              timer);   
     }    
 }

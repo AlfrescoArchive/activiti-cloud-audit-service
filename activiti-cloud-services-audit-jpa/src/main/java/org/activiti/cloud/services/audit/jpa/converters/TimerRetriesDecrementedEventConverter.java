@@ -17,7 +17,7 @@ public class TimerRetriesDecrementedEventConverter extends BaseEventToEntityConv
 
     @Override
     public String getSupportedEvent() {
-        return BPMNTimerEvent.TimerEvents.JOB_RETRIES_DECREMENTED.name();
+        return BPMNTimerEvent.TimerEvents.TIMER_RETRIES_DECREMENTED.name();
     }
 
     @Override

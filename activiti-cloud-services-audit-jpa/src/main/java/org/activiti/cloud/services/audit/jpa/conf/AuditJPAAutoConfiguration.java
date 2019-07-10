@@ -44,9 +44,9 @@ import org.activiti.cloud.services.audit.jpa.converters.TaskCompletedEventConver
 import org.activiti.cloud.services.audit.jpa.converters.TaskCreatedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.TaskSuspendedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.TaskUpdatedEventConverter;
-import org.activiti.cloud.services.audit.jpa.converters.TimerCanceledEventConverter;
-import org.activiti.cloud.services.audit.jpa.converters.TimerExecutionFailureEventConverter;
-import org.activiti.cloud.services.audit.jpa.converters.TimerExecutionSuccessEventConverter;
+import org.activiti.cloud.services.audit.jpa.converters.TimerCancelledEventConverter;
+import org.activiti.cloud.services.audit.jpa.converters.TimerFailedEventConverter;
+import org.activiti.cloud.services.audit.jpa.converters.TimerExecutedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.TimerFiredEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.TimerRetriesDecrementedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.TimerScheduledEventConverter;
@@ -242,20 +242,20 @@ public class AuditJPAAutoConfiguration {
     
     @ConditionalOnMissingBean
     @Bean
-    public TimerCanceledEventConverter timerCanceledEventConverter(EventContextInfoAppender eventContextInfoAppender) {
-        return new TimerCanceledEventConverter(eventContextInfoAppender);
+    public TimerCancelledEventConverter timerCancelledEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new TimerCancelledEventConverter(eventContextInfoAppender);
     }   
     
     @ConditionalOnMissingBean
     @Bean
-    public TimerExecutionFailureEventConverter timerExecutionFailureEventConverter(EventContextInfoAppender eventContextInfoAppender) {
-        return new TimerExecutionFailureEventConverter(eventContextInfoAppender);
+    public TimerFailedEventConverter timerFailedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new TimerFailedEventConverter(eventContextInfoAppender);
     }  
     
     @ConditionalOnMissingBean
     @Bean
-    public TimerExecutionSuccessEventConverter timerExecutionSuccessEventConverter(EventContextInfoAppender eventContextInfoAppender) {
-        return new TimerExecutionSuccessEventConverter(eventContextInfoAppender);
+    public TimerExecutedEventConverter timerExecutedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new TimerExecutedEventConverter(eventContextInfoAppender);
     }   
     
     @ConditionalOnMissingBean

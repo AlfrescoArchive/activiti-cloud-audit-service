@@ -67,6 +67,4 @@ public abstract class TimerAuditEventEntity extends AuditEventEntity {
     public void setTimer(BPMNTimer timer) {
         this.timer = timer;
     }
-
- 
 }

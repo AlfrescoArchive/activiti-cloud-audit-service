@@ -41,6 +41,7 @@ import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.model.events.BPMNSignalEvent;
 import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.activiti.api.process.model.payloads.SignalPayload;
+import org.activiti.api.process.model.payloads.TimerPayload;
 import org.activiti.api.runtime.model.impl.BPMNSignalImpl;
 import org.activiti.api.runtime.model.impl.BPMNTimerImpl;
 import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
@@ -355,16 +356,7 @@ public class AuditEventsControllerImplIT {
         BPMNTimerImpl timer = new BPMNTimerImpl("elementId");
         timer.setProcessDefinitionId("processDefinitionId");
         timer.setProcessInstanceId("processInstanceId"); 
-        timer.setTimerPayload(ProcessPayloadBuilder.timer()
-                              .withExecutionId("ExecutionId")
-                              .withIsExclusive(true)
-                              .withRetries(5)
-                              .withMaxIterations(2)
-                              .withJobHandlerType("jobHandlerType")
-                              .withJobHandlerConfiguration("jobHandlerConfiguration")
-                              .withTenantId("tetantId")
-                              .withJobType("jobType")
-                              .build());
+        timer.setTimerPayload(createTimerPayload());
         
         TimerFiredAuditEventEntity eventEntity = new TimerFiredAuditEventEntity("eventId",
                                                                                 System.currentTimeMillis());
@@ -386,5 +378,15 @@ public class AuditEventsControllerImplIT {
                             eventEntity.getId()))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+    
+    private TimerPayload createTimerPayload() {
+        TimerPayload timerPayload = new TimerPayload();
+        timerPayload.setRetries(5);
+        timerPayload.setMaxIterations(2);
+        timerPayload.setRepeat("repeat");
+        timerPayload.setExceptionMessage("Any message");
+        
+        return timerPayload;     
     }
 }

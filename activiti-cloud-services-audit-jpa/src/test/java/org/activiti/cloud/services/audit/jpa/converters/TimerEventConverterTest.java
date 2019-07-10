@@ -16,7 +16,8 @@
 
 package org.activiti.cloud.services.audit.jpa.converters;
 
-import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.activiti.api.process.model.payloads.TimerPayload;
 import org.activiti.api.runtime.model.impl.BPMNTimerImpl;
 import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
@@ -25,7 +26,6 @@ import org.activiti.cloud.api.process.model.impl.events.CloudBPMNTimerScheduledE
 import org.activiti.cloud.services.audit.jpa.events.TimerFiredAuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.events.TimerScheduledAuditEventEntity;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TimerEventConverterTest {
 
@@ -179,16 +179,12 @@ public class TimerEventConverterTest {
     }
     
     private TimerPayload createTimerPayload() {
-        return ProcessPayloadBuilder.timer()
-                .withExecutionId("ExecutionId")
-                .withIsExclusive(true)
-                .withRetries(5)
-                .withMaxIterations(2)
-                .withJobHandlerType("jobHandlerType")
-                .withJobHandlerConfiguration("jobHandlerConfiguration")
-                .withTenantId("tetantId")
-                .withJobType("jobType")
-                .build();
+        TimerPayload timerPayload = new TimerPayload();
+        timerPayload.setRetries(5);
+        timerPayload.setMaxIterations(2);
+        timerPayload.setRepeat("repeat");
+        timerPayload.setExceptionMessage("Any message");
+        
+        return timerPayload;     
     }
- 
 }

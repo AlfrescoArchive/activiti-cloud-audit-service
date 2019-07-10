@@ -67,12 +67,10 @@ public class JpaJsonConverter<T> implements AttributeConverter<T, String> {
 
             resolver.addMapping(ProcessDefinition.class,
                                 ProcessDefinitionImpl.class);
-
             resolver.addMapping(VariableInstance.class,
                                 VariableInstanceImpl.class);
             resolver.addMapping(ProcessInstance.class,
                                 ProcessInstanceImpl.class);
-
             resolver.addMapping(Task.class,
                                 TaskImpl.class);
             resolver.addMapping(BPMNActivity.class,

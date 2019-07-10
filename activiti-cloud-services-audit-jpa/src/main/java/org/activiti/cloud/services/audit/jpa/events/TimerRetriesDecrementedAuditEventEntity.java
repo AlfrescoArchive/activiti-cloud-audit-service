@@ -32,26 +32,26 @@ public class TimerRetriesDecrementedAuditEventEntity extends TimerAuditEventEnti
     }
 
     public TimerRetriesDecrementedAuditEventEntity(String eventId,
-                                      Long timestamp) {
+                                                   Long timestamp) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.JOB_RETRIES_DECREMENTED.name());
+              BPMNTimerEvent.TimerEvents.TIMER_RETRIES_DECREMENTED.name());
     }
 
     public TimerRetriesDecrementedAuditEventEntity(String eventId,
-                                          Long timestamp,
-                                          String appName,
-                                          String appVersion,
-                                          String serviceName,
-                                          String serviceFullName,
-                                          String serviceType,
-                                          String serviceVersion,
-                                          String messageId,
-                                          Integer sequenceNumber,
-                                          BPMNTimer timer) {
+                                                   Long timestamp,
+                                                   String appName,
+                                                   String appVersion,
+                                                   String serviceName,
+                                                   String serviceFullName,
+                                                   String serviceType,
+                                                   String serviceVersion,
+                                                   String messageId,
+                                                   Integer sequenceNumber,
+                                                   BPMNTimer timer) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.JOB_RETRIES_DECREMENTED.name(),
+              BPMNTimerEvent.TimerEvents.TIMER_RETRIES_DECREMENTED.name(),
               appName,
               appVersion,
               serviceName,
@@ -60,8 +60,6 @@ public class TimerRetriesDecrementedAuditEventEntity extends TimerAuditEventEnti
               serviceVersion,
               messageId,
               sequenceNumber,
-              timer);
-        
-    }
-    
+              timer);   
+    }   
 }
