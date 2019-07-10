@@ -23,22 +23,22 @@ import org.activiti.api.process.model.BPMNTimer;
 import org.activiti.api.process.model.events.BPMNTimerEvent;
 
 @Entity
-@DiscriminatorValue(value = TimerExecutionSuccessAuditEventEntity.TIMER_EXECUTION_SUCCESS_EVENT)
-public class TimerExecutionSuccessAuditEventEntity extends TimerAuditEventEntity {
+@DiscriminatorValue(value = TimerCancelledAuditEventEntity.TIMER_CANCELLED_EVENT)
+public class TimerCancelledAuditEventEntity extends TimerAuditEventEntity {
 
-    protected static final String TIMER_EXECUTION_SUCCESS_EVENT = "TimerExecutionSuccessEvent";
+    protected static final String TIMER_CANCELLED_EVENT = "TimerCancelledEvent";
     
-    public TimerExecutionSuccessAuditEventEntity() {
+    public TimerCancelledAuditEventEntity() {
     }
 
-    public TimerExecutionSuccessAuditEventEntity(String eventId,
-                                      Long timestamp) {
+    public TimerCancelledAuditEventEntity(String eventId,
+                                          Long timestamp) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.JOB_EXECUTION_SUCCESS.name());
+              BPMNTimerEvent.TimerEvents.TIMER_CANCELLED.name());
     }
 
-    public TimerExecutionSuccessAuditEventEntity(String eventId,
+    public TimerCancelledAuditEventEntity(String eventId,
                                           Long timestamp,
                                           String appName,
                                           String appVersion,
@@ -51,7 +51,7 @@ public class TimerExecutionSuccessAuditEventEntity extends TimerAuditEventEntity
                                           BPMNTimer timer) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.JOB_EXECUTION_SUCCESS.name(),
+              BPMNTimerEvent.TimerEvents.TIMER_CANCELLED.name(),
               appName,
               appVersion,
               serviceName,
@@ -60,8 +60,6 @@ public class TimerExecutionSuccessAuditEventEntity extends TimerAuditEventEntity
               serviceVersion,
               messageId,
               sequenceNumber,
-              timer);
-        
-    }
-    
+              timer);   
+    }    
 }

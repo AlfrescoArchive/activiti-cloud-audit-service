@@ -3,26 +3,26 @@ package org.activiti.cloud.services.audit.jpa.converters;
 import org.activiti.api.process.model.events.BPMNTimerEvent;
 import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
 import org.activiti.cloud.api.model.shared.impl.events.CloudRuntimeEventImpl;
-import org.activiti.cloud.api.process.model.events.CloudBPMNTimerCanceledEvent;
-import org.activiti.cloud.api.process.model.impl.events.CloudBPMNTimerCanceledEventImpl;
+import org.activiti.cloud.api.process.model.events.CloudBPMNTimerExecutedEvent;
+import org.activiti.cloud.api.process.model.impl.events.CloudBPMNTimerExecutedEventImpl;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
-import org.activiti.cloud.services.audit.jpa.events.TimerCanceledAuditEventEntity;
+import org.activiti.cloud.services.audit.jpa.events.TimerExecutedAuditEventEntity;
 
-public class TimerCanceledEventConverter extends BaseEventToEntityConverter {
+public class TimerExecutedEventConverter extends BaseEventToEntityConverter {
 
-    public TimerCanceledEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+    public TimerExecutedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
         super(eventContextInfoAppender);
     }
 
     @Override
     public String getSupportedEvent() {
-        return BPMNTimerEvent.TimerEvents.JOB_CANCELED.name();
+        return BPMNTimerEvent.TimerEvents.TIMER_EXECUTED.name();
     }
 
     @Override
-    protected TimerCanceledAuditEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent) {
-        CloudBPMNTimerCanceledEvent cloudEvent = (CloudBPMNTimerCanceledEvent) cloudRuntimeEvent;
-        return new TimerCanceledAuditEventEntity(cloudEvent.getId(),
+    protected TimerExecutedAuditEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent) {
+        CloudBPMNTimerExecutedEvent cloudEvent = (CloudBPMNTimerExecutedEvent) cloudRuntimeEvent;
+        return new TimerExecutedAuditEventEntity(cloudEvent.getId(),
                                                  cloudEvent.getTimestamp(),
                                                  cloudEvent.getAppName(),
                                                  cloudEvent.getAppVersion(),
@@ -37,9 +37,9 @@ public class TimerCanceledEventConverter extends BaseEventToEntityConverter {
 
     @Override
     protected CloudRuntimeEventImpl<?, ?> createAPIEvent(AuditEventEntity auditEventEntity) {
-        TimerCanceledAuditEventEntity timerEventEntity = (TimerCanceledAuditEventEntity) auditEventEntity;
+        TimerExecutedAuditEventEntity timerEventEntity = (TimerExecutedAuditEventEntity) auditEventEntity;
 
-        CloudBPMNTimerCanceledEventImpl cloudEvent = new CloudBPMNTimerCanceledEventImpl(timerEventEntity.getEventId(),
+        CloudBPMNTimerExecutedEventImpl cloudEvent = new CloudBPMNTimerExecutedEventImpl(timerEventEntity.getEventId(),
                                                                                          timerEventEntity.getTimestamp(),
                                                                                          timerEventEntity.getTimer(),
                                                                                          timerEventEntity.getProcessDefinitionId(),

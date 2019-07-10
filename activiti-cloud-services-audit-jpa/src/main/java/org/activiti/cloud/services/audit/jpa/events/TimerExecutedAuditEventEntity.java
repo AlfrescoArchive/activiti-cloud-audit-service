@@ -23,22 +23,22 @@ import org.activiti.api.process.model.BPMNTimer;
 import org.activiti.api.process.model.events.BPMNTimerEvent;
 
 @Entity
-@DiscriminatorValue(value = TimerCanceledAuditEventEntity.TIMER_CANCELED_EVENT)
-public class TimerCanceledAuditEventEntity extends TimerAuditEventEntity {
+@DiscriminatorValue(value = TimerExecutedAuditEventEntity.TIMER_EXECUTED_EVENT)
+public class TimerExecutedAuditEventEntity extends TimerAuditEventEntity {
 
-    protected static final String TIMER_CANCELED_EVENT = "TimerCanceledEvent";
+    protected static final String TIMER_EXECUTED_EVENT = "TimerExecutedEvent";
     
-    public TimerCanceledAuditEventEntity() {
+    public TimerExecutedAuditEventEntity() {
     }
 
-    public TimerCanceledAuditEventEntity(String eventId,
+    public TimerExecutedAuditEventEntity(String eventId,
                                          Long timestamp) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.JOB_CANCELED.name());
+              BPMNTimerEvent.TimerEvents.TIMER_EXECUTED.name());
     }
 
-    public TimerCanceledAuditEventEntity(String eventId,
+    public TimerExecutedAuditEventEntity(String eventId,
                                          Long timestamp,
                                          String appName,
                                          String appVersion,
@@ -51,7 +51,7 @@ public class TimerCanceledAuditEventEntity extends TimerAuditEventEntity {
                                          BPMNTimer timer) {
         super(eventId,
               timestamp,
-              BPMNTimerEvent.TimerEvents.JOB_CANCELED.name(),
+              BPMNTimerEvent.TimerEvents.TIMER_EXECUTED.name(),
               appName,
               appVersion,
               serviceName,
@@ -60,8 +60,6 @@ public class TimerCanceledAuditEventEntity extends TimerAuditEventEntity {
               serviceVersion,
               messageId,
               sequenceNumber,
-              timer);
-        
-    }
-    
+              timer);   
+    }   
 }

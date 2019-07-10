@@ -32,6 +32,7 @@ import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.model.events.BPMNActivityEvent;
 import org.activiti.api.process.model.events.BPMNTimerEvent;
 import org.activiti.api.process.model.payloads.SignalPayload;
+import org.activiti.api.process.model.payloads.TimerPayload;
 import org.activiti.api.runtime.model.impl.BPMNActivityImpl;
 import org.activiti.api.runtime.model.impl.BPMNSignalImpl;
 import org.activiti.api.runtime.model.impl.BPMNTimerImpl;
@@ -581,16 +582,7 @@ public class AuditServiceIT {
         BPMNTimerImpl timer1 = new BPMNTimerImpl("timerId1");
         timer1.setProcessDefinitionId("processDefinitionId");
         timer1.setProcessInstanceId("processInstanceId");
-        timer1.setTimerPayload(ProcessPayloadBuilder.timer()
-                              .withExecutionId("ExecutionId1")
-                              .withIsExclusive(true)
-                              .withRetries(5)
-                              .withMaxIterations(2)
-                              .withJobHandlerType("jobHandlerType")
-                              .withJobHandlerConfiguration("jobHandlerConfiguration")
-                              .withTenantId("tetantId")
-                              .withJobType("jobType")
-                              .build());
+        timer1.setTimerPayload(createTimerPayload());
 
         CloudBPMNTimerFiredEventImpl cloudTimerFiredEvent = new CloudBPMNTimerFiredEventImpl("eventId1",
                                                                                              System.currentTimeMillis(),
@@ -602,24 +594,14 @@ public class AuditServiceIT {
         BPMNTimerImpl timer2 = new BPMNTimerImpl("timerId2");
         timer2.setProcessDefinitionId("processDefinitionId");
         timer2.setProcessInstanceId("processInstanceId");
-        timer2.setTimerPayload(ProcessPayloadBuilder.timer()
-                              .withExecutionId("ExecutionId2")
-                              .withIsExclusive(true)
-                              .withRetries(5)
-                              .withMaxIterations(2)
-                              .withJobHandlerType("jobHandlerType")
-                              .withJobHandlerConfiguration("jobHandlerConfiguration")
-                              .withTenantId("tetantId")
-                              .withJobType("jobType")
-                              .build());
+        timer2.setTimerPayload(createTimerPayload());
 
         CloudBPMNTimerScheduledEventImpl cloudTimerScheduledEvent = new CloudBPMNTimerScheduledEventImpl("eventId2",
                                                                                                          System.currentTimeMillis(),
                                                                                                          timer2,
                                                                                                          timer2.getProcessDefinitionId(),
                                                                                                          timer2.getProcessInstanceId());
-        
-          
+               
         coveredEvents.add(cloudTimerScheduledEvent);
         
         producer.send(coveredEvents.toArray(new CloudRuntimeEvent[coveredEvents.size()]));
@@ -649,9 +631,9 @@ public class AuditServiceIT {
                     event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getProcessInstanceId(),
                     event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getProcessDefinitionId(),
                     event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getTimerPayload().getId(),
-                    event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getTimerPayload().getJobHandlerConfiguration(),
-                    event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getTimerPayload().getJobHandlerType(),
-                    event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getTimerPayload().getJobType())                    
+                    event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getTimerPayload().getMaxIterations(),
+                    event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getTimerPayload().getRepeat(),
+                    event -> ((CloudBPMNTimerScheduledEvent)event).getEntity().getTimerPayload().getRetries())                    
             .contains(tuple(cloudTimerScheduledEvent.getEventType(),
                             cloudTimerScheduledEvent.getServiceName(),
                             cloudTimerScheduledEvent.getServiceVersion(),
@@ -662,9 +644,9 @@ public class AuditServiceIT {
                             cloudTimerScheduledEvent.getEntity().getProcessInstanceId(),
                             cloudTimerScheduledEvent.getEntity().getProcessDefinitionId(),
                             cloudTimerScheduledEvent.getEntity().getTimerPayload().getId(),
-                            cloudTimerScheduledEvent.getEntity().getTimerPayload().getJobHandlerConfiguration(),
-                            cloudTimerScheduledEvent.getEntity().getTimerPayload().getJobHandlerType(),
-                            cloudTimerScheduledEvent.getEntity().getTimerPayload().getJobType()));
+                            cloudTimerScheduledEvent.getEntity().getTimerPayload().getMaxIterations(),
+                            cloudTimerScheduledEvent.getEntity().getTimerPayload().getRepeat(),
+                            cloudTimerScheduledEvent.getEntity().getTimerPayload().getRetries()));
         });
     }
     
@@ -910,4 +892,13 @@ public class AuditServiceIT {
         return testEvents;
     }
     
+    private TimerPayload createTimerPayload() {
+        TimerPayload timerPayload = new TimerPayload();
+        timerPayload.setRetries(5);
+        timerPayload.setMaxIterations(2);
+        timerPayload.setRepeat("repeat");
+        timerPayload.setExceptionMessage("Any message");
+        
+        return timerPayload;     
+    } 
 }
