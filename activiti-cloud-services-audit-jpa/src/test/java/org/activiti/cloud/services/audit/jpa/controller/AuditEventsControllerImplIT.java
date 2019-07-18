@@ -358,8 +358,9 @@ public class AuditEventsControllerImplIT {
         timer.setProcessInstanceId("processInstanceId"); 
         timer.setTimerPayload(createTimerPayload());
         
-        TimerFiredAuditEventEntity eventEntity = new TimerFiredAuditEventEntity("eventId",
-                                                                                System.currentTimeMillis());
+        TimerFiredAuditEventEntity eventEntity = new TimerFiredAuditEventEntity();
+        eventEntity.setEventId("eventId");
+        eventEntity.setTimestamp(System.currentTimeMillis());
 
         eventEntity.setId(1L);
         eventEntity.setEntityId("entityId");

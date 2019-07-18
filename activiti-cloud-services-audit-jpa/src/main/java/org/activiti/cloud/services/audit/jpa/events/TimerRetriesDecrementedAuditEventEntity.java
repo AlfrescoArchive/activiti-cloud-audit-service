@@ -19,8 +19,7 @@ package org.activiti.cloud.services.audit.jpa.events;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.api.process.model.BPMNTimer;
-import org.activiti.api.process.model.events.BPMNTimerEvent;
+import org.activiti.cloud.api.process.model.events.CloudBPMNTimerRetriesDecrementedEvent;
 
 @Entity
 @DiscriminatorValue(value = TimerRetriesDecrementedAuditEventEntity.TIMER_RETRIES_DECREMENTED_EVENT)
@@ -31,35 +30,7 @@ public class TimerRetriesDecrementedAuditEventEntity extends TimerAuditEventEnti
     public TimerRetriesDecrementedAuditEventEntity() {
     }
 
-    public TimerRetriesDecrementedAuditEventEntity(String eventId,
-                                                   Long timestamp) {
-        super(eventId,
-              timestamp,
-              BPMNTimerEvent.TimerEvents.TIMER_RETRIES_DECREMENTED.name());
+    public TimerRetriesDecrementedAuditEventEntity(CloudBPMNTimerRetriesDecrementedEvent cloudEvent) {
+        super(cloudEvent);
     }
-
-    public TimerRetriesDecrementedAuditEventEntity(String eventId,
-                                                   Long timestamp,
-                                                   String appName,
-                                                   String appVersion,
-                                                   String serviceName,
-                                                   String serviceFullName,
-                                                   String serviceType,
-                                                   String serviceVersion,
-                                                   String messageId,
-                                                   Integer sequenceNumber,
-                                                   BPMNTimer timer) {
-        super(eventId,
-              timestamp,
-              BPMNTimerEvent.TimerEvents.TIMER_RETRIES_DECREMENTED.name(),
-              appName,
-              appVersion,
-              serviceName,
-              serviceFullName,
-              serviceType,
-              serviceVersion,
-              messageId,
-              sequenceNumber,
-              timer);   
-    }   
 }
