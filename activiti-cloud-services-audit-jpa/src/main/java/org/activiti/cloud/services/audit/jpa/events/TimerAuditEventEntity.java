@@ -5,6 +5,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 
 import org.activiti.api.process.model.BPMNTimer;
+import org.activiti.cloud.api.process.model.events.CloudBPMNTimerEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.TimerJpaJsonConverter;
 
 @Entity
@@ -58,6 +59,18 @@ public abstract class TimerAuditEventEntity extends AuditEventEntity {
             setEntityId(timer.getElementId());
         }
 
+    }
+
+    public TimerAuditEventEntity(CloudBPMNTimerEvent cloudEvent) {
+        super(cloudEvent);
+        this.timer = cloudEvent.getEntity();
+        if (timer != null) {
+            setProcessDefinitionId(timer.getProcessDefinitionId());
+            setProcessInstanceId(timer.getProcessInstanceId());
+        }
+        if (timer != null) {
+            setEntityId(timer.getElementId());
+        }
     }
 
     public BPMNTimer getTimer() {

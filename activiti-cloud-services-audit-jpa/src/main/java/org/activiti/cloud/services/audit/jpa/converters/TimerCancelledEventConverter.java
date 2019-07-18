@@ -21,18 +21,7 @@ public class TimerCancelledEventConverter extends BaseEventToEntityConverter {
 
     @Override
     protected TimerCancelledAuditEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent) {
-        CloudBPMNTimerCancelledEvent cloudEvent = (CloudBPMNTimerCancelledEvent) cloudRuntimeEvent;
-        return new TimerCancelledAuditEventEntity(cloudEvent.getId(),
-                                                  cloudEvent.getTimestamp(),
-                                                  cloudEvent.getAppName(),
-                                                  cloudEvent.getAppVersion(),
-                                                  cloudEvent.getServiceFullName(),
-                                                  cloudEvent.getServiceName(),
-                                                  cloudEvent.getServiceType(),
-                                                  cloudEvent.getServiceVersion(),
-                                                  cloudEvent.getMessageId(),
-                                                  cloudEvent.getSequenceNumber(),
-                                                  cloudEvent.getEntity());
+        return new TimerCancelledAuditEventEntity((CloudBPMNTimerCancelledEvent) cloudRuntimeEvent);
     }
 
     @Override
@@ -44,16 +33,6 @@ public class TimerCancelledEventConverter extends BaseEventToEntityConverter {
                                                                                            timerEventEntity.getTimer(),
                                                                                            timerEventEntity.getProcessDefinitionId(),
                                                                                            timerEventEntity.getProcessInstanceId());
-
-        cloudEvent.setAppName(timerEventEntity.getAppName());
-        cloudEvent.setAppVersion(timerEventEntity.getAppVersion());
-        cloudEvent.setServiceFullName(timerEventEntity.getServiceFullName());
-        cloudEvent.setServiceName(timerEventEntity.getServiceName());
-        cloudEvent.setServiceType(timerEventEntity.getServiceType());
-        cloudEvent.setServiceVersion(timerEventEntity.getServiceVersion());
-        cloudEvent.setMessageId(timerEventEntity.getMessageId());
-        cloudEvent.setSequenceNumber(timerEventEntity.getSequenceNumber());
-
         return cloudEvent;
     }
 }
