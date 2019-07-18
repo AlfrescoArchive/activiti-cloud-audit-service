@@ -351,7 +351,7 @@ public class AuditEventsControllerImplIT {
     }
     
     @Test
-    public void getTimerEventById() throws Exception {
+    public void shouldGetTimerEventById() throws Exception {
 
         BPMNTimerImpl timer = new BPMNTimerImpl("elementId");
         timer.setProcessDefinitionId("processDefinitionId");
