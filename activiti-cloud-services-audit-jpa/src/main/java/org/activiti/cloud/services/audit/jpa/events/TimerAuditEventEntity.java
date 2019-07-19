@@ -18,49 +18,6 @@ public abstract class TimerAuditEventEntity extends AuditEventEntity {
     public TimerAuditEventEntity() {
     }
 
-    public TimerAuditEventEntity(String eventId,
-                                 Long timestamp,
-                                 String eventType) {
-        super(eventId,
-              timestamp,
-              eventType);
-    }
-
-    public TimerAuditEventEntity(String eventId,
-                                 Long timestamp,
-                                 String eventType,
-                                 String appName,
-                                 String appVersion,
-                                 String serviceName,
-                                 String serviceFullName,
-                                 String serviceType,
-                                 String serviceVersion,
-                                 String messageId,
-                                 Integer sequenceNumber,
-                                 BPMNTimer timer) {
-        super(eventId,
-              timestamp,
-              eventType);
-        setAppName(appName);
-        setAppVersion(appVersion);
-        setServiceName(serviceName);
-        setServiceFullName(serviceFullName);
-        setServiceType(serviceType);
-        setServiceVersion(serviceVersion);
-        setMessageId(messageId);
-        setSequenceNumber(sequenceNumber);
-        if (timer != null) {
-            setProcessDefinitionId(timer.getProcessDefinitionId());
-            setProcessInstanceId(timer.getProcessInstanceId());
-        }
-
-        this.timer = timer;
-        if (timer != null) {
-            setEntityId(timer.getElementId());
-        }
-
-    }
-
     public TimerAuditEventEntity(CloudBPMNTimerEvent cloudEvent) {
         super(cloudEvent);
         this.timer = cloudEvent.getEntity();
