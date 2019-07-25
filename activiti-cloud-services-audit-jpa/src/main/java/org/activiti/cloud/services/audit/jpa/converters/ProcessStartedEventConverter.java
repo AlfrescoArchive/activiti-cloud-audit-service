@@ -27,9 +27,9 @@ public class ProcessStartedEventConverter extends BaseEventToEntityConverter {
     @Override
     protected CloudRuntimeEventImpl<?, ?> createAPIEvent(AuditEventEntity auditEventEntity) {
         ProcessStartedAuditEventEntity processStartedAuditEventEntity = (ProcessStartedAuditEventEntity) auditEventEntity;
-        CloudProcessStartedEventImpl cloudEvent = new CloudProcessStartedEventImpl(processStartedAuditEventEntity.getEventId(),
-                                                                                   processStartedAuditEventEntity.getTimestamp(),
-                                                                                   processStartedAuditEventEntity.getProcessInstance());
-        return cloudEvent;
+
+        return new CloudProcessStartedEventImpl(processStartedAuditEventEntity.getEventId(),
+                                                processStartedAuditEventEntity.getTimestamp(),
+                                                processStartedAuditEventEntity.getProcessInstance());
     }
 }

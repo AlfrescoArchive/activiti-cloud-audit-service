@@ -21,20 +21,17 @@ public class ActivityStartedEventConverter extends BaseEventToEntityConverter {
 
     @Override
     protected ActivityStartedAuditEventEntity createEventEntity(CloudRuntimeEvent cloudRuntimeEvent) {
-        CloudBPMNActivityStartedEvent cloudActivityStartedEvent = (CloudBPMNActivityStartedEvent) cloudRuntimeEvent;
-        return new ActivityStartedAuditEventEntity((CloudBPMNActivityStartedEvent) cloudRuntimeEvent);
-               
+        return new ActivityStartedAuditEventEntity((CloudBPMNActivityStartedEvent) cloudRuntimeEvent);           
     }
 
     @Override
     protected CloudRuntimeEventImpl<?, ?> createAPIEvent(AuditEventEntity auditEventEntity) {
         ActivityStartedAuditEventEntity activityStartedAuditEventEntity = (ActivityStartedAuditEventEntity) auditEventEntity;
 
-        CloudBPMNActivityStartedEventImpl cloudEvent = new CloudBPMNActivityStartedEventImpl(activityStartedAuditEventEntity.getEventId(),
-                                                                                             activityStartedAuditEventEntity.getTimestamp(),
-                                                                                             activityStartedAuditEventEntity.getBpmnActivity(),
-                                                                                             activityStartedAuditEventEntity.getProcessDefinitionId(),
-                                                                                             activityStartedAuditEventEntity.getProcessInstanceId());
-        return cloudEvent;
+        return new CloudBPMNActivityStartedEventImpl(activityStartedAuditEventEntity.getEventId(),
+                                                     activityStartedAuditEventEntity.getTimestamp(),
+                                                     activityStartedAuditEventEntity.getBpmnActivity(),
+                                                     activityStartedAuditEventEntity.getProcessDefinitionId(),
+                                                     activityStartedAuditEventEntity.getProcessInstanceId());
     }
 }

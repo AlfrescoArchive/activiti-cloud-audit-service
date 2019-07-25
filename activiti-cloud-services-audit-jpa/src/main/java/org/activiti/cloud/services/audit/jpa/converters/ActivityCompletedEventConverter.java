@@ -29,11 +29,10 @@ public class ActivityCompletedEventConverter extends BaseEventToEntityConverter 
   
         ActivityCompletedAuditEventEntity activityCompletedAuditEventEntity = (ActivityCompletedAuditEventEntity) auditEventEntity;
 
-        CloudBPMNActivityCompletedEventImpl cloudEvent = new CloudBPMNActivityCompletedEventImpl(activityCompletedAuditEventEntity.getEventId(),
-                                                                                                 activityCompletedAuditEventEntity.getTimestamp(),
-                                                                                                 activityCompletedAuditEventEntity.getBpmnActivity(),
-                                                                                                 activityCompletedAuditEventEntity.getProcessDefinitionId(),
-                                                                                                 activityCompletedAuditEventEntity.getProcessInstanceId());
-        return cloudEvent;
+        return new CloudBPMNActivityCompletedEventImpl(activityCompletedAuditEventEntity.getEventId(),
+                                                       activityCompletedAuditEventEntity.getTimestamp(),
+                                                       activityCompletedAuditEventEntity.getBpmnActivity(),
+                                                       activityCompletedAuditEventEntity.getProcessDefinitionId(),
+                                                       activityCompletedAuditEventEntity.getProcessInstanceId());
     }
 }

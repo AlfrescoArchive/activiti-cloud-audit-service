@@ -28,9 +28,8 @@ public class VariableDeletedEventConverter extends BaseEventToEntityConverter {
     protected CloudRuntimeEventImpl<?, ?> createAPIEvent(AuditEventEntity auditEventEntity) {
         VariableDeletedEventEntity variableDeletedEventEntity = (VariableDeletedEventEntity) auditEventEntity;
 
-        CloudVariableDeletedEventImpl cloudEvent = new CloudVariableDeletedEventImpl(variableDeletedEventEntity.getEventId(),
-                                                                                     variableDeletedEventEntity.getTimestamp(),
-                                                                                     variableDeletedEventEntity.getVariableInstance());
-        return cloudEvent;
+        return new CloudVariableDeletedEventImpl(variableDeletedEventEntity.getEventId(),
+                                                 variableDeletedEventEntity.getTimestamp(),
+                                                 variableDeletedEventEntity.getVariableInstance());
     }
 }
