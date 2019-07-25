@@ -335,8 +335,10 @@ public class AuditEventsControllerImplIT {
         signal.setSignalPayload(new SignalPayload("signal",
                                                   null));
 
-        SignalReceivedAuditEventEntity eventEntity = new SignalReceivedAuditEventEntity("eventId",
-                                                                                        System.currentTimeMillis());
+        SignalReceivedAuditEventEntity eventEntity = new SignalReceivedAuditEventEntity();
+        
+        eventEntity.setEventId("eventId");
+        eventEntity.setTimestamp(System.currentTimeMillis());    
         eventEntity.setId(1L);
         eventEntity.setServiceName("rb-my-app");
         eventEntity.setEventType(BPMNSignalEvent.SignalEvents.SIGNAL_RECEIVED.name());
