@@ -22,6 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 
 import org.activiti.api.process.model.BPMNActivity;
+import org.activiti.cloud.api.process.model.events.CloudBPMNActivityEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.ActivityJpaJsonConverter;
 
 @Entity
@@ -69,6 +70,12 @@ public abstract class BPMNActivityAuditEventEntity extends AuditEventEntity {
         setSequenceNumber(sequenceNumber);
         setBpmnActivity(bpmnActivity);
     }
+    
+    public BPMNActivityAuditEventEntity(CloudBPMNActivityEvent cloudEvent) {
+        super(cloudEvent);
+        setBpmnActivity(cloudEvent.getEntity());
+    }
+    
 
     public BPMNActivity getBpmnActivity() {
         return bpmnActivity;
