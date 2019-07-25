@@ -58,14 +58,6 @@ public abstract class AuditEventEntity {
     public AuditEventEntity() {
     }
 
-    public AuditEventEntity(String eventId,
-                            Long timestamp,
-                            String eventType) {
-        this.eventId = eventId;
-        this.timestamp = timestamp;
-        this.eventType = eventType;
-    }
-
     public AuditEventEntity(CloudRuntimeEvent<?,?> cloudEvent) {
         this.eventId = cloudEvent.getId();
         this.timestamp = cloudEvent.getTimestamp();
