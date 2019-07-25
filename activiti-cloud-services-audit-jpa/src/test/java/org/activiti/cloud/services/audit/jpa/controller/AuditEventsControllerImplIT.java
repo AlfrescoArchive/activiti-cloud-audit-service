@@ -144,8 +144,10 @@ public class AuditEventsControllerImplIT {
     }
 
     private AuditEventEntity buildAuditEventEntity(long id) {
-        ProcessStartedAuditEventEntity eventEntity = new ProcessStartedAuditEventEntity("eventId",
-                                                                                        System.currentTimeMillis());
+        ProcessStartedAuditEventEntity eventEntity = new ProcessStartedAuditEventEntity();
+        
+        eventEntity.setEventId("eventId");
+        eventEntity.setTimestamp(System.currentTimeMillis());
         eventEntity.setId(id);
         ProcessInstanceImpl processInstance = new ProcessInstanceImpl();
         processInstance.setId("10");

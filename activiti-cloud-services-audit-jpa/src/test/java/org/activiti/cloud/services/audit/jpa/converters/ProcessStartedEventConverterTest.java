@@ -16,9 +16,14 @@
 
 package org.activiti.cloud.services.audit.jpa.converters;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 import org.activiti.api.runtime.model.impl.ProcessInstanceImpl;
 import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
-import org.activiti.cloud.api.model.shared.impl.events.CloudRuntimeEventImpl;
 import org.activiti.cloud.api.process.model.events.CloudProcessStartedEvent;
 import org.activiti.cloud.api.process.model.impl.events.CloudProcessStartedEventImpl;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
@@ -28,12 +33,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ProcessStartedEventConverterTest {
 
@@ -58,6 +57,8 @@ public class ProcessStartedEventConverterTest {
         event.setEntityId("entityId");
         event.setMessageId("message-id");
         event.setSequenceNumber(0);
+        event.setAppName("app");
+        event.setAppVersion("2");
 
         //when
         ProcessStartedAuditEventEntity auditEventEntity = eventConverter.createEventEntity(event);
@@ -98,36 +99,39 @@ public class ProcessStartedEventConverterTest {
     @Test
     public void createAPIEventShouldSetAllNonProcessContextRelatedFields() {
         //given
-        ProcessStartedAuditEventEntity processStartedAuditEventEntity = new ProcessStartedAuditEventEntity("eventId",
-                                                                                                           System.currentTimeMillis(),
-                                                                                                           "app",
-                                                                                                           "v2",
-                                                                                                           "service",
-                                                                                                           "fullService",
-                                                                                                           "rb",
-                                                                                                           "sv1",
-                                                                                                           "msgId",
-                                                                                                           2,
-                                                                                                           new ProcessInstanceImpl());
-
+        CloudProcessStartedEventImpl cloudAuditEventEntity = new CloudProcessStartedEventImpl("ProcessStartedEventId",
+                                                                                              System.currentTimeMillis(),
+                                                                                              new ProcessInstanceImpl());
+        cloudAuditEventEntity.setAppName("app");
+        cloudAuditEventEntity.setAppVersion("v2");
+        cloudAuditEventEntity.setServiceName("service");
+        cloudAuditEventEntity.setServiceFullName("fullService");
+        cloudAuditEventEntity.setServiceType("rb");
+        cloudAuditEventEntity.setServiceVersion("sv1");
+        cloudAuditEventEntity.setMessageId("msgId");                                                                               
+        cloudAuditEventEntity.setSequenceNumber(2);    
+        
+        ProcessStartedAuditEventEntity auditEventEntity = new ProcessStartedAuditEventEntity(cloudAuditEventEntity);
+  
         //when
-        CloudRuntimeEventImpl<?, ?> apiEvent = eventConverter.createAPIEvent(processStartedAuditEventEntity);
+        ProcessStartedEventConverter converter = new ProcessStartedEventConverter(new EventContextInfoAppender());
+        
+        CloudProcessStartedEventImpl apiEvent = (CloudProcessStartedEventImpl)converter.convertToAPI(auditEventEntity);
         assertThat(apiEvent)
                 .isNotNull()
                 .isInstanceOf(CloudProcessStartedEvent.class);
         CloudProcessStartedEvent cloudProcessStartedEvent = (CloudProcessStartedEvent) apiEvent;
-        assertThat(cloudProcessStartedEvent.getId()).isEqualTo(processStartedAuditEventEntity.getEventId());
-        assertThat(cloudProcessStartedEvent.getTimestamp()).isEqualTo(processStartedAuditEventEntity.getTimestamp());
-        assertThat(cloudProcessStartedEvent.getEntity()).isEqualTo(processStartedAuditEventEntity.getProcessInstance());
-        assertThat(cloudProcessStartedEvent.getAppName()).isEqualTo(processStartedAuditEventEntity.getAppName());
-        assertThat(cloudProcessStartedEvent.getAppVersion()).isEqualTo(processStartedAuditEventEntity.getAppVersion());
-        assertThat(cloudProcessStartedEvent.getServiceFullName()).isEqualTo(processStartedAuditEventEntity.getServiceFullName());
-        assertThat(cloudProcessStartedEvent.getServiceName()).isEqualTo(processStartedAuditEventEntity.getServiceName());
-        assertThat(cloudProcessStartedEvent.getServiceType()).isEqualTo(processStartedAuditEventEntity.getServiceType());
-        assertThat(cloudProcessStartedEvent.getServiceVersion()).isEqualTo(processStartedAuditEventEntity.getServiceVersion());
-        assertThat(cloudProcessStartedEvent.getMessageId()).isEqualTo(processStartedAuditEventEntity.getMessageId());
-        assertThat(cloudProcessStartedEvent.getSequenceNumber()).isEqualTo(processStartedAuditEventEntity.getSequenceNumber());
-
+        assertThat(cloudProcessStartedEvent.getId()).isEqualTo(auditEventEntity.getEventId());
+        assertThat(cloudProcessStartedEvent.getTimestamp()).isEqualTo(auditEventEntity.getTimestamp());
+        assertThat(cloudProcessStartedEvent.getEntity()).isEqualTo(auditEventEntity.getProcessInstance());
+        assertThat(cloudProcessStartedEvent.getAppName()).isEqualTo(auditEventEntity.getAppName());
+        assertThat(cloudProcessStartedEvent.getAppVersion()).isEqualTo(auditEventEntity.getAppVersion());
+        assertThat(cloudProcessStartedEvent.getServiceFullName()).isEqualTo(auditEventEntity.getServiceFullName());
+        assertThat(cloudProcessStartedEvent.getServiceName()).isEqualTo(auditEventEntity.getServiceName());
+        assertThat(cloudProcessStartedEvent.getServiceType()).isEqualTo(auditEventEntity.getServiceType());
+        assertThat(cloudProcessStartedEvent.getServiceVersion()).isEqualTo(auditEventEntity.getServiceVersion());
+        assertThat(cloudProcessStartedEvent.getMessageId()).isEqualTo(auditEventEntity.getMessageId());
+        assertThat(cloudProcessStartedEvent.getSequenceNumber()).isEqualTo(auditEventEntity.getSequenceNumber());
     }
 
     @Test
