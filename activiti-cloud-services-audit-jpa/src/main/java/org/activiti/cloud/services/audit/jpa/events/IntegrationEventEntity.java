@@ -30,20 +30,12 @@ public abstract class IntegrationEventEntity extends AuditEventEntity {
 
     public IntegrationEventEntity(String eventId,
                                   Long timestamp,
-                                  String eventType) {
-        super(eventId,
-              timestamp,
-              eventType);
-    }
-
-    public IntegrationEventEntity(String eventId,
-                                  Long timestamp,
                                   String eventType,
                                   String integrationContextId,
                                   String flowNodeId) {
-        super(eventId,
-              timestamp,
-              eventType);
+        this.eventId = eventId;
+        this.timestamp = timestamp;
+        this.eventType = eventType;
         this.integrationContextId = integrationContextId;
         this.flowNodeId = flowNodeId;
     }
