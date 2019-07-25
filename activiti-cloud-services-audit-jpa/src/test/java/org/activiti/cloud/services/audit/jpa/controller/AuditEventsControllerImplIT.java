@@ -314,9 +314,10 @@ public class AuditEventsControllerImplIT {
 
         given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
 
-        AuditEventEntity event = new ActivityStartedAuditEventEntity("eventId",
-                                                                     System.currentTimeMillis());
-
+        AuditEventEntity event = new ActivityStartedAuditEventEntity();
+        event.setEventId("eventId");
+        event.setTimestamp(System.currentTimeMillis());
+        
         mockMvc.perform(head("{version}/events/{id}",
                              "/v1",
                              eventEntity.getId()))
