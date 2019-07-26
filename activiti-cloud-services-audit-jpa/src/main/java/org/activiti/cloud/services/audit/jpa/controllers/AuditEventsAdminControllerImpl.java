@@ -18,7 +18,9 @@ package org.activiti.cloud.services.audit.jpa.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.activiti.api.runtime.shared.NotFoundException;
 import org.activiti.cloud.alfresco.data.domain.AlfrescoPagedResourcesAssembler;
 import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
 import org.activiti.cloud.services.audit.api.assembler.EventResourceAssembler;
@@ -27,6 +29,8 @@ import org.activiti.cloud.services.audit.api.converters.APIEventToEntityConverte
 import org.activiti.cloud.services.audit.api.resources.EventsRelProvider;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
+import org.activiti.cloud.services.audit.jpa.security.SecurityPoliciesApplicationServiceImpl;
+import org.activiti.core.common.spring.security.policies.ActivitiForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,6 +39,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,15 +56,20 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
 
     private final APIEventToEntityConverters eventConverters;
 
+    private SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService;
+
     @Autowired
     public AuditEventsAdminControllerImpl(EventsRepository eventsRepository,
                                           EventResourceAssembler eventResourceAssembler,
                                           APIEventToEntityConverters eventConverters,
-                                          AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler) {
+                                          AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler,
+                                          SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService
+                                          ) {
         this.eventsRepository = eventsRepository;
         this.eventResourceAssembler = eventResourceAssembler;
         this.eventConverters = eventConverters;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.securityPoliciesApplicationService = securityPoliciesApplicationService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -77,5 +87,21 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
                                                                  pageable,
                                                                  allAuditInPage.getTotalElements()),
                                                   eventResourceAssembler);
+    }
+
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
+    public Resource<CloudRuntimeEvent> findById(@PathVariable String eventId) {
+        Optional<AuditEventEntity> findResult = eventsRepository.findByEventId(eventId);
+        if (!findResult.isPresent()) {
+            throw new NotFoundException("Unable to find event for the given id:'" + eventId + "'");
+        }
+        AuditEventEntity auditEventEntity = findResult.get();
+        if (!securityPoliciesApplicationService.canRead(auditEventEntity.getProcessDefinitionId(),
+                                                        auditEventEntity.getServiceFullName())) {
+            throw new ActivitiForbiddenException("Operation not permitted for " + auditEventEntity.getProcessDefinitionId());
+        }
+
+        CloudRuntimeEvent cloudRuntimeEvent = eventConverters.getConverterByEventTypeName(auditEventEntity.getEventType()).convertToAPI(auditEventEntity);
+        return eventResourceAssembler.toResource(cloudRuntimeEvent);
     }
 }
