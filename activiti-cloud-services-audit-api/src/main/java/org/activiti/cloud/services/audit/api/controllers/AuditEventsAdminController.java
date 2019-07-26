@@ -23,6 +23,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/admin/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL, produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
 public interface AuditEventsAdminController {
+
+    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
+    Resource<CloudRuntimeEvent> findById(@PathVariable String eventId);
 
     @RequestMapping(method = RequestMethod.GET)
     PagedResources<Resource<CloudRuntimeEvent>> findAll(Pageable pageable);
