@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,5 +37,6 @@ public interface AuditEventsAdminController {
     Resource<CloudRuntimeEvent> findById(@PathVariable String eventId);
 
     @RequestMapping(method = RequestMethod.GET)
-    PagedResources<Resource<CloudRuntimeEvent>> findAll(Pageable pageable);
+    PagedResources<Resource<CloudRuntimeEvent>> findAll(@RequestParam(value = "search", required = false) String search,
+                                                        Pageable pageable);
 }

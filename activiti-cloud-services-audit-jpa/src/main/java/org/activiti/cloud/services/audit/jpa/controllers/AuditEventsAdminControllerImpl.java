@@ -56,7 +56,7 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
 
     private final APIEventToEntityConverters eventConverters;
 
-    private SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService;
+    private final SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService;
 
     @Autowired
     public AuditEventsAdminControllerImpl(EventsRepository eventsRepository,
@@ -96,11 +96,6 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
             throw new NotFoundException("Unable to find event for the given id:'" + eventId + "'");
         }
         AuditEventEntity auditEventEntity = findResult.get();
-        if (!securityPoliciesApplicationService.canRead(auditEventEntity.getProcessDefinitionId(),
-                                                        auditEventEntity.getServiceFullName())) {
-            throw new ActivitiForbiddenException("Operation not permitted for " + auditEventEntity.getProcessDefinitionId());
-        }
-
         CloudRuntimeEvent cloudRuntimeEvent = eventConverters.getConverterByEventTypeName(auditEventEntity.getEventType()).convertToAPI(auditEventEntity);
         return eventResourceAssembler.toResource(cloudRuntimeEvent);
     }

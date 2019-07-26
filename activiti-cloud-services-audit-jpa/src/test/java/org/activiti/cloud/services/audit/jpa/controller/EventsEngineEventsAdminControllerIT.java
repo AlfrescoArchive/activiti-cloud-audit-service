@@ -44,17 +44,21 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
 import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pageRequestParameters;
 import static org.activiti.alfresco.rest.docs.AlfrescoDocumentation.pagedResourcesResponseFields;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -176,6 +180,50 @@ public class EventsEngineEventsAdminControllerIT {
                 .node("list.pagination.count").isEqualTo(1)
                 .node("list.pagination.hasMoreItems").isEqualTo(false)
                 .node("list.pagination.totalItems").isEqualTo(12);
+    }
+
+    @Test
+    public void findById() throws Exception {
+
+        AuditEventEntity eventEntity = buildAuditEventEntity(1);
+
+        given(eventsRepository.findByEventId(anyString())).willReturn(Optional.of(eventEntity));
+
+        mockMvc.perform(get("/admin/{version}/events/{id}",
+                            "/v1",
+                            eventEntity.getId()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document(DOCUMENTATION_IDENTIFIER + "/get",
+                                pathParameters(parameterWithName("id").description("The event id"),
+                                               parameterWithName("version").description("The API version")),
+                                responseFields(
+                                        subsectionWithPath("id").description("The event id"),
+                                        subsectionWithPath("_links").description("<<resources-index-links,Links>> to other resources"),
+                                        subsectionWithPath("timestamp").description("The event timestamp"),
+                                        subsectionWithPath("eventType").description("The event type"),
+                                        subsectionWithPath("appName").description("The application name"),
+                                        subsectionWithPath("serviceFullName").description("The full service name"),
+                                        subsectionWithPath("appVersion").description("The application version"),
+                                        subsectionWithPath("serviceVersion").description("The version of the service"),
+                                        subsectionWithPath("serviceType").description("The type of the service"),
+                                        subsectionWithPath("nestedProcessDefinitionId").description("Nested process definition id"),
+                                        subsectionWithPath("nestedProcessInstanceId").description("Nested process instance id"),
+                                        subsectionWithPath("serviceName").description("The service name"),
+                                        subsectionWithPath("entityId").description("the entity idCloudProcessSuspendedEventImpl"),
+                                        subsectionWithPath("entity").description("the process instance entity"),
+                                        subsectionWithPath("entity.processDefinitionId").description("The process definition id"),
+                                        subsectionWithPath("entity.id").description("The associated entity id"),
+                                        subsectionWithPath("processInstanceId").description("The process instance id"),
+                                        subsectionWithPath("processDefinitionId").description("The process definition id"),
+                                        subsectionWithPath("processDefinitionKey").description("The process definition key"),
+                                        subsectionWithPath("processDefinitionVersion").description("The process definition version"),
+                                        subsectionWithPath("businessKey").description("The businessKey"),
+                                        subsectionWithPath("parentProcessInstanceId").description("The parent process instance id"),
+                                        subsectionWithPath("messageId").description("The transaction id coming from received message"),
+                                        subsectionWithPath("sequenceNumber").description("The position of the event within the transaction")
+
+                                )));
     }
 
     @Test
