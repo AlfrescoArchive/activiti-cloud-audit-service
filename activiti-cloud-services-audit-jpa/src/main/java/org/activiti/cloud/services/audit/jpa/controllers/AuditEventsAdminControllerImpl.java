@@ -72,9 +72,14 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
     @RequestMapping(method = RequestMethod.GET)
     public PagedResources<Resource<CloudRuntimeEvent>> findAll(@RequestParam(value = "search", required = false) String search,
                                                                Pageable pageable) {
+
         Specification<AuditEventEntity> spec = searchUtils.createSearchSpec(search);
-        Page<AuditEventEntity> allAuditInPage = eventsRepository.findAll(spec,
-                                                                         pageable);
+        Page<AuditEventEntity> allAuditInPage;
+        if (spec != null) {
+            allAuditInPage = eventsRepository.findAll(spec, pageable);
+        } else {
+            allAuditInPage = eventsRepository.findAll(pageable);
+        }
 
         List<CloudRuntimeEvent> events = new ArrayList<>();
 
