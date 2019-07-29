@@ -25,18 +25,4 @@ public class IntegrationRequestSentEventEntity extends IntegrationEventEntity {
 
     protected static final String INTEGRATION_REQUEST_SENT_EVENT = "IntegrationRequestSentEvent";
 
-    public IntegrationRequestSentEventEntity() {
-    }
-
-    public IntegrationRequestSentEventEntity(String eventId,
-                                             Long timestamp,
-                                             String eventType,
-                                             String integrationContextId,
-                                             String flowNodeId) {
-        super(eventId,
-              timestamp,
-              eventType,
-              integrationContextId,
-              flowNodeId);
-    }
 }

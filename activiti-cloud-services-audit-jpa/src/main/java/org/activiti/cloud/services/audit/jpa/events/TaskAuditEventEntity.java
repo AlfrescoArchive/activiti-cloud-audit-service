@@ -36,11 +36,8 @@ public abstract class TaskAuditEventEntity extends AuditEventEntity {
     public void setTask(Task task) {
         this.task = task;
         if (task != null) {
-            setProcessDefinitionId(task.getProcessDefinitionId());
-            setProcessInstanceId(task.getProcessInstanceId());
             this.taskId = task.getId();
             this.taskName = task.getName();
-            setEntityId(task.getId());
         }
     }
 

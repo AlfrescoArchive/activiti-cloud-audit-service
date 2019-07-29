@@ -33,9 +33,9 @@ public abstract class AuditEventEntity {
     @Id
     @GeneratedValue
     private Long id;
-    protected String eventId;
-    protected Long timestamp;
-    protected String eventType;
+    private String eventId;
+    private Long timestamp;
+    private String eventType;
 
     /* Cloud Data */
     private String appName;
