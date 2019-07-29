@@ -27,6 +27,7 @@ import org.activiti.cloud.services.audit.api.converters.APIEventToEntityConverte
 import org.activiti.cloud.services.audit.api.resources.EventsRelProvider;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
+import org.activiti.cloud.services.audit.jpa.security.AlwaysTrueSpecification;
 import org.activiti.cloud.services.audit.jpa.utils.SearchSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -74,18 +75,19 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
                                                                Pageable pageable) {
 
         Specification<AuditEventEntity> spec = searchSpecificationBuilder.createSearchSpec(search);
-        Page<AuditEventEntity> allAuditInPage;
-        if (spec != null) {
-            allAuditInPage = eventsRepository.findAll(spec, pageable);
-        } else {
-            allAuditInPage = eventsRepository.findAll(pageable);
+
+        if (spec == null) {
+            spec = new AlwaysTrueSpecification();
         }
+
+        Page<AuditEventEntity> allAuditInPage = eventsRepository.findAll(spec, pageable);
 
         List<CloudRuntimeEvent> events = new ArrayList<>();
 
         for (AuditEventEntity aee : allAuditInPage.getContent()) {
             events.add(eventConverters.getConverterByEventTypeName(aee.getEventType()).convertToAPI(aee));
         }
+
 
         return pagedResourcesAssembler.toResource(pageable,
                                                   new PageImpl<>(events,
