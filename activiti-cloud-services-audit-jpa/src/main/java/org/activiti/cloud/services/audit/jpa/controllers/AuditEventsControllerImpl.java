@@ -30,6 +30,7 @@ import org.activiti.cloud.services.audit.jpa.repository.EventSpecificationsBuild
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
 import org.activiti.cloud.services.audit.jpa.repository.SearchOperation;
 import org.activiti.cloud.services.audit.jpa.security.SecurityPoliciesApplicationServiceImpl;
+import org.activiti.cloud.services.audit.jpa.utils.SearchUtils;
 import org.activiti.core.common.spring.security.policies.ActivitiForbiddenException;
 import org.activiti.core.common.spring.security.policies.SecurityPolicyAccess;
 import org.slf4j.Logger;
@@ -66,18 +67,22 @@ public class AuditEventsControllerImpl implements AuditEventsController {
     private SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService;
 
     private final APIEventToEntityConverters eventConverters;
-     
+
+    private final SearchUtils searchUtils;
+
     @Autowired
     public AuditEventsControllerImpl(EventsRepository eventsRepository,
                                      EventResourceAssembler eventResourceAssembler,
                                      APIEventToEntityConverters eventConverters,
                                      SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService,
-                                     AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler) {
+                                     AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler,
+                                     SearchUtils searchUtils) {
         this.eventsRepository = eventsRepository;
         this.eventResourceAssembler = eventResourceAssembler;
         this.eventConverters = eventConverters;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
         this.securityPoliciesApplicationService = securityPoliciesApplicationService;
+        this.searchUtils = searchUtils;
     }
 
     @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
@@ -98,9 +103,9 @@ public class AuditEventsControllerImpl implements AuditEventsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public PagedResources<Resource<CloudRuntimeEvent>> findAll(@RequestParam(value = "search", required = false) String search,
-                                                 Pageable pageable) {
+                                                               Pageable pageable) {
 
-        Specification<AuditEventEntity> spec = createSearchSpec(search);
+        Specification<AuditEventEntity> spec = searchUtils.createSearchSpec(search);
 
         spec = securityPoliciesApplicationService.createSpecWithSecurity(spec,
                                                                          SecurityPolicyAccess.READ);
@@ -123,24 +128,5 @@ public class AuditEventsControllerImpl implements AuditEventsController {
                                                                  pageable,
                                                                  allAuditInPage.getTotalElements()),
                                                   eventResourceAssembler);
-    }
-
-    private Specification<AuditEventEntity> createSearchSpec(String search) {
-        EventSpecificationsBuilder builder = new EventSpecificationsBuilder();
-        if (search != null && !search.isEmpty()) {
-            String operationSetExper = Joiner.on("|")
-                    .join(SearchOperation.SIMPLE_OPERATION_SET);
-            Pattern pattern = Pattern.compile("(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)([a-zA-Z0-9-_]+?)(\\p{Punct}?),");
-            Matcher matcher = pattern.matcher(search + ",");
-            while (matcher.find()) {
-                builder.with(matcher.group(1),
-                             matcher.group(2),
-                             matcher.group(4),
-                             matcher.group(3),
-                             matcher.group(5));
-            }
-        }
-
-        return builder.build();
     }
 }
