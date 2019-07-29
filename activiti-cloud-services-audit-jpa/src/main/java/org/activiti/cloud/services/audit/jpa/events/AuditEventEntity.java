@@ -28,7 +28,7 @@ import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TYPE")
 @Entity
-public abstract class  AuditEventEntity {
+public abstract class AuditEventEntity {
 
     @Id
     @GeneratedValue
