@@ -53,6 +53,7 @@ import org.activiti.cloud.services.audit.jpa.converters.TimerScheduledEventConve
 import org.activiti.cloud.services.audit.jpa.converters.VariableCreatedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.VariableDeletedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.VariableUpdatedEventConverter;
+import org.activiti.cloud.services.audit.jpa.utils.SearchUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -262,5 +263,10 @@ public class AuditJPAAutoConfiguration {
     @Bean
     public TimerRetriesDecrementedEventConverter timerRetriesDecrementedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
         return new TimerRetriesDecrementedEventConverter(eventContextInfoAppender);
-    }   
+    }
+    @ConditionalOnMissingBean
+    @Bean
+    public SearchUtils searchUtild(){
+        return new SearchUtils();
+    }
 } 

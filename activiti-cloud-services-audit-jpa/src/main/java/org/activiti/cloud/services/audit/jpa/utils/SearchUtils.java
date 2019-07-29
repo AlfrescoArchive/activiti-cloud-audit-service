@@ -8,9 +8,7 @@ import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventSpecificationsBuilder;
 import org.activiti.cloud.services.audit.jpa.repository.SearchOperation;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
 
-@Component
 public class SearchUtils {
     public Specification<AuditEventEntity> createSearchSpec(String search) {
         EventSpecificationsBuilder builder = new EventSpecificationsBuilder();
