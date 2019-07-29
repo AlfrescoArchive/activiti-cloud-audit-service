@@ -9,7 +9,7 @@ import org.activiti.cloud.services.audit.jpa.repository.EventSpecificationsBuild
 import org.activiti.cloud.services.audit.jpa.repository.SearchOperation;
 import org.springframework.data.jpa.domain.Specification;
 
-public class SearchUtils {
+public class SearchSpecificationBuilder {
     public Specification<AuditEventEntity> createSearchSpec(String search) {
         EventSpecificationsBuilder builder = new EventSpecificationsBuilder();
         if (search != null && !search.isEmpty()) {

@@ -194,7 +194,22 @@ public class EventsEngineEventsAdminControllerIT {
                 .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_IDENTIFIER + "/head/list"));
     }
+    @Test
+    public void searchEvents() throws Exception {
+        PageRequest pageable = PageRequest.of(1,
+                                              10);
+        Page<AuditEventEntity> eventsPage = new PageImpl<>(buildEventsData(1),
+                                                           pageable,
+                                                           10);
 
+        given(eventsRepository.findAll(any(PageRequest.class))).willReturn(eventsPage);
+
+        mockMvc.perform(head("/admin/{version}/events",
+                             "v1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document(DOCUMENTATION_IDENTIFIER + "/head/list"));
+    }
     @Test
     public void headEventsAlfresco() throws Exception {
         AlfrescoPageRequest pageRequest = new AlfrescoPageRequest(11,

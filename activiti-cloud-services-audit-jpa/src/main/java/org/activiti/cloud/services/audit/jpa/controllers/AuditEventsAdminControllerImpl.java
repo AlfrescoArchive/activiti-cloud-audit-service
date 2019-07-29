@@ -27,7 +27,7 @@ import org.activiti.cloud.services.audit.api.converters.APIEventToEntityConverte
 import org.activiti.cloud.services.audit.api.resources.EventsRelProvider;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
-import org.activiti.cloud.services.audit.jpa.utils.SearchUtils;
+import org.activiti.cloud.services.audit.jpa.utils.SearchSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,26 +54,26 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
 
     private final APIEventToEntityConverters eventConverters;
 
-    private final SearchUtils searchUtils;
+    private final SearchSpecificationBuilder searchSpecificationBuilder;
 
     @Autowired
     public AuditEventsAdminControllerImpl(EventsRepository eventsRepository,
                                           EventResourceAssembler eventResourceAssembler,
                                           APIEventToEntityConverters eventConverters,
                                           AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler,
-                                          SearchUtils searchUtils) {
+                                          SearchSpecificationBuilder searchSpecificationBuilder) {
         this.eventsRepository = eventsRepository;
         this.eventResourceAssembler = eventResourceAssembler;
         this.eventConverters = eventConverters;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
-        this.searchUtils = searchUtils;
+        this.searchSpecificationBuilder = searchSpecificationBuilder;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public PagedResources<Resource<CloudRuntimeEvent>> findAll(@RequestParam(value = "search", required = false) String search,
                                                                Pageable pageable) {
 
-        Specification<AuditEventEntity> spec = searchUtils.createSearchSpec(search);
+        Specification<AuditEventEntity> spec = searchSpecificationBuilder.createSearchSpec(search);
         Page<AuditEventEntity> allAuditInPage;
         if (spec != null) {
             allAuditInPage = eventsRepository.findAll(spec, pageable);
