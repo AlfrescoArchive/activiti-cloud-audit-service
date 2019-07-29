@@ -105,7 +105,8 @@ public class EventsEngineEventsAdminControllerIT {
                                                            pageable,
                                                            11);
 
-        given(eventsRepository.findAll(any(PageRequest.class))).willReturn(eventsPage);
+        given(eventsRepository.findAll(any(),
+                                       any(PageRequest.class))).willReturn(eventsPage);
 
         mockMvc.perform(get("/admin/{version}/events",
                             "v1")
@@ -166,7 +167,7 @@ public class EventsEngineEventsAdminControllerIT {
 
         List<AuditEventEntity> events = buildEventsData(1);
 
-        given(eventsRepository.findAll(any(AlfrescoPageRequest.class)))
+        given(eventsRepository.findAll(any(),any(AlfrescoPageRequest.class)))
                 .willReturn(new PageImpl<>(events,
                                            pageRequest,
                                            12));
@@ -197,7 +198,8 @@ public class EventsEngineEventsAdminControllerIT {
                                                            pageable,
                                                            10);
 
-        given(eventsRepository.findAll(any(PageRequest.class))).willReturn(eventsPage);
+        given(eventsRepository.findAll(any(),
+                                       any(PageRequest.class))).willReturn(eventsPage);
 
         mockMvc.perform(head("/admin/{version}/events",
                              "v1"))
@@ -247,7 +249,7 @@ public class EventsEngineEventsAdminControllerIT {
 
         List<AuditEventEntity> events = buildEventsData(1);
 
-        given(eventsRepository.findAll(
+        given(eventsRepository.findAll(any(),
                 any(AlfrescoPageRequest.class)))
                 .willReturn(new PageImpl<>(events,
                                            pageRequest,
