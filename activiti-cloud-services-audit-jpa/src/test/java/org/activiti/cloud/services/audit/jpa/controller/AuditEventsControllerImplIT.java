@@ -110,7 +110,7 @@ public class AuditEventsControllerImplIT {
         given(eventsRepository.findAll(any(),
                                        any(PageRequest.class))).willReturn(eventsPage);
 
-        mockMvc.perform(get("{version}/events?search=entityId:3Acadaae69-af7e-11e9-a6f3-0a580a340115 ",
+        mockMvc.perform(get("{version}/events",
                             "/v1")
                                 .param("page",
                                        "1")
