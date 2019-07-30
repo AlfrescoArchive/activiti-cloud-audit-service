@@ -213,32 +213,29 @@ public class EventsEngineEventsAdminControllerIT {
     public void searchEvents() throws Exception {
         PageRequest pageable = PageRequest.of(1,
                                               10);
-        Page<AuditEventEntity> eventsPage = new PageImpl<>(buildEventsData(5),
+        Page<AuditEventEntity> eventsPage = new PageImpl<>(buildEventsData(1),
                                                            pageable,
                                                            10);
 
         given(eventsRepository.findAll(any(),
-                                       any( Pageable.class))).willReturn(eventsPage);
+                                       any(Pageable.class))).willReturn(eventsPage);
 
-        MvcResult result = mockMvc.perform(get("/admin/{version}/events?search=processInstanceId:2",
-                                               "v1")
-                                                   .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/admin/{version}/events?search=processInstanceId:2",
+                            "v1")
+                                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document(DOCUMENTATION_ALFRESCO_IDENTIFIER + "/list",
                                 requestParameters(parameterWithName("search").description("The search criteria")),
                                 pagedResourcesResponseFields())
-                )
-                .andReturn();
+                );
         verify(eventsRepository).findAll(argumentCaptor.capture(),
                                          ArgumentMatchers.any(Pageable.class));
-        Specification<AuditEventEntity> value= argumentCaptor.getValue();
+        Specification<AuditEventEntity> value = argumentCaptor.getValue();
 
         assertThat(value).isInstanceOf(EventSpecification.class);
-        EventSpecification eventSpecification = (EventSpecification)value;
+        EventSpecification eventSpecification = (EventSpecification) value;
         assertThat(eventSpecification.getCriteria().getKey()).isEqualTo("processInstanceId");
         assertThat(eventSpecification.getCriteria().getValue()).isEqualTo("2");
-
-
     }
 
     @Test
