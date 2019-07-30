@@ -33,7 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -76,7 +75,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EventsEngineEventsAdminControllerIT {
 
     @Captor
-    ArgumentCaptor< Specification<AuditEventEntity>> argumentCaptor;
+    private ArgumentCaptor< Specification<AuditEventEntity>> argumentCaptor;
     private static final String DOCUMENTATION_IDENTIFIER = "events-admin";
     private static final String DOCUMENTATION_ALFRESCO_IDENTIFIER = "events-admin-alfresco";
 
@@ -229,7 +228,7 @@ public class EventsEngineEventsAdminControllerIT {
                                 pagedResourcesResponseFields())
                 );
         verify(eventsRepository).findAll(argumentCaptor.capture(),
-                                         ArgumentMatchers.any(Pageable.class));
+                                         any(Pageable.class));
         Specification<AuditEventEntity> value = argumentCaptor.getValue();
 
         assertThat(value).isInstanceOf(EventSpecification.class);
