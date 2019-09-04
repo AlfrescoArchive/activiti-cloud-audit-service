@@ -27,16 +27,20 @@ import org.activiti.cloud.services.audit.api.converters.APIEventToEntityConverte
 import org.activiti.cloud.services.audit.api.resources.EventsRelProvider;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
+import org.activiti.cloud.services.audit.jpa.security.AlwaysTrueSpecification;
+import org.activiti.cloud.services.audit.jpa.utils.SearchSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -51,26 +55,39 @@ public class AuditEventsAdminControllerImpl implements AuditEventsAdminControlle
 
     private final APIEventToEntityConverters eventConverters;
 
+    private final SearchSpecificationBuilder searchSpecificationBuilder;
+
     @Autowired
     public AuditEventsAdminControllerImpl(EventsRepository eventsRepository,
                                           EventResourceAssembler eventResourceAssembler,
                                           APIEventToEntityConverters eventConverters,
-                                          AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler) {
+                                          AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler,
+                                          SearchSpecificationBuilder searchSpecificationBuilder) {
         this.eventsRepository = eventsRepository;
         this.eventResourceAssembler = eventResourceAssembler;
         this.eventConverters = eventConverters;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.searchSpecificationBuilder = searchSpecificationBuilder;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public PagedResources<Resource<CloudRuntimeEvent>> findAll(Pageable pageable) {
-        Page<AuditEventEntity> allAuditInPage = eventsRepository.findAll(pageable);
+    public PagedResources<Resource<CloudRuntimeEvent>> findAll(@RequestParam(value = "search", required = false) String search,
+                                                               Pageable pageable) {
+
+        Specification<AuditEventEntity> spec = searchSpecificationBuilder.createSearchSpec(search);
+
+        if (spec == null) {
+            spec = new AlwaysTrueSpecification();
+        }
+
+        Page<AuditEventEntity> allAuditInPage = eventsRepository.findAll(spec, pageable);
 
         List<CloudRuntimeEvent> events = new ArrayList<>();
 
         for (AuditEventEntity aee : allAuditInPage.getContent()) {
             events.add(eventConverters.getConverterByEventTypeName(aee.getEventType()).convertToAPI(aee));
         }
+
 
         return pagedResourcesAssembler.toResource(pageable,
                                                   new PageImpl<>(events,

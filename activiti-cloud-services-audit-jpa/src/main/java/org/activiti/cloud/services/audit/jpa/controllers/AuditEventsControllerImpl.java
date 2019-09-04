@@ -16,7 +16,6 @@
 
 package org.activiti.cloud.services.audit.jpa.controllers;
 
-import com.google.common.base.Joiner;
 import org.activiti.api.runtime.shared.NotFoundException;
 import org.activiti.cloud.alfresco.data.domain.AlfrescoPagedResourcesAssembler;
 import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
@@ -26,10 +25,9 @@ import org.activiti.cloud.services.audit.api.converters.APIEventToEntityConverte
 import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
 import org.activiti.cloud.services.audit.api.resources.EventsRelProvider;
 import org.activiti.cloud.services.audit.jpa.events.AuditEventEntity;
-import org.activiti.cloud.services.audit.jpa.repository.EventSpecificationsBuilder;
 import org.activiti.cloud.services.audit.jpa.repository.EventsRepository;
-import org.activiti.cloud.services.audit.jpa.repository.SearchOperation;
 import org.activiti.cloud.services.audit.jpa.security.SecurityPoliciesApplicationServiceImpl;
+import org.activiti.cloud.services.audit.jpa.utils.SearchSpecificationBuilder;
 import org.activiti.core.common.spring.security.policies.ActivitiForbiddenException;
 import org.activiti.core.common.spring.security.policies.SecurityPolicyAccess;
 import org.slf4j.Logger;
@@ -48,8 +46,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/v1/" + EventsRelProvider.COLLECTION_RESOURCE_REL, produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -66,18 +62,22 @@ public class AuditEventsControllerImpl implements AuditEventsController {
     private SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService;
 
     private final APIEventToEntityConverters eventConverters;
-     
+
+    private final SearchSpecificationBuilder searchSpecificationBuilder;
+
     @Autowired
     public AuditEventsControllerImpl(EventsRepository eventsRepository,
                                      EventResourceAssembler eventResourceAssembler,
                                      APIEventToEntityConverters eventConverters,
                                      SecurityPoliciesApplicationServiceImpl securityPoliciesApplicationService,
-                                     AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler) {
+                                     AlfrescoPagedResourcesAssembler<CloudRuntimeEvent> pagedResourcesAssembler,
+                                     SearchSpecificationBuilder searchSpecificationBuilder) {
         this.eventsRepository = eventsRepository;
         this.eventResourceAssembler = eventResourceAssembler;
         this.eventConverters = eventConverters;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
         this.securityPoliciesApplicationService = securityPoliciesApplicationService;
+        this.searchSpecificationBuilder = searchSpecificationBuilder;
     }
 
     @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
@@ -98,9 +98,9 @@ public class AuditEventsControllerImpl implements AuditEventsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public PagedResources<Resource<CloudRuntimeEvent>> findAll(@RequestParam(value = "search", required = false) String search,
-                                                 Pageable pageable) {
+                                                               Pageable pageable) {
 
-        Specification<AuditEventEntity> spec = createSearchSpec(search);
+        Specification<AuditEventEntity> spec = searchSpecificationBuilder.createSearchSpec(search);
 
         spec = securityPoliciesApplicationService.createSpecWithSecurity(spec,
                                                                          SecurityPolicyAccess.READ);
@@ -123,24 +123,5 @@ public class AuditEventsControllerImpl implements AuditEventsController {
                                                                  pageable,
                                                                  allAuditInPage.getTotalElements()),
                                                   eventResourceAssembler);
-    }
-
-    private Specification<AuditEventEntity> createSearchSpec(String search) {
-        EventSpecificationsBuilder builder = new EventSpecificationsBuilder();
-        if (search != null && !search.isEmpty()) {
-            String operationSetExper = Joiner.on("|")
-                    .join(SearchOperation.SIMPLE_OPERATION_SET);
-            Pattern pattern = Pattern.compile("(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)([a-zA-Z0-9-_]+?)(\\p{Punct}?),");
-            Matcher matcher = pattern.matcher(search + ",");
-            while (matcher.find()) {
-                builder.with(matcher.group(1),
-                             matcher.group(2),
-                             matcher.group(4),
-                             matcher.group(3),
-                             matcher.group(5));
-            }
-        }
-
-        return builder.build();
     }
 }
