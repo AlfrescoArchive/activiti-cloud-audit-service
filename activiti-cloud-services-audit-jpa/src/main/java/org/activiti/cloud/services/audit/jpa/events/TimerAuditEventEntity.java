@@ -1,14 +1,14 @@
 package org.activiti.cloud.services.audit.jpa.events;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-
 import org.activiti.api.process.model.BPMNTimer;
 import org.activiti.cloud.api.process.model.events.CloudBPMNTimerEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.TimerJpaJsonConverter;
 
-@Entity
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class TimerAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = TimerJpaJsonConverter.class)

@@ -16,16 +16,16 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-
 import org.activiti.api.process.model.BPMNActivity;
 import org.activiti.cloud.api.process.model.events.CloudBPMNActivityEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.ActivityJpaJsonConverter;
 
-@Entity
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class BPMNActivityAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = ActivityJpaJsonConverter.class)
