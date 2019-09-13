@@ -21,15 +21,15 @@ import org.activiti.cloud.api.model.shared.events.CloudRuntimeEvent;
 import java.util.Objects;
 
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TYPE")
-@MappedSuperclass
+@Entity(name = "AuditEvent")
 public abstract class AuditEventEntity {
 
     @Id
