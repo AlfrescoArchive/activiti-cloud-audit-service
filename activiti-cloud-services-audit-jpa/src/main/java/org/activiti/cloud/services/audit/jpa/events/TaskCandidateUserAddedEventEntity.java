@@ -16,18 +16,18 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.api.task.model.TaskCandidateUser;
+import org.activiti.api.task.model.impl.TaskCandidateUserImpl;
+import org.activiti.cloud.api.task.model.events.CloudTaskCandidateUserAddedEvent;
+import org.activiti.cloud.services.audit.jpa.converters.json.TaskCandidateUserJpaJsonConverter;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
-import org.activiti.api.task.model.TaskCandidateUser;
-import org.activiti.api.task.model.impl.TaskCandidateUserImpl;
-import org.activiti.cloud.api.task.model.events.CloudTaskCandidateUserAddedEvent;
-import org.activiti.cloud.services.audit.jpa.converters.json.TaskCandidateUserJpaJsonConverter;
-
-@Entity
+@Entity(name = TaskCandidateUserAddedEventEntity.TASK_CANDIDATE_USER_ADDED_EVENT)
 @DiscriminatorValue(value = TaskCandidateUserAddedEventEntity.TASK_CANDIDATE_USER_ADDED_EVENT)
 public class TaskCandidateUserAddedEventEntity extends AuditEventEntity {
 

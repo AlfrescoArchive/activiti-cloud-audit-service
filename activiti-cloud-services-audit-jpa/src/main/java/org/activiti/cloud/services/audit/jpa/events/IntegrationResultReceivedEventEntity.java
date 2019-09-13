@@ -19,7 +19,7 @@ package org.activiti.cloud.services.audit.jpa.events;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-@Entity
+@Entity(name = IntegrationResultReceivedEventEntity.INTEGRATION_RESULT_RECEIVED_EVENT)
 @DiscriminatorValue(value = IntegrationResultReceivedEventEntity.INTEGRATION_RESULT_RECEIVED_EVENT)
 public class IntegrationResultReceivedEventEntity extends IntegrationEventEntity {
 

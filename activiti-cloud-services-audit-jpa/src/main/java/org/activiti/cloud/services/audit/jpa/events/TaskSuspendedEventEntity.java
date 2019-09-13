@@ -16,12 +16,12 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.cloud.api.task.model.events.CloudTaskSuspendedEvent;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.cloud.api.task.model.events.CloudTaskSuspendedEvent;
-
-@Entity
+@Entity(name = TaskSuspendedEventEntity.TASK_SUSPENDED_EVENT)
 @DiscriminatorValue(value = TaskSuspendedEventEntity.TASK_SUSPENDED_EVENT)
 public class TaskSuspendedEventEntity extends TaskAuditEventEntity {
 

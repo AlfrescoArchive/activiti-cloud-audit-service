@@ -16,12 +16,12 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.cloud.api.process.model.events.CloudBPMNMessageSentEvent;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.cloud.api.process.model.events.CloudBPMNMessageSentEvent;
-
-@Entity
+@Entity(name = MessageSentAuditEventEntity.MESSAGE_SENT_EVENT)
 @DiscriminatorValue(value = MessageSentAuditEventEntity.MESSAGE_SENT_EVENT)
 public class MessageSentAuditEventEntity extends MessageAuditEventEntity {
 

@@ -16,12 +16,12 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.cloud.api.process.model.events.CloudBPMNActivityCancelledEvent;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.cloud.api.process.model.events.CloudBPMNActivityCancelledEvent;
-
-@Entity
+@Entity(name = ActivityCancelledAuditEventEntity.ACTIVITY_CANCELLED_EVENT)
 @DiscriminatorValue(value = ActivityCancelledAuditEventEntity.ACTIVITY_CANCELLED_EVENT)
 public class ActivityCancelledAuditEventEntity extends BPMNActivityAuditEventEntity {
 

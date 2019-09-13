@@ -16,12 +16,12 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.cloud.api.process.model.events.CloudProcessResumedEvent;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.cloud.api.process.model.events.CloudProcessResumedEvent;
-
-@Entity
+@Entity(name = ProcessResumedAuditEventEntity.PROCESS_RESUMED_EVENT)
 @DiscriminatorValue(value = ProcessResumedAuditEventEntity.PROCESS_RESUMED_EVENT)
 public class ProcessResumedAuditEventEntity extends ProcessAuditEventEntity {
 

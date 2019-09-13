@@ -16,12 +16,12 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.cloud.api.model.shared.events.CloudVariableUpdatedEvent;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.cloud.api.model.shared.events.CloudVariableUpdatedEvent;
-
-@Entity
+@Entity(name = VariableUpdatedEventEntity.VARIABLE_UPDATED_EVENT)
 @DiscriminatorValue(value = VariableUpdatedEventEntity.VARIABLE_UPDATED_EVENT)
 public class VariableUpdatedEventEntity extends VariableAuditEventEntity {
 

@@ -21,7 +21,7 @@ import javax.persistence.Entity;
 
 import org.activiti.cloud.api.model.shared.events.CloudVariableDeletedEvent;
 
-@Entity
+@Entity(name = VariableDeletedEventEntity.VARIABLE_DELETED_EVENT)
 @DiscriminatorValue(value = VariableDeletedEventEntity.VARIABLE_DELETED_EVENT)
 public class VariableDeletedEventEntity extends VariableAuditEventEntity {
 

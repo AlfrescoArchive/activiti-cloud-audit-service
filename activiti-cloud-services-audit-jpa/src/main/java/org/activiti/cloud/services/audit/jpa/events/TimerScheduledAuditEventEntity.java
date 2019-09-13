@@ -16,12 +16,12 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.cloud.api.process.model.events.CloudBPMNTimerScheduledEvent;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.cloud.api.process.model.events.CloudBPMNTimerScheduledEvent;
-
-@Entity
+@Entity(name = TimerScheduledAuditEventEntity.TIMER_SCHEDULED_EVENT)
 @DiscriminatorValue(value = TimerScheduledAuditEventEntity.TIMER_SCHEDULED_EVENT)
 public class TimerScheduledAuditEventEntity extends TimerAuditEventEntity {
 

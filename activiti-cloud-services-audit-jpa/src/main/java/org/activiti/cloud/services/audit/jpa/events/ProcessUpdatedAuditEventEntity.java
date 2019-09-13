@@ -16,12 +16,12 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
+import org.activiti.cloud.api.process.model.events.CloudProcessUpdatedEvent;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.activiti.cloud.api.process.model.events.CloudProcessUpdatedEvent;
-
-@Entity
+@Entity(name = ProcessUpdatedAuditEventEntity.PROCESS_UPDATED_EVENT)
 @DiscriminatorValue(value = ProcessUpdatedAuditEventEntity.PROCESS_UPDATED_EVENT)
 public class ProcessUpdatedAuditEventEntity extends ProcessAuditEventEntity {
 
