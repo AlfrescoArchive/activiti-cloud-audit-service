@@ -56,7 +56,7 @@ public class ProcessUpdatedAuditEventEntity extends ProcessAuditEventEntity {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("ProcessUpdatedAuditEventEntity []");
+        builder.append("ProcessUpdatedAuditEventEntity [toString()=").append(super.toString()).append("]");
         return builder.toString();
     }
 }

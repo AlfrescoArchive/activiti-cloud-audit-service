@@ -56,7 +56,7 @@ public class TaskAssignedEventEntity extends TaskAuditEventEntity {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("TaskAssignedEventEntity []");
+        builder.append("TaskAssignedEventEntity [toString()=").append(super.toString()).append("]");
         return builder.toString();
     }
 }
