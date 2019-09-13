@@ -4,6 +4,8 @@ import org.activiti.api.task.model.Task;
 import org.activiti.cloud.api.task.model.events.CloudTaskRuntimeEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.TaskJpaJsonConverter;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Lob;
@@ -55,5 +57,45 @@ public abstract class TaskAuditEventEntity extends AuditEventEntity {
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Objects.hash(task, taskId, taskName);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        TaskAuditEventEntity other = (TaskAuditEventEntity) obj;
+        return Objects.equals(task, other.task) 
+                && Objects.equals(taskId, other.taskId) 
+                && Objects.equals(taskName, other.taskName);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TaskAuditEventEntity [task=")
+               .append(task)
+               .append(", taskId=")
+               .append(taskId)
+               .append(", taskName=")
+               .append(taskName)
+               .append(", toString()=")
+               .append(super.toString())
+               .append("]");
+        return builder.toString();
     }
 }

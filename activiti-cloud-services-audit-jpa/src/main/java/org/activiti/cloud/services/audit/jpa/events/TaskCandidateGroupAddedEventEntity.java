@@ -21,6 +21,8 @@ import org.activiti.api.task.model.impl.TaskCandidateGroupImpl;
 import org.activiti.cloud.api.task.model.events.CloudTaskCandidateGroupAddedEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.TaskCandidateGroupJpaJsonConverter;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
@@ -52,6 +54,40 @@ public class TaskCandidateGroupAddedEventEntity extends AuditEventEntity {
 
     public void setCandidateGroup(TaskCandidateGroup candidateGroup) {
         this.candidateGroup = new TaskCandidateGroupImpl(candidateGroup.getGroupId(),candidateGroup.getTaskId());
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Objects.hash(candidateGroup);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        TaskCandidateGroupAddedEventEntity other = (TaskCandidateGroupAddedEventEntity) obj;
+        return Objects.equals(candidateGroup, other.candidateGroup);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TaskCandidateGroupAddedEventEntity [candidateGroup=")
+               .append(candidateGroup)
+               .append(", toString()=")
+               .append(super.toString())
+               .append("]");
+        return builder.toString();
     }
 
 }

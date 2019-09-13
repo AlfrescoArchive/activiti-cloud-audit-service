@@ -20,6 +20,8 @@ import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.cloud.api.process.model.events.CloudProcessRuntimeEvent;
 import org.activiti.cloud.services.audit.jpa.converters.json.ProcessInstanceJpaJsonConverter;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Lob;
@@ -47,6 +49,40 @@ public abstract class ProcessAuditEventEntity extends AuditEventEntity {
 
     public void setProcessInstance(ProcessInstance processInstance) {
         this.processInstance = processInstance;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Objects.hash(processInstance);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ProcessAuditEventEntity other = (ProcessAuditEventEntity) obj;
+        return Objects.equals(processInstance, other.processInstance);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ProcessAuditEventEntity [processInstance=")
+               .append(processInstance)
+               .append(", toString()=")
+               .append(super.toString())
+               .append("]");
+        return builder.toString();
     }
 
 }

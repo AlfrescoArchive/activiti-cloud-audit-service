@@ -32,5 +32,31 @@ public class ProcessStartedAuditEventEntity extends ProcessAuditEventEntity {
 
     public ProcessStartedAuditEventEntity(CloudProcessStartedEvent cloudEvent) {
         super(cloudEvent);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ProcessStartedAuditEventEntity [toString()=").append(super.toString()).append("]");
+        return builder.toString();
     } 
 }

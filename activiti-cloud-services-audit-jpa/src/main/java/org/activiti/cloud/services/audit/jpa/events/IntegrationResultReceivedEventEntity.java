@@ -25,4 +25,30 @@ public class IntegrationResultReceivedEventEntity extends IntegrationEventEntity
 
     protected static final String INTEGRATION_RESULT_RECEIVED_EVENT = "IntegrationResultReceivedEvent";
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("IntegrationResultReceivedEventEntity [toString()=").append(super.toString()).append("]");
+        return builder.toString();
+    }
+
 }
