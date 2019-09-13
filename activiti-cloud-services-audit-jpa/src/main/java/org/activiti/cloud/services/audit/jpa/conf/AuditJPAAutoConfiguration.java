@@ -270,6 +270,24 @@ public class AuditJPAAutoConfiguration {
     
     @ConditionalOnMissingBean
     @Bean
+    public MessageReceivedEventConverter messageReceivedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new MessageReceivedEventConverter(eventContextInfoAppender);
+    }
+    
+    @ConditionalOnMissingBean
+    @Bean
+    public MessageWaitingEventConverter messageWaitingEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new MessageWaitingEventConverter(eventContextInfoAppender);
+    }      
+    
+    @ConditionalOnMissingBean
+    @Bean
+    public MessageSentEventConverter messageSentEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new MessageSentEventConverter(eventContextInfoAppender);
+    }        
+    
+    @ConditionalOnMissingBean
+    @Bean
     public ErrorReceivedEventConverter errorReceivedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
         return new ErrorReceivedEventConverter(eventContextInfoAppender);
     }   

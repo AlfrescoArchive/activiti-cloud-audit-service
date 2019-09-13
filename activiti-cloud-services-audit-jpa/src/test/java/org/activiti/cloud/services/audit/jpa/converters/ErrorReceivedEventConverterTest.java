@@ -39,7 +39,7 @@ public class ErrorReceivedEventConverterTest {
     }
     
     @Test
-    public void shoudld_convert_toAPIErrorReceivedEvent() {
+    public void should_convertToAPIErrorReceivedEvent() {
         //given
         ErrorReceivedAuditEventEntity auditEventEntity = (ErrorReceivedAuditEventEntity) eventConverter.convertToEntity(createErrorReceivedEvent());
         
