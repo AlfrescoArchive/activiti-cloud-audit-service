@@ -27,7 +27,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 @Entity(name = TaskCandidateUserAddedEventEntity.TASK_CANDIDATE_USER_ADDED_EVENT)
 @DiscriminatorValue(value = TaskCandidateUserAddedEventEntity.TASK_CANDIDATE_USER_ADDED_EVENT)
@@ -36,8 +35,7 @@ public class TaskCandidateUserAddedEventEntity extends AuditEventEntity {
     protected static final String TASK_CANDIDATE_USER_ADDED_EVENT = "TaskCandidateUserAddedEvent";
 
     @Convert(converter = TaskCandidateUserJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition = "text")
     private TaskCandidateUserImpl candidateUser;
     
     public TaskCandidateUserAddedEventEntity() {

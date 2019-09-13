@@ -8,15 +8,13 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class TaskAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = TaskJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition = "text")
     private Task task;
 
     private String taskId;

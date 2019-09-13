@@ -26,7 +26,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 @Entity(name = ProcessDeployedAuditEventEntity.PROCESS_DEPLOYED_EVENT)
 @DiscriminatorValue(value = ProcessDeployedAuditEventEntity.PROCESS_DEPLOYED_EVENT)
@@ -35,8 +34,7 @@ public class ProcessDeployedAuditEventEntity extends AuditEventEntity {
     protected static final String PROCESS_DEPLOYED_EVENT = "ProcessDeployedEvent";
 
     @Convert(converter = ProcessDefinitionJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition = "text")
     private ProcessDefinition processDefinition;
 
     public ProcessDeployedAuditEventEntity() {

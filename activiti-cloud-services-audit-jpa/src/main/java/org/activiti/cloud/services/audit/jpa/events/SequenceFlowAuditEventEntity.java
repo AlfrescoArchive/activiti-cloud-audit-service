@@ -26,7 +26,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 @Entity(name = SequenceFlowAuditEventEntity.SEQUENCE_FLOW_TAKEN_EVENT)
 @DiscriminatorValue(value = SequenceFlowAuditEventEntity.SEQUENCE_FLOW_TAKEN_EVENT)
@@ -35,8 +34,7 @@ public class SequenceFlowAuditEventEntity extends AuditEventEntity {
     protected static final String SEQUENCE_FLOW_TAKEN_EVENT = "SequenceFlowTakenEvent";
 
     @Convert(converter = SequenceFlowJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition = "text")
     private BPMNSequenceFlow sequenceFlow;
 
     public SequenceFlowAuditEventEntity() {

@@ -24,15 +24,13 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class BPMNActivityAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = ActivityJpaJsonConverter.class)
-    @Lob
-    @Column
+    @Column(columnDefinition = "text")
     private BPMNActivity bpmnActivity;
 
     public BPMNActivityAuditEventEntity() {
