@@ -16,7 +16,6 @@
 
 package org.activiti.cloud.services.audit.jpa.events;
 
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.MappedSuperclass;
@@ -29,7 +28,7 @@ import org.activiti.cloud.services.audit.jpa.converters.json.MessageJpaJsonConve
 public abstract class MessageAuditEventEntity extends AuditEventEntity {
 
     @Convert(converter = MessageJpaJsonConverter.class)
-    @Column(columnDefinition="text")
+    @Column(columnDefinition = "text")
     private BPMNMessage message;
 
     public MessageAuditEventEntity() {
@@ -41,8 +40,6 @@ public abstract class MessageAuditEventEntity extends AuditEventEntity {
         if (message != null) {
             setProcessDefinitionId(message.getProcessDefinitionId());
             setProcessInstanceId(message.getProcessInstanceId());
-        }
-        if (message != null) {
             setEntityId(message.getElementId());
         }
     }
