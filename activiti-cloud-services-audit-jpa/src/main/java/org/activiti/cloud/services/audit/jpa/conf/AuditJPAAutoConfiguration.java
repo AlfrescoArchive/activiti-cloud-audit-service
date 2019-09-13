@@ -21,6 +21,7 @@ import org.activiti.cloud.services.audit.api.converters.EventToEntityConverter;
 import org.activiti.cloud.services.audit.jpa.converters.ActivityCancelledEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.ActivityCompletedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.ActivityStartedEventConverter;
+import org.activiti.cloud.services.audit.jpa.converters.ErrorReceivedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.EventContextInfoAppender;
 import org.activiti.cloud.services.audit.jpa.converters.MessageReceivedEventConverter;
 import org.activiti.cloud.services.audit.jpa.converters.MessageSentEventConverter;
@@ -269,20 +270,7 @@ public class AuditJPAAutoConfiguration {
     
     @ConditionalOnMissingBean
     @Bean
-    public MessageReceivedEventConverter messageReceivedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
-        return new MessageReceivedEventConverter(eventContextInfoAppender);
-    }
-    
-    @ConditionalOnMissingBean
-    @Bean
-    public MessageWaitingEventConverter messageWaitingEventConverter(EventContextInfoAppender eventContextInfoAppender) {
-        return new MessageWaitingEventConverter(eventContextInfoAppender);
-    }      
-    
-    @ConditionalOnMissingBean
-    @Bean
-    public MessageSentEventConverter messageSentEventConverter(EventContextInfoAppender eventContextInfoAppender) {
-        return new MessageSentEventConverter(eventContextInfoAppender);
-    }        
-    
+    public ErrorReceivedEventConverter errorReceivedEventConverter(EventContextInfoAppender eventContextInfoAppender) {
+        return new ErrorReceivedEventConverter(eventContextInfoAppender);
+    }   
 } 
