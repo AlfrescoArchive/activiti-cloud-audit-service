@@ -131,12 +131,6 @@
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.testcontainers</groupId>-->
-<!--      <artifactId>rabbitmq</artifactId>-->
-<!--      <version>${testcontainers.version}</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
