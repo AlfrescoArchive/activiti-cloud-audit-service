@@ -29,7 +29,7 @@ import org.activiti.cloud.services.audit.jpa.converters.json.MessageSubscription
 @DiscriminatorValue(value = MessageSubscriptionCancelledAuditEventEntity.MESSAGE_SUBSCRIPTION_CANCELLED_EVENT)
 public class MessageSubscriptionCancelledAuditEventEntity extends AuditEventEntity {
 
-    protected static final String MESSAGE_SUBSCRIPTION_CANCELLED_EVENT = "MessageSubscriptionCancelledEvent";
+    protected static final String MESSAGE_SUBSCRIPTION_CANCELLED_EVENT = "MsgSubscriptionCancelledEvent";
     
     @Convert(converter = MessageSubscriptionJpaJsonConverter.class)
     @Column(columnDefinition="text")
