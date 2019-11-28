@@ -193,7 +193,7 @@ public class AuditServiceIT {
     }
     
     @Test
-    public void shouldBeAbleToFilterOnProcessInstanceIdTaskCreatedEvent() {
+    public void should_getTaskCreatedEvent_when_filteredOnProcessInstanceIdEventType() {
         //given
         List<CloudRuntimeEvent> coveredEvents = getTestEvents();
         producer.send(coveredEvents.toArray(new CloudRuntimeEvent[coveredEvents.size()]));
@@ -226,9 +226,7 @@ public class AuditServiceIT {
 
         });
     }
-    
-    
-
+   
     @Test
     public void shouldGetProcessStartedUpdatedCompletedEvents() {
         //given
