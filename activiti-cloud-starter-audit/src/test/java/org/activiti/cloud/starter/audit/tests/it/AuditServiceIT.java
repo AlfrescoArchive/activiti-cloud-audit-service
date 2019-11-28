@@ -210,11 +210,8 @@ public class AuditServiceIT {
             ResponseEntity<PagedResources<CloudRuntimeEvent>> eventsPagedResources = eventsRestTemplate.executeFind(filters);
 
             //then
-            Collection<CloudRuntimeEvent> retrievedEvents = eventsRestTemplate
-                                                            .executeFind(filters)
-                                                            .getBody()
-                                                            .getContent();
-            assertThat(retrievedEvents)
+            assertThat(eventsPagedResources).isNotNull();
+            assertThat(eventsPagedResources.getBody())
                 .isNotEmpty()
                 .filteredOn(event -> ((CloudTaskCreatedEvent)event).getEntity().getTaskDefinitionKey().equals("taskDefinitionKey"))
                 .extracting(event -> event.getEventType(),
